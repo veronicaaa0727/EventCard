@@ -7,3 +7,5 @@ Functionalities:
 
 Plan:
 8/8 have beta version.
+
+2. User to User
