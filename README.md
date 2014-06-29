@@ -4,3 +4,6 @@ EventCard is a mobile application that enables users to manage their social netw
 
 Functionalities:
 1. Account
+
+Plan:
+8/8 have beta version.
