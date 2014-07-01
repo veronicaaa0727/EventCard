@@ -1,0 +1,41 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="#">
+
+	<!-- CSS Global Compulsory -->
+	<link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+	<title>Events for EventCard</title>
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+  </head>
+
+  <body>
+
+	<div class="container page-index">
+		{% if user.is_authenticated %}
+		<h4>Welcome {{user.email}}</h4>
+	  	{% endif %}
+	  	<a href="{% url 'EventCard:user_logout' %}">Logout</a>
+
+	</div> <!-- /container -->
+
+
+	<!-- Bootstrap core JavaScript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+  </body>
+</html>
