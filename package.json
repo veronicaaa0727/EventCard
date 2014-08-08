@@ -1,0 +1,16 @@
+{
+  "name": "event-card",
+  "version": "0.0.0",
+  "description": "An application helps people meet new people in Events",
+  "main": "server.js",
+  "author": "Pengqi Liu",
+  "dependencies": {
+    "connect-flash": "^0.1.1",
+    "cors": "^2.4.1",
+    "express": "3.x",
+    "mongoose": "3.x",
+    "passport": "^0.2.0",
+    "passport-linkedin-oauth2": "^1.1.1",
+    "passport-local": "^1.0.0"
+  }
+}
