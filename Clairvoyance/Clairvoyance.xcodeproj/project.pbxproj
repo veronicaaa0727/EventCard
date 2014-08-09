@@ -11,6 +11,7 @@
 		33071060E8D61DCBB5CD62EA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 330718AF8D0AB8B674A83921 /* InfoPlist.strings */; };
 		3307108D5CC7A885EBF5D544 /* ClairvoyanceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 330714900097145FBBD53DAE /* ClairvoyanceTests.m */; };
 		3307127F114F02181BE1FA01 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33071B8D76DA03A37FF8F958 /* Foundation.framework */; };
+		330714671EB4FF6DF576181F /* CirclesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 330714928F5B94953B62052F /* CirclesView.m */; };
 		3307161319B9213F7980A0C4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3307117AA9CB0195A7CC5FF4 /* CoreGraphics.framework */; };
 		33071642C14476D7F3DBEFF9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 33071D211BE08C417466504F /* main.m */; };
 		330716937EBBF457BB9E9FF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 330715B23B7BB357806EC008 /* AppDelegate.m */; };
@@ -38,10 +39,12 @@
 		33071359FD4E1C25596AB740 /* Clairvoyance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clairvoyance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3307143CC40BACC5A115304C /* ClairvoyanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClairvoyanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		330714900097145FBBD53DAE /* ClairvoyanceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClairvoyanceTests.m; sourceTree = "<group>"; };
+		330714928F5B94953B62052F /* CirclesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CirclesView.m; sourceTree = "<group>"; };
 		330714FB5DDB1EC83519410C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		330715B23B7BB357806EC008 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		330716A3922B9ED67277D4D8 /* CircleScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleScreenController.h; sourceTree = "<group>"; };
 		330716DF84751B725C23A069 /* CircleScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleScreenController.m; sourceTree = "<group>"; };
+		330718C22CE52532A80B654C /* CirclesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CirclesView.h; sourceTree = "<group>"; };
 		330719A41D20997DA558BCD7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		33071B8D76DA03A37FF8F958 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		33071BCF48BA70DEFF4D7F84 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -95,6 +98,8 @@
 				33071BCF48BA70DEFF4D7F84 /* Images.xcassets */,
 				330716DF84751B725C23A069 /* CircleScreenController.m */,
 				330716A3922B9ED67277D4D8 /* CircleScreenController.h */,
+				330714928F5B94953B62052F /* CirclesView.m */,
+				330718C22CE52532A80B654C /* CirclesView.h */,
 			);
 			path = Clairvoyance;
 			sourceTree = "<group>";
@@ -241,6 +246,7 @@
 				33071642C14476D7F3DBEFF9 /* main.m in Sources */,
 				330716937EBBF457BB9E9FF8 /* AppDelegate.m in Sources */,
 				330718B262367B2E72EE6FDE /* CircleScreenController.m in Sources */,
+				330714671EB4FF6DF576181F /* CirclesView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

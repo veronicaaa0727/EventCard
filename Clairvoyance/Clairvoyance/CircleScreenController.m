@@ -4,6 +4,7 @@
 //
 
 #import "CircleScreenController.h"
+#import "CirclesView.h"
 
 
 @implementation CircleScreenController {
@@ -17,6 +18,10 @@
     }
 
     return self;
+}
+
+- (void)loadView {
+    self.view = [[CirclesView alloc] initWithFrame:CGRectZero];
 }
 
 
