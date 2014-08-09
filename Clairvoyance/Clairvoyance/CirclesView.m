@@ -17,6 +17,20 @@
 
     [[UIColor colorWithRed:0 green:1 blue:1 alpha:1] set];
     [[UIBezierPath bezierPathWithOvalInRect:circleRect] fill];
+
+    UIFont *eventFont = [UIFont systemFontOfSize:24];
+
+
+    NSDictionary *nameAttributes = @{
+            NSFontAttributeName : eventFont,
+            NSForegroundColorAttributeName : [UIColor whiteColor]
+    };
+
+    CGSize nameSize = [name sizeWithAttributes:nameAttributes];
+    x -= nameSize.width * .5;
+    y -= nameSize.height * .5;
+    [name drawAtPoint:CGPointMake(x, y) withAttributes:nameAttributes];
+
 }
 
 - (void)drawRect:(CGRect)rect {
