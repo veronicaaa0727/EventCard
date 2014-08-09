@@ -1,0 +1,436 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3307104EAEA43B54BB390B69 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33071BCF48BA70DEFF4D7F84 /* Images.xcassets */; };
+		33071060E8D61DCBB5CD62EA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 330718AF8D0AB8B674A83921 /* InfoPlist.strings */; };
+		3307108D5CC7A885EBF5D544 /* ClairvoyanceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 330714900097145FBBD53DAE /* ClairvoyanceTests.m */; };
+		3307127F114F02181BE1FA01 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33071B8D76DA03A37FF8F958 /* Foundation.framework */; };
+		3307161319B9213F7980A0C4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3307117AA9CB0195A7CC5FF4 /* CoreGraphics.framework */; };
+		33071642C14476D7F3DBEFF9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 33071D211BE08C417466504F /* main.m */; };
+		330716937EBBF457BB9E9FF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 330715B23B7BB357806EC008 /* AppDelegate.m */; };
+		3307178065940354ECD6333A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 330719A41D20997DA558BCD7 /* UIKit.framework */; };
+		330717C9F8D2C4AEF5CF29A3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33071F3DB29989A561D7991A /* XCTest.framework */; };
+		33071994C808A13A85236EB3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 330719A41D20997DA558BCD7 /* UIKit.framework */; };
+		33071B8C65EBF976D9235052 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33071B8D76DA03A37FF8F958 /* Foundation.framework */; };
+		33071DFA06663AD16B8826BE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 33071E4F259FED34AEB91122 /* InfoPlist.strings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3307173B0C3C1028D2F21A71 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 33071E60C75F02425F1CB9DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3307196DABF81021B33ED2F3;
+			remoteInfo = Clairvoyance;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3307117AA9CB0195A7CC5FF4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		330711905D4015A5BC1E619D /* ClairvoyanceTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = "ClairvoyanceTests-Info.plist"; sourceTree = "<group>"; };
+		33071359FD4E1C25596AB740 /* Clairvoyance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clairvoyance.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3307143CC40BACC5A115304C /* ClairvoyanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClairvoyanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		330714900097145FBBD53DAE /* ClairvoyanceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClairvoyanceTests.m; sourceTree = "<group>"; };
+		330714FB5DDB1EC83519410C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		330715B23B7BB357806EC008 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		330719A41D20997DA558BCD7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		33071B8D76DA03A37FF8F958 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		33071BCF48BA70DEFF4D7F84 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		33071BEAB4C2D891BC8AE919 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		33071C6E13DD6A89D992EA1B /* Clairvoyance-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = "Clairvoyance-Info.plist"; sourceTree = "<group>"; };
+		33071D211BE08C417466504F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		33071F3DB29989A561D7991A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		33071F5A7817ABB51AF5C15D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		33071F85E17B3886515E55CD /* Clairvoyance-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Clairvoyance-Prefix.pch"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		33071D7749EA09896BA1E8EC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3307127F114F02181BE1FA01 /* Foundation.framework in Frameworks */,
+				3307161319B9213F7980A0C4 /* CoreGraphics.framework in Frameworks */,
+				3307178065940354ECD6333A /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		33071E3FF63A4BBF49B09A18 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				330717C9F8D2C4AEF5CF29A3 /* XCTest.framework in Frameworks */,
+				33071B8C65EBF976D9235052 /* Foundation.framework in Frameworks */,
+				33071994C808A13A85236EB3 /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		33071253AC74663221CCBD29 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				33071359FD4E1C25596AB740 /* Clairvoyance.app */,
+				3307143CC40BACC5A115304C /* ClairvoyanceTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3307125A180F932ECA2D2BB6 /* Clairvoyance */ = {
+			isa = PBXGroup;
+			children = (
+				330719DEEB0B07F67B6A297A /* Supporting Files */,
+				33071BEAB4C2D891BC8AE919 /* AppDelegate.h */,
+				330715B23B7BB357806EC008 /* AppDelegate.m */,
+				33071BCF48BA70DEFF4D7F84 /* Images.xcassets */,
+			);
+			path = Clairvoyance;
+			sourceTree = "<group>";
+		};
+		330713035A0FDEB39CE7029B /* ClairvoyanceTests */ = {
+			isa = PBXGroup;
+			children = (
+				33071DA5FAD1F65FED64D916 /* Supporting Files */,
+				330714900097145FBBD53DAE /* ClairvoyanceTests.m */,
+			);
+			path = ClairvoyanceTests;
+			sourceTree = "<group>";
+		};
+		3307199EE33F03D6F30B6BEC = {
+			isa = PBXGroup;
+			children = (
+				33071253AC74663221CCBD29 /* Products */,
+				33071A951AB2947DEC0870EB /* Frameworks */,
+				3307125A180F932ECA2D2BB6 /* Clairvoyance */,
+				330713035A0FDEB39CE7029B /* ClairvoyanceTests */,
+			);
+			sourceTree = "<group>";
+		};
+		330719DEEB0B07F67B6A297A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				33071C6E13DD6A89D992EA1B /* Clairvoyance-Info.plist */,
+				33071E4F259FED34AEB91122 /* InfoPlist.strings */,
+				33071D211BE08C417466504F /* main.m */,
+				33071F85E17B3886515E55CD /* Clairvoyance-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		33071A951AB2947DEC0870EB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				33071B8D76DA03A37FF8F958 /* Foundation.framework */,
+				3307117AA9CB0195A7CC5FF4 /* CoreGraphics.framework */,
+				330719A41D20997DA558BCD7 /* UIKit.framework */,
+				33071F3DB29989A561D7991A /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		33071DA5FAD1F65FED64D916 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				330711905D4015A5BC1E619D /* ClairvoyanceTests-Info.plist */,
+				330718AF8D0AB8B674A83921 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		330714C12555507CBA871AC4 /* ClairvoyanceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 33071B487567CFB188A2B89A /* Build configuration list for PBXNativeTarget "ClairvoyanceTests" */;
+			buildPhases = (
+				33071E3C9B255ADBE13AEB28 /* Sources */,
+				33071E3FF63A4BBF49B09A18 /* Frameworks */,
+				3307145285271B977B4A0D09 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3307170ABDA163D1A3D8AA2D /* PBXTargetDependency */,
+			);
+			name = ClairvoyanceTests;
+			productName = ClairvoyanceTests;
+			productReference = 3307143CC40BACC5A115304C /* ClairvoyanceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3307196DABF81021B33ED2F3 /* Clairvoyance */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 33071412E81D24C5C4696DDC /* Build configuration list for PBXNativeTarget "Clairvoyance" */;
+			buildPhases = (
+				330718C78E8B55370A7EFB70 /* Sources */,
+				33071D7749EA09896BA1E8EC /* Frameworks */,
+				33071DC1C329ED95D0F4E286 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Clairvoyance;
+			productName = Clairvoyance;
+			productReference = 33071359FD4E1C25596AB740 /* Clairvoyance.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		33071E60C75F02425F1CB9DE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = Clairvoyance;
+			};
+			buildConfigurationList = 33071C0B4EC8318DFBAC15D3 /* Build configuration list for PBXProject "Clairvoyance" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 3307199EE33F03D6F30B6BEC;
+			productRefGroup = 33071253AC74663221CCBD29 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3307196DABF81021B33ED2F3 /* Clairvoyance */,
+				330714C12555507CBA871AC4 /* ClairvoyanceTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3307145285271B977B4A0D09 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				33071060E8D61DCBB5CD62EA /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		33071DC1C329ED95D0F4E286 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				33071DFA06663AD16B8826BE /* InfoPlist.strings in Resources */,
+				3307104EAEA43B54BB390B69 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		330718C78E8B55370A7EFB70 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				33071642C14476D7F3DBEFF9 /* main.m in Sources */,
+				330716937EBBF457BB9E9FF8 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		33071E3C9B255ADBE13AEB28 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3307108D5CC7A885EBF5D544 /* ClairvoyanceTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3307170ABDA163D1A3D8AA2D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3307196DABF81021B33ED2F3 /* Clairvoyance */;
+			targetProxy = 3307173B0C3C1028D2F21A71 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		330718AF8D0AB8B674A83921 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				33071F5A7817ABB51AF5C15D /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		33071E4F259FED34AEB91122 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				330714FB5DDB1EC83519410C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3307167F6D81A474FC4F8A2A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Clairvoyance/Clairvoyance-Prefix.pch";
+				INFOPLIST_FILE = "Clairvoyance/Clairvoyance-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		330716A6933FFC394226DC0E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		330717C05C9F93D212B1A026 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Clairvoyance/Clairvoyance-Prefix.pch";
+				INFOPLIST_FILE = "ClairvoyanceTests/ClairvoyanceTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		330717CF5FD4172B5D3EF005 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		33071813953D0B12AF3BDA10 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Clairvoyance/Clairvoyance-Prefix.pch";
+				INFOPLIST_FILE = "Clairvoyance/Clairvoyance-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		33071FE7727D021FFE241BDD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Clairvoyance/Clairvoyance-Prefix.pch";
+				INFOPLIST_FILE = "ClairvoyanceTests/ClairvoyanceTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		33071412E81D24C5C4696DDC /* Build configuration list for PBXNativeTarget "Clairvoyance" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				33071813953D0B12AF3BDA10 /* Debug */,
+				3307167F6D81A474FC4F8A2A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		33071B487567CFB188A2B89A /* Build configuration list for PBXNativeTarget "ClairvoyanceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				330717C05C9F93D212B1A026 /* Debug */,
+				33071FE7727D021FFE241BDD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		33071C0B4EC8318DFBAC15D3 /* Build configuration list for PBXProject "Clairvoyance" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				330716A6933FFC394226DC0E /* Debug */,
+				330717CF5FD4172B5D3EF005 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 33071E60C75F02425F1CB9DE /* Project object */;
+}
