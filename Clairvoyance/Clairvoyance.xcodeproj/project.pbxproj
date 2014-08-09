@@ -21,6 +21,8 @@
 		33071994C808A13A85236EB3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 330719A41D20997DA558BCD7 /* UIKit.framework */; };
 		33071B8C65EBF976D9235052 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33071B8D76DA03A37FF8F958 /* Foundation.framework */; };
 		33071DFA06663AD16B8826BE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 33071E4F259FED34AEB91122 /* InfoPlist.strings */; };
+		33071FBF80319BD3A622706F /* JoinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33071D5A0241A5883020EBA2 /* JoinViewController.m */; };
+		C9EBAF591995E50900F844CE /* JoinView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9EBAF581995E50900F844CE /* JoinView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,10 +52,13 @@
 		33071BEAB4C2D891BC8AE919 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		33071C6E13DD6A89D992EA1B /* Clairvoyance-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = "Clairvoyance-Info.plist"; sourceTree = "<group>"; };
 		33071D211BE08C417466504F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		33071D5A0241A5883020EBA2 /* JoinViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JoinViewController.m; sourceTree = "<group>"; };
 		33071D9E80EC907BE4658E19 /* CirclesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CirclesView.m; path = Clairvoyance/CirclesView.m; sourceTree = "<group>"; };
+		33071E31702D0B836B38F00E /* JoinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JoinViewController.h; sourceTree = "<group>"; };
 		33071F3DB29989A561D7991A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		33071F5A7817ABB51AF5C15D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		33071F85E17B3886515E55CD /* Clairvoyance-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Clairvoyance-Prefix.pch"; sourceTree = "<group>"; };
+		C9EBAF581995E50900F844CE /* JoinView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JoinView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +105,9 @@
 				33071BCF48BA70DEFF4D7F84 /* Images.xcassets */,
 				330716DF84751B725C23A069 /* CircleScreenController.m */,
 				330716A3922B9ED67277D4D8 /* CircleScreenController.h */,
+				33071D5A0241A5883020EBA2 /* JoinViewController.m */,
+				33071E31702D0B836B38F00E /* JoinViewController.h */,
+				C9EBAF581995E50900F844CE /* JoinView.xib */,
 			);
 			path = Clairvoyance;
 			sourceTree = "<group>";
@@ -232,6 +240,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				33071DFA06663AD16B8826BE /* InfoPlist.strings in Resources */,
+				C9EBAF591995E50900F844CE /* JoinView.xib in Resources */,
 				3307104EAEA43B54BB390B69 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -247,6 +256,7 @@
 				330716937EBBF457BB9E9FF8 /* AppDelegate.m in Sources */,
 				330718B262367B2E72EE6FDE /* CircleScreenController.m in Sources */,
 				330717F50624F97FDE64FE9E /* CirclesView.m in Sources */,
+				33071FBF80319BD3A622706F /* JoinViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +434,7 @@
 				3307167F6D81A474FC4F8A2A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		33071B487567CFB188A2B89A /* Build configuration list for PBXNativeTarget "ClairvoyanceTests" */ = {
 			isa = XCConfigurationList;
@@ -432,6 +443,7 @@
 				33071FE7727D021FFE241BDD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		33071C0B4EC8318DFBAC15D3 /* Build configuration list for PBXProject "Clairvoyance" */ = {
 			isa = XCConfigurationList;

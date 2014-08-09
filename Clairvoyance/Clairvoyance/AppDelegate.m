@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import "CircleScreenController.h"
 
+UINavigationController *gNavController = nil;
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -17,10 +19,11 @@
 
     UIViewController *circleScreenController = [[CircleScreenController alloc] initWithNibName:nil bundle:nil];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:circleScreenController];
+    gNavController = navigationController;
 
     [self.window setRootViewController:navigationController];
 
-    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
 
     return YES;

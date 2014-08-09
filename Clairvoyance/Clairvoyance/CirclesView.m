@@ -4,11 +4,15 @@
 //
 
 #import "CirclesView.h"
+#import "CircleScreenController.h"
+#import "AppDelegate.h"
+#import "JoinViewController.h"
 
 
 @implementation CirclesView {
     float lastX;
     float scrollX;
+    BOOL scrolled;
 }
 
 - (void)drawEventName:(NSString *)name x:(float)x y:(float)y radius:(float)r {
@@ -66,6 +70,8 @@
     UITouch *touch = [touches anyObject];
     CGPoint p = [touch locationInView:self];
     lastX = p.x;
+
+    scrolled = NO;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -76,11 +82,18 @@
 
     scrollX += dx;
 
+    scrolled = YES;
+
     [self setNeedsDisplay];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesEnded:touches withEvent:event];
+    if (!scrolled) {
+        CircleScreenController *controller = (CircleScreenController *)[gNavController topViewController];
+        JoinViewController *joinViewController = [[JoinViewController alloc] initWithNibName:@"JoinView" bundle:nil];
+        joinViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        [controller presentViewController:joinViewController animated:YES completion:nil];
+    }
 }
 
 
