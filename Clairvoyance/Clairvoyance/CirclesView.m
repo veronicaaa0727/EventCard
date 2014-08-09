@@ -7,7 +7,8 @@
 
 
 @implementation CirclesView {
-
+    float lastX;
+    float scrollX;
 }
 
 - (void)drawEventName:(NSString *)name x:(float)x y:(float)y radius:(float)r {
@@ -47,11 +48,39 @@
     // seed the random generator so we get the same colors each draw
     srand48(0);
 
+    CGContextRef c = UIGraphicsGetCurrentContext();
+
+    CGContextSaveGState(c);
+
+    CGContextTranslateCTM(c, scrollX, 0);
+
     [self drawEventName:@"WWDC" x:200 y:200 radius:100];
     [self drawEventName:@"Meetup" x:300 y:400 radius:70];
     [self drawEventName:@"Google IO" x:100 y:400 radius:100];
     [self drawEventName:@"Party" x:350 y:250 radius:100];
 
+    CGContextRestoreGState(c);
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint p = [touch locationInView:self];
+    lastX = p.x;
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    CGPoint p = [touch locationInView:self];
+    float dx = p.x - lastX;
+    lastX = p.x;
+
+    scrollX += dx;
+
+    [self setNeedsDisplay];
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    [super touchesEnded:touches withEvent:event];
 }
 
 
