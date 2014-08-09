@@ -15,7 +15,7 @@
     circleRect.origin = CGPointMake(x, y);
     circleRect = CGRectInset(circleRect, -r, -r);
 
-    [[UIColor colorWithRed:0 green:1 blue:1 alpha:1] set];
+    [[self blueGreenColor] set];
     [[UIBezierPath bezierPathWithOvalInRect:circleRect] fill];
 
     UIFont *eventFont = [UIFont systemFontOfSize:24];
@@ -33,11 +33,24 @@
 
 }
 
+- (UIColor *)blueGreenColor {
+    float r = 0;
+    float g = .5 + drand48() * .5;
+    float b = .5 + drand48() * .5;
+    return [UIColor colorWithRed:r green:g blue:b alpha:1];
+}
+
 - (void)drawRect:(CGRect)rect {
     [[UIColor blackColor] set];
     [[UIBezierPath bezierPathWithRect:rect] fill];
 
+    // seed the random generator so we get the same colors each draw
+    srand48(0);
+
     [self drawEventName:@"WWDC" x:200 y:200 radius:100];
+    [self drawEventName:@"Meetup" x:300 y:400 radius:70];
+    [self drawEventName:@"Google IO" x:100 y:400 radius:100];
+    [self drawEventName:@"Party" x:350 y:250 radius:100];
 
 }
 
