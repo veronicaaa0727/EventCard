@@ -28,9 +28,12 @@
                     <state key="normal" title="Join">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="joinButtonPressed" destination="-1" eventType="touchUpInside" id="fr5-y6-dtk"/>
+                    </connections>
                 </button>
             </subviews>
-            <color key="backgroundColor" red="0.52880075311516639" green="1" blue="0.73635348318411808" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.55933149507389812" green="1" blue="0.73119939966010639" alpha="1" colorSpace="calibratedRGB"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>
