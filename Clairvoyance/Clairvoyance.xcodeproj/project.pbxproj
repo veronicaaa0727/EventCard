@@ -16,6 +16,7 @@
 		330716937EBBF457BB9E9FF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 330715B23B7BB357806EC008 /* AppDelegate.m */; };
 		3307178065940354ECD6333A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 330719A41D20997DA558BCD7 /* UIKit.framework */; };
 		330717C9F8D2C4AEF5CF29A3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33071F3DB29989A561D7991A /* XCTest.framework */; };
+		330718B262367B2E72EE6FDE /* CircleScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = 330716DF84751B725C23A069 /* CircleScreenController.m */; };
 		33071994C808A13A85236EB3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 330719A41D20997DA558BCD7 /* UIKit.framework */; };
 		33071B8C65EBF976D9235052 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33071B8D76DA03A37FF8F958 /* Foundation.framework */; };
 		33071DFA06663AD16B8826BE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 33071E4F259FED34AEB91122 /* InfoPlist.strings */; };
@@ -39,6 +40,8 @@
 		330714900097145FBBD53DAE /* ClairvoyanceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClairvoyanceTests.m; sourceTree = "<group>"; };
 		330714FB5DDB1EC83519410C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		330715B23B7BB357806EC008 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		330716A3922B9ED67277D4D8 /* CircleScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleScreenController.h; sourceTree = "<group>"; };
+		330716DF84751B725C23A069 /* CircleScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleScreenController.m; sourceTree = "<group>"; };
 		330719A41D20997DA558BCD7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		33071B8D76DA03A37FF8F958 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		33071BCF48BA70DEFF4D7F84 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -90,6 +93,8 @@
 				33071BEAB4C2D891BC8AE919 /* AppDelegate.h */,
 				330715B23B7BB357806EC008 /* AppDelegate.m */,
 				33071BCF48BA70DEFF4D7F84 /* Images.xcassets */,
+				330716DF84751B725C23A069 /* CircleScreenController.m */,
+				330716A3922B9ED67277D4D8 /* CircleScreenController.h */,
 			);
 			path = Clairvoyance;
 			sourceTree = "<group>";
@@ -235,6 +240,7 @@
 			files = (
 				33071642C14476D7F3DBEFF9 /* main.m in Sources */,
 				330716937EBBF457BB9E9FF8 /* AppDelegate.m in Sources */,
+				330718B262367B2E72EE6FDE /* CircleScreenController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
