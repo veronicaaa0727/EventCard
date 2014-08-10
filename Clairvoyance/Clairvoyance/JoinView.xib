@@ -6,6 +6,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="JoinViewController">
             <connections>
+                <outlet property="eventWebView" destination="CFL-mI-hwa" id="mdm-Pa-uD7"/>
                 <outlet property="view" destination="iN0-l3-epB" id="Wbk-T9-qm4"/>
             </connections>
         </placeholder>
@@ -32,6 +33,11 @@
                         <action selector="joinButtonPressed" destination="-1" eventType="touchUpInside" id="fr5-y6-dtk"/>
                     </connections>
                 </button>
+                <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CFL-mI-hwa">
+                    <rect key="frame" x="0.0" y="183" width="320" height="206"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                </webView>
             </subviews>
             <color key="backgroundColor" red="0.55933149507389812" green="1" blue="0.73119939966010639" alpha="1" colorSpace="calibratedRGB"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>

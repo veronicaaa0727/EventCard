@@ -36,6 +36,9 @@
     // ideally should do a dequereusablecell call
     cell.textLabel.text = @"Joe Smith";
     cell.detailTextLabel.text = @"Software Engineer";
+    UIButton *connectButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+
+    cell.accessoryView = connectButton;
     return cell;
 }
 
