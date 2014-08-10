@@ -13,10 +13,14 @@
 @implementation CirclesView {
     float lastX;
     float scrollX;
+    float inertiaX;
+    float lastVelocity;
     BOOL scrolled;
 
     NSMutableArray *circles;
     int circleSelected;
+
+    double lastEventTime;
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -83,6 +87,10 @@
 
 - (void)drawRect:(CGRect)rect {
 //    [[UIColor blackColor] set];
+    if (inertiaX) scrollX += inertiaX;
+    inertiaX *= .96;
+    if (fabsf(inertiaX) < .01) inertiaX = 0;
+
     [[UIColor colorWithRed:.1 green:.1 blue:.15 alpha:1] set];
 
     [[UIBezierPath bezierPathWithRect:rect] fill];
@@ -128,6 +136,7 @@
     lastX = p.x;
 
     scrolled = NO;
+    inertiaX = 0;
 
     circleSelected = -1;
     p.x -= scrollX;
@@ -137,6 +146,7 @@
             circleSelected = i;
         }
     }
+    lastVelocity = 0;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -145,14 +155,25 @@
     float dx = p.x - lastX;
     lastX = p.x;
 
+    double eventTime = [NSDate timeIntervalSinceReferenceDate];
+    double dt = eventTime - lastEventTime;
+
+    if (dt < 1) {
+        lastVelocity = dx / dt;
+
+    }
+
     scrollX += dx;
 
     scrolled = YES;
+
+    lastEventTime = eventTime;
 
     [self setNeedsDisplay];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+
     if (!scrolled) {
         if (circleSelected != -1) {
             EventCircle *circle = circles[circleSelected];
@@ -165,6 +186,14 @@
 
 
     }
+    else {
+        NSLog(@"starting inertial scroll with velocity %f", lastVelocity);
+
+        if (lastVelocity < -500) lastVelocity = -500;
+        if (lastVelocity > 500) lastVelocity = 500;
+        inertiaX = lastVelocity * .014;
+    }
+
     circleSelected = -1;
 }
 
