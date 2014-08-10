@@ -6,5 +6,9 @@
 #import <Foundation/Foundation.h>
 
 
-@interface PersonTableController : NSObject
+@interface PersonTableController : NSObject <UITableViewDataSource, UITableViewDelegate> {
+@public
+    int numPeople;
+    BOOL showAddButton;
+}
 @end

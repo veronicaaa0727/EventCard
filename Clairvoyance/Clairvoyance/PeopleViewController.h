@@ -6,5 +6,5 @@
 #import <Foundation/Foundation.h>
 
 
-@interface PeopleViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface PeopleViewController : UIViewController
 @end

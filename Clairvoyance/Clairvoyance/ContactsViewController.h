@@ -6,5 +6,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface ContactsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface ContactsViewController : UIViewController
 @end
+
+extern int gNumPeopleToShowInContacts;

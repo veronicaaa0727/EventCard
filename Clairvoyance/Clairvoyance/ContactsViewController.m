@@ -4,10 +4,13 @@
 //
 
 #import "ContactsViewController.h"
+#import "PersonTableController.h"
 
+
+int gNumPeopleToShowInContacts = 0;
 
 @implementation ContactsViewController {
-
+    PersonTableController *tableController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -21,22 +24,14 @@
 
 - (void)loadView {
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    tableView.rowHeight = 100;
+    tableController = [[PersonTableController alloc] init];
+    tableController->numPeople = gNumPeopleToShowInContacts;
+    NSLog(@"num people to show in contacts %d", gNumPeopleToShowInContacts);
+    tableView.dataSource = tableController;
+    tableView.delegate = tableController;
+    tableView.rowHeight = 110;
     self.view = tableView;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return nil;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 0;
+    [tableView reloadData];
 }
 
 @end

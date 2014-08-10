@@ -7,10 +7,11 @@
 #import "AppDelegate.h"
 #import "ContactsViewController.h"
 #import "PersonDetailController.h"
+#import "PersonTableController.h"
 
 
 @implementation PeopleViewController {
-
+    PersonTableController * tableController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -34,71 +35,13 @@
 
 - (void)loadView {
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    tableView.dataSource = self;
-    tableView.delegate = self;
+    tableController = [[PersonTableController alloc] init];
+    tableController->numPeople = 20;
+    tableController->showAddButton = YES;
+    tableView.dataSource = tableController;
+    tableView.delegate = tableController;
     tableView.rowHeight = 110;
     self.view = tableView;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 20;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
-    // ideally should do a dequereusablecell call
-
-    UIImageView *profileView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 50, 50)];
-    [profileView setImage:[UIImage imageNamed:@"Sample_profile_image.png"]];
-    [cell addSubview:profileView];
-
-    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(70, 10, 200, 30)];
-    nameLabel.text = @"Joe Smith";
-//    cell.textLabel.frame = CGRectMake(50, 10, 200, 30);
-    [cell addSubview:nameLabel];
-    UILabel *subtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(70, 30, 200, 30)];
-    subtitleLabel.text = @"Software Engineer";
-    subtitleLabel.textColor = [UIColor grayColor];
-    [cell addSubview:subtitleLabel];
-
-    UILabel *detailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 50, 250, 60)];
-    detailsLabel.numberOfLines = 2;
-    detailsLabel.text = @"Joe is the staff engineer at Google who can write mobile apps";
-    detailsLabel.font = [UIFont systemFontOfSize:14];
-
-    [cell addSubview:detailsLabel];
-
-
-    UIButton *connectButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-    [connectButton addTarget:self action:@selector(addContactPressed:) forControlEvents:UIControlEventTouchUpInside];
-
-    cell.accessoryView = connectButton;
-    return cell;
-}
-
-- (IBAction)addContactPressed:(UIButton *)sender {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Contact Added"
-                                                    message:@"Joe Smith has been added to your contact list in Clairvoyance"
-                                                   delegate:self
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSLog(@"add contact alert dismissed");
-
-}
-
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    PersonDetailController *detailController = [[PersonDetailController alloc] initWithNibName:@"PersonDetailView" bundle:nil];
-    [gNavController pushViewController:detailController animated:YES];
 }
 
 
