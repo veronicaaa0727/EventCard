@@ -154,10 +154,16 @@
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     if (!scrolled) {
-        CircleScreenController *controller = (CircleScreenController *)[gNavController topViewController];
-        JoinViewController *joinViewController = [[JoinViewController alloc] initWithNibName:@"JoinView" bundle:nil];
-        joinViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        [controller presentViewController:joinViewController animated:YES completion:nil];
+        if (circleSelected != -1) {
+            EventCircle *circle = circles[circleSelected];
+
+            CircleScreenController *controller = (CircleScreenController *)[gNavController topViewController];
+            JoinViewController *joinViewController = [[JoinViewController alloc] initWithNibName:@"JoinView" bundle:nil event:circle];
+            joinViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+            [controller presentViewController:joinViewController animated:YES completion:nil];
+        }
+
+
     }
     circleSelected = -1;
 }

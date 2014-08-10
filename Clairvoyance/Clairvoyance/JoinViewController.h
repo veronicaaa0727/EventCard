@@ -5,6 +5,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class EventCircle;
+
 
 @interface JoinViewController : UIViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil event:(EventCircle *)eventCircle;
 @end
