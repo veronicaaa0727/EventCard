@@ -34,10 +34,10 @@
 //        [self drawEventName:@"Google IO" x:100 y:400 radius:100];
 //        [self drawEventName:@"Party" x:350 y:250 radius:100];
 
-        [circles addObject:[EventCircle circleWithName:@"WWDC" x:200 y:200 radius:100]];
-        [circles addObject:[EventCircle circleWithName:@"Meetup" x:300 y:400 radius:70]];
-        [circles addObject:[EventCircle circleWithName:@"Google" x:100 y:400 radius:100]];
-        [circles addObject:[EventCircle circleWithName:@"Party" x:350 y:250 radius:100]];
+        [circles addObject:[EventCircle circleWithName:@"WWDC" x:200 y:200 radius:100 url:@"http://developer.apple.com/wwdc/"]];
+        [circles addObject:[EventCircle circleWithName:@"Meetup" x:300 y:400 radius:70 url:@"http://www.meetup.com/Applets-IOS-SWIFT-a-South-Bay-Group/"]];
+        [circles addObject:[EventCircle circleWithName:@"Google IO" x:100 y:400 radius:100 url:@"http://www.google.com/events/io/io-extended"]];
+        [circles addObject:[EventCircle circleWithName:@"Party" x:350 y:250 radius:100 url:@"http://wwdcparties.com/"]];
         circleSelected = -1;
     }
 

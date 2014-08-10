@@ -26,7 +26,7 @@
 
 
 - (void)viewDidLoad {
-    NSURL *requestURL = [[NSURL alloc] initWithString:@"http://developer.apple.com/wwdc/"];
+    NSURL *requestURL = [[NSURL alloc] initWithString:event->url];
     NSURLRequest *descriptionRequest = [NSURLRequest requestWithURL:requestURL];
     eventWebView.opaque = NO;
     eventWebView.backgroundColor = [UIColor clearColor];

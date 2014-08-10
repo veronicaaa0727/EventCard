@@ -8,10 +8,10 @@
 
 @interface EventCircle : NSObject {
 @public
-    NSString *name;
+    NSString *name, *url;
     float x, y, radius;
 }
-+ (id)circleWithName:(NSString *)theName x:(float)xCoord y:(float)yCoord radius:(float)theRadius;
++ (id)circleWithName:(NSString *)theName x:(float)xCoord y:(float)yCoord radius:(float)theRadius url:(NSString *)url;
 
 - (BOOL)containsPoint:(CGPoint)point;
 @end

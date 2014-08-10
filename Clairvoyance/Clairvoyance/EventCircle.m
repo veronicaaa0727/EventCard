@@ -10,12 +10,13 @@
 
 }
 
-+ (id)circleWithName:(NSString *)theName x:(float)xCoord y:(float)yCoord radius:(float)theRadius {
++ (id)circleWithName:(NSString *)theName x:(float)xCoord y:(float)yCoord radius:(float)theRadius url:(NSString *)theURL {
     EventCircle *circle = [[EventCircle alloc] init];
     circle->name = theName;
     circle->x = xCoord;
     circle->y = yCoord;
     circle->radius = theRadius;
+    circle->url = theURL;
     return circle;
 }
 
