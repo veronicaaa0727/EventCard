@@ -7,15 +7,41 @@
 #import "CircleScreenController.h"
 #import "AppDelegate.h"
 #import "JoinViewController.h"
+#import "EventCircle.h"
 
 
 @implementation CirclesView {
     float lastX;
     float scrollX;
     BOOL scrolled;
+
+    NSMutableArray *circles;
+    int circleSelected;
 }
 
-- (void)drawEventName:(NSString *)name x:(float)x y:(float)y radius:(float)r {
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        circles = [[NSMutableArray alloc] init];
+//
+//
+//        [self drawEventName:@"WWDC" x:200 y:200 radius:100];
+//        [self drawEventName:@"Meetup" x:300 y:400 radius:70];
+//        [self drawEventName:@"Google IO" x:100 y:400 radius:100];
+//        [self drawEventName:@"Party" x:350 y:250 radius:100];
+
+        [circles addObject:[EventCircle circleWithName:@"WWDC" x:200 y:200 radius:100]];
+        [circles addObject:[EventCircle circleWithName:@"Meetup" x:300 y:400 radius:70]];
+        [circles addObject:[EventCircle circleWithName:@"Google" x:100 y:400 radius:100]];
+        [circles addObject:[EventCircle circleWithName:@"Party" x:350 y:250 radius:100]];
+        circleSelected = -1;
+    }
+
+    return self;
+}
+
+
+- (void)drawEventName:(NSString *)name x:(float)x y:(float)y radius:(float)r selected:(BOOL)isSelected {
     float angle = drand48() * M_PI * 2;
     double time = [NSDate timeIntervalSinceReferenceDate];
     double progress = time - floor(time);
@@ -29,6 +55,8 @@
     circleRect = CGRectInset(circleRect, -r, -r);
 
     [[self blueGreenColor] set];
+    // should request bluegreencolor even if circle not selected in order not to throw off random number generation
+    if (isSelected) [[UIColor yellowColor] set];
     [[UIBezierPath bezierPathWithOvalInRect:circleRect] fill];
 
     UIFont *eventFont = [UIFont systemFontOfSize:24];
@@ -77,10 +105,17 @@
 
     CGContextTranslateCTM(c, scrollX, 0);
 
-    [self drawEventName:@"WWDC" x:200 y:200 radius:100];
-    [self drawEventName:@"Meetup" x:300 y:400 radius:70];
-    [self drawEventName:@"Google IO" x:100 y:400 radius:100];
-    [self drawEventName:@"Party" x:350 y:250 radius:100];
+    for (int i = 0; i < [circles count]; ++i) {
+        EventCircle *circle = circles[i];
+        [self drawEventName:circle->name x:circle->x y:circle->y radius:circle->radius selected:(i == circleSelected)];
+    }
+//    for (EventCircle *circle in circles) {
+//        [self drawEventName:circle->name x:circle->x y:circle->y radius:circle->radius];
+//    }
+//    [self drawEventName:@"WWDC" x:200 y:200 radius:100];
+//    [self drawEventName:@"Meetup" x:300 y:400 radius:70];
+//    [self drawEventName:@"Google IO" x:100 y:400 radius:100];
+//    [self drawEventName:@"Party" x:350 y:250 radius:100];
 
     CGContextRestoreGState(c);
 
@@ -93,6 +128,15 @@
     lastX = p.x;
 
     scrolled = NO;
+
+    circleSelected = -1;
+    p.x -= scrollX;
+    for (int i = 0; i < [circles count]; ++i) {
+        EventCircle *circle = circles[i];
+        if ([circle containsPoint:p]) {
+            circleSelected = i;
+        }
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -115,6 +159,7 @@
         joinViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
         [controller presentViewController:joinViewController animated:YES completion:nil];
     }
+    circleSelected = -1;
 }
 
 
