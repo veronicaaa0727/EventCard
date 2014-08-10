@@ -34,7 +34,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gK-lR-xuz">
-                    <rect key="frame" x="16" y="476" width="147" height="87"/>
+                    <rect key="frame" x="20" y="476" width="147" height="87"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="49"/>
                     <state key="normal" title="Back">
@@ -42,7 +42,6 @@
                     </state>
                     <connections>
                         <action selector="backButtonPressed" destination="-1" eventType="touchUpInside" id="mkt-ui-hNa"/>
-                        <action selector="joinButtonPressed" destination="-1" eventType="touchUpInside" id="zMf-pe-8LG"/>
                     </connections>
                 </button>
                 <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CFL-mI-hwa">
