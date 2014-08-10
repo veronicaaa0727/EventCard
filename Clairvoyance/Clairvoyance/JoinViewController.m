@@ -46,5 +46,10 @@
     }];
 }
 
+- (IBAction)backButtonPressed {
+    self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 @end

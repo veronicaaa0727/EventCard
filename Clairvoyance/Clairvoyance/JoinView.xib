@@ -23,7 +23,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5KX-aY-75p">
-                    <rect key="frame" x="89" y="468" width="142" height="87"/>
+                    <rect key="frame" x="165" y="476" width="142" height="87"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="49"/>
                     <state key="normal" title="Join">
@@ -31,6 +31,18 @@
                     </state>
                     <connections>
                         <action selector="joinButtonPressed" destination="-1" eventType="touchUpInside" id="fr5-y6-dtk"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gK-lR-xuz">
+                    <rect key="frame" x="16" y="476" width="147" height="87"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="49"/>
+                    <state key="normal" title="Back">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="backButtonPressed" destination="-1" eventType="touchUpInside" id="mkt-ui-hNa"/>
+                        <action selector="joinButtonPressed" destination="-1" eventType="touchUpInside" id="zMf-pe-8LG"/>
                     </connections>
                 </button>
                 <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CFL-mI-hwa">
