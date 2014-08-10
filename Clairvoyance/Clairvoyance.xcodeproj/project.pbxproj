@@ -21,6 +21,7 @@
 		330718B262367B2E72EE6FDE /* CircleScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = 330716DF84751B725C23A069 /* CircleScreenController.m */; };
 		33071994C808A13A85236EB3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 330719A41D20997DA558BCD7 /* UIKit.framework */; };
 		33071B8C65EBF976D9235052 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33071B8D76DA03A37FF8F958 /* Foundation.framework */; };
+		33071C11135DF121CA14F121 /* ContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3307141EA9BCD1CDDCC36433 /* ContactsViewController.m */; };
 		33071DFA06663AD16B8826BE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 33071E4F259FED34AEB91122 /* InfoPlist.strings */; };
 		33071FBF80319BD3A622706F /* JoinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33071D5A0241A5883020EBA2 /* JoinViewController.m */; };
 		C9EBAF591995E50900F844CE /* JoinView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9EBAF581995E50900F844CE /* JoinView.xib */; };
@@ -38,10 +39,12 @@
 
 /* Begin PBXFileReference section */
 		3307101386FFDAC852290C95 /* CirclesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CirclesView.h; path = Clairvoyance/CirclesView.h; sourceTree = "<group>"; };
+		330711594075160F98B765AF /* ContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsViewController.h; sourceTree = "<group>"; };
 		3307117AA9CB0195A7CC5FF4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		330711905D4015A5BC1E619D /* ClairvoyanceTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = "ClairvoyanceTests-Info.plist"; sourceTree = "<group>"; };
 		3307120FC6A53BF0072CB09B /* PeopleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeopleViewController.m; sourceTree = "<group>"; };
 		33071359FD4E1C25596AB740 /* Clairvoyance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clairvoyance.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3307141EA9BCD1CDDCC36433 /* ContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsViewController.m; sourceTree = "<group>"; };
 		3307143CC40BACC5A115304C /* ClairvoyanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClairvoyanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		330714900097145FBBD53DAE /* ClairvoyanceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClairvoyanceTests.m; sourceTree = "<group>"; };
 		330714FB5DDB1EC83519410C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -113,6 +116,8 @@
 				C9EBAF581995E50900F844CE /* JoinView.xib */,
 				3307120FC6A53BF0072CB09B /* PeopleViewController.m */,
 				33071D6575FBAE5CAAD6EADE /* PeopleViewController.h */,
+				3307141EA9BCD1CDDCC36433 /* ContactsViewController.m */,
+				330711594075160F98B765AF /* ContactsViewController.h */,
 			);
 			path = Clairvoyance;
 			sourceTree = "<group>";
@@ -263,6 +268,7 @@
 				330717F50624F97FDE64FE9E /* CirclesView.m in Sources */,
 				33071FBF80319BD3A622706F /* JoinViewController.m in Sources */,
 				330712F221753D9142B39C93 /* PeopleViewController.m in Sources */,
+				33071C11135DF121CA14F121 /* ContactsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
