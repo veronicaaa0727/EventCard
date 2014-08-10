@@ -46,8 +46,19 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-    [[UIColor blackColor] set];
+//    [[UIColor blackColor] set];
+    [[UIColor colorWithRed:.1 green:.1 blue:.15 alpha:1] set];
+
     [[UIBezierPath bezierPathWithRect:rect] fill];
+
+    UIColor *promptColor = [UIColor colorWithRed:1 green:.9 blue:.9 alpha:1];
+    UIFont *promptFont = [UIFont systemFontOfSize:24];
+    NSDictionary *promptAttributes = @{
+            NSFontAttributeName : promptFont,
+            NSForegroundColorAttributeName : promptColor
+    };
+    [@"Land on your" drawAtPoint:CGPointMake(10, 26) withAttributes:promptAttributes];
+
 
     // seed the random generator so we get the same colors each draw
     srand48(0);

@@ -20,8 +20,21 @@
     return self;
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [self setNeedsStatusBarAppearanceUpdate];
+    [self.navigationController setNavigationBarHidden:YES];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [self.navigationController setNavigationBarHidden:NO];
+}
+
 - (void)loadView {
     self.view = [[CirclesView alloc] initWithFrame:CGRectZero];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 
 

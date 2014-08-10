@@ -36,7 +36,7 @@
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     tableView.dataSource = self;
     tableView.delegate = self;
-    tableView.rowHeight = 100;
+    tableView.rowHeight = 110;
     self.view = tableView;
 }
 
@@ -45,10 +45,30 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     // ideally should do a dequereusablecell call
-    cell.textLabel.text = @"Joe Smith";
-    cell.detailTextLabel.text = @"Software Engineer";
+
+    UIImageView *profileView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 50, 50)];
+    [profileView setImage:[UIImage imageNamed:@"Sample_profile_image.png"]];
+    [cell addSubview:profileView];
+
+    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(70, 10, 200, 30)];
+    nameLabel.text = @"Joe Smith";
+//    cell.textLabel.frame = CGRectMake(50, 10, 200, 30);
+    [cell addSubview:nameLabel];
+    UILabel *subtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(70, 30, 200, 30)];
+    subtitleLabel.text = @"Software Engineer";
+    subtitleLabel.textColor = [UIColor grayColor];
+    [cell addSubview:subtitleLabel];
+
+    UILabel *detailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 50, 250, 60)];
+    detailsLabel.numberOfLines = 2;
+    detailsLabel.text = @"Joe is the staff engineer at Google who can write mobile apps";
+    detailsLabel.font = [UIFont systemFontOfSize:14];
+
+    [cell addSubview:detailsLabel];
+
+
     UIButton *connectButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
 
     cell.accessoryView = connectButton;
