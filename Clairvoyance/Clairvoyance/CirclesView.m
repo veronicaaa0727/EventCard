@@ -16,6 +16,14 @@
 }
 
 - (void)drawEventName:(NSString *)name x:(float)x y:(float)y radius:(float)r {
+    float angle = drand48() * M_PI * 2;
+    double time = [NSDate timeIntervalSinceReferenceDate];
+    double progress = time - floor(time);
+    float angleOffset = progress * M_PI * 2;
+    angle += angleOffset;
+    x += cosf(angle) * 5;
+    y += sinf(angle) * 5;
+
     CGRect circleRect = CGRectZero;
     circleRect.origin = CGPointMake(x, y);
     circleRect = CGRectInset(circleRect, -r, -r);
@@ -75,6 +83,8 @@
     [self drawEventName:@"Party" x:350 y:250 radius:100];
 
     CGContextRestoreGState(c);
+
+    [self performSelector:@selector(setNeedsDisplay) withObject:nil afterDelay:0];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

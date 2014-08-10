@@ -5,6 +5,8 @@
 
 #import "PersonTableController.h"
 #import "ContactsViewController.h"
+#import "PersonDetailController.h"
+#import "AppDelegate.h"
 
 
 @implementation PersonTableController {
@@ -68,5 +70,12 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    PersonDetailController *controller = [[PersonDetailController alloc] initWithNibName:@"PersonDetailView" bundle:nil];
+    [gNavController pushViewController:controller animated:YES];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
 
 @end
