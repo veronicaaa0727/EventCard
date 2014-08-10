@@ -1,0 +1,34 @@
+<div class="panel panel-default row" ng-controller="eventListCtrl" ng-hide="data.error">
+	<div class="text-center">
+		<h2>Welcome {{data.auth.profile.nickname}}</h2>
+	</div>
+	<div class="col-xs-3">
+		<a ng-click="selectedCategory()" class="btn btn-block btn-default btn-lg">Home</a>
+		<a ng-repeat="item in data.events | orderBy:'category' | unique:'category'"
+				ng-click="selectedCategory(item)" ng-class="getCategoryClass(item)" 
+				class="btn btn-block btn-default bth-lg">
+				{{item}}
+		</a>
+	</div>
+	<div class="col-xs-8">
+		<div class="well" ng-repeat="item in data.events | filter:categoryFilterFn | range:selectedPage:pageSize">
+			<h3>
+				<strong>{{item.name}}</strong>
+				<span class="pull-right label label-primary">
+					{{item.number}}
+				</span>
+			</h3>
+			<button ng-click="viewDetails(item)" class="btn btn-success pull-right">
+				View Details
+			</button>
+			<span class="lead">{{item.description}}</span>
+		</div>
+		<div class="pull-right btn-group">
+			<a ng-repeat="page in data.events | filter:categoryFilterFn | pageCount:pageSize"
+				ng-click="selectPage($index + 1)" class="btn btn-default"
+				ng-class="getPageClass($index + 1)">
+				{{$index + 1}}
+			</a>
+		</div>
+	</div>
+</div>

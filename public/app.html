@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html ng-app="eventCards">
+<head>
+	<title>EventCards</title>
+	<link href="./bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+	<link href="./bower_components/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet" />
+	<link href="./css/app.css" rel="stylesheet" />
+	<script src="./bower_components/angular/angular.min.js"></script>
+	<script src="./bower_components/angular-route/angular-route.min.js"></script>
+	<script src="./controllers/eventCards.js"></script>
+	<script src="./controllers/eventListControllers.js"></script>
+	<script src="./controllers/eventDetailControllers.js"></script>
+	<script src="./controllers/eventUsersControllers.js"></script>
+	<script src="./filters/customFilters.js"></script>
+	<script src="./components/eventBox/eventBox.js"></script>
+	<!-- We use client cookies to save the user credentials -->
+	<script src="//code.angularjs.org/1.2.16/angular-cookies.min.js"></script>
+
+	<!-- Auth0 widget script and AngularJS module -->
+	<script src="//cdn.auth0.com/w2/auth0-widget-5.0.min.js"></script>
+	<script src="//cdn.auth0.com/w2/auth0-angular-2.js"> </script>
+
+	<!-- Setting the right viewport -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+</head>
+<body ng-controller="eventCardsCtrl">
+	<div class="navbar navbar-inverse">
+		<a class="navbar-brand" href="#">Event Card Application</a>
+	</div>
+	<ng-view />
+</body>
+</html>

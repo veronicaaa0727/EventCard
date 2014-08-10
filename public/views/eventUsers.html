@@ -1,0 +1,18 @@
+<div class="panel panel-default row" ng-controller="eventUsersCtrl">
+	<div class="text-center">
+		<h2>Welcome {{auth.profile.nickname}}</h2>
+	</div>
+	<div class="well" ng-repeat="item in attendees">
+		<h3>
+			<strong>{{item.name}}</strong>
+		</h3>
+		<button ng-click="addFriend(item)" class="btn btn-success pull-right">
+			Poke
+		</button>
+		<span class="lead">{{item.company}}</span>
+	</div>
+	<div class="text-center">
+		<a class="btn btn-primary" href="#/events">Back to Home</a>
+		<button class="btn-sm btn-warning" ng-click="logout()">Logout</button>
+	</div>
+</div>
