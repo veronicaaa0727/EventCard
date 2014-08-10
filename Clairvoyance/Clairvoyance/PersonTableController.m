@@ -52,8 +52,8 @@
 }
 
 - (IBAction)addContactPressed:(UIButton *)sender {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Contact Added"
-                                                    message:@"Joe Smith has been added to your contact list in Clairvoyance"
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Handshake Sent"
+                                                    message:@"A handshake has been sent to Joe Smith, we'll let you know when the connection is complete!"
                                                    delegate:self
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
@@ -63,6 +63,12 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSLog(@"add contact alert dismissed");
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Handshake Complete"
+                                                    message:@"Joe Smith has completed the handshake, you can now connect to him in your Clairvoyance contacts."
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
 
 }
 
