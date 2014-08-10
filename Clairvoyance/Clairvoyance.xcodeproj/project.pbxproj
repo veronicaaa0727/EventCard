@@ -12,6 +12,7 @@
 		3307108D5CC7A885EBF5D544 /* ClairvoyanceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 330714900097145FBBD53DAE /* ClairvoyanceTests.m */; };
 		3307127F114F02181BE1FA01 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33071B8D76DA03A37FF8F958 /* Foundation.framework */; };
 		330712F221753D9142B39C93 /* PeopleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3307120FC6A53BF0072CB09B /* PeopleViewController.m */; };
+		3307149CDD92E9D3E2A357DB /* PersonTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33071327D2316370943F68F6 /* PersonTableController.m */; };
 		3307161319B9213F7980A0C4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3307117AA9CB0195A7CC5FF4 /* CoreGraphics.framework */; };
 		33071642C14476D7F3DBEFF9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 33071D211BE08C417466504F /* main.m */; };
 		330716937EBBF457BB9E9FF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 330715B23B7BB357806EC008 /* AppDelegate.m */; };
@@ -46,6 +47,7 @@
 		3307117AA9CB0195A7CC5FF4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		330711905D4015A5BC1E619D /* ClairvoyanceTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = "ClairvoyanceTests-Info.plist"; sourceTree = "<group>"; };
 		3307120FC6A53BF0072CB09B /* PeopleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeopleViewController.m; sourceTree = "<group>"; };
+		33071327D2316370943F68F6 /* PersonTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonTableController.m; sourceTree = "<group>"; };
 		33071359FD4E1C25596AB740 /* Clairvoyance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clairvoyance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		330713B87E06F217B6AC1772 /* Sample_profile_image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Sample_profile_image.png; sourceTree = "<group>"; };
 		3307141EA9BCD1CDDCC36433 /* ContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsViewController.m; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 		330716DF84751B725C23A069 /* CircleScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleScreenController.m; sourceTree = "<group>"; };
 		330719A41D20997DA558BCD7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		33071B8D76DA03A37FF8F958 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		33071BA97FE8352C409FEDCE /* PersonTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonTableController.h; sourceTree = "<group>"; };
 		33071BCF48BA70DEFF4D7F84 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		33071BEAB4C2D891BC8AE919 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		33071C6E13DD6A89D992EA1B /* Clairvoyance-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = "Clairvoyance-Info.plist"; sourceTree = "<group>"; };
@@ -128,6 +131,8 @@
 				330711594075160F98B765AF /* ContactsViewController.h */,
 				33071F4AAA3CF881DDF8095A /* PersonDetailController.m */,
 				33071D1972EF256EE5B97278 /* PersonDetailController.h */,
+				33071327D2316370943F68F6 /* PersonTableController.m */,
+				33071BA97FE8352C409FEDCE /* PersonTableController.h */,
 			);
 			path = Clairvoyance;
 			sourceTree = "<group>";
@@ -291,6 +296,7 @@
 				330712F221753D9142B39C93 /* PeopleViewController.m in Sources */,
 				33071C11135DF121CA14F121 /* ContactsViewController.m in Sources */,
 				3307197961A019A97533AE28 /* PersonDetailController.m in Sources */,
+				3307149CDD92E9D3E2A357DB /* PersonTableController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

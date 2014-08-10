@@ -41,7 +41,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
+    return 20;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -70,10 +70,26 @@
 
 
     UIButton *connectButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+    [connectButton addTarget:self action:@selector(addContactPressed:) forControlEvents:UIControlEventTouchUpInside];
 
     cell.accessoryView = connectButton;
     return cell;
 }
+
+- (IBAction)addContactPressed:(UIButton *)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Contact Added"
+                                                    message:@"Joe Smith has been added to your contact list in Clairvoyance"
+                                                   delegate:self
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSLog(@"add contact alert dismissed");
+
+}
+
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
