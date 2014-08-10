@@ -54,13 +54,17 @@
     x += cosf(angle) * 5;
     y += sinf(angle) * 5;
 
+    [[self blueGreenColor] set];
+    // should request bluegreencolor even if circle not selected in order not to throw off random number generation
+    if (isSelected) {
+        [[UIColor yellowColor] set];
+//        r += 15; tried making circle bigger when pressed, but doesn't really look better...
+        // might work if change was animated instead of instant
+    }
     CGRect circleRect = CGRectZero;
     circleRect.origin = CGPointMake(x, y);
     circleRect = CGRectInset(circleRect, -r, -r);
 
-    [[self blueGreenColor] set];
-    // should request bluegreencolor even if circle not selected in order not to throw off random number generation
-    if (isSelected) [[UIColor yellowColor] set];
     [[UIBezierPath bezierPathWithOvalInRect:circleRect] fill];
 
     UIFont *eventFont = [UIFont systemFontOfSize:24];
