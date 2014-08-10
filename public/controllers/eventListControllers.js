@@ -1,6 +1,6 @@
 eventCards
 	.constant("eventListActiveClass", "btn-primary")
-	.constant("eventListPagecount", 3)
+	.constant("eventListPagecount", 10)
 	.controller("eventListCtrl", function($scope, $filter, $location,
 		eventListActiveClass, eventListPagecount, eventBox){
 

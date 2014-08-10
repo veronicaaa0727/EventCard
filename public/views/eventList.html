@@ -2,7 +2,9 @@
 	<div class="text-center">
 		<h2>Welcome {{data.auth.profile.nickname}}</h2>
 	</div>
-	<div class="col-xs-3">
+	<div class="col-xs-1">
+	</div>
+	<div class="col-xs-2">
 		<a ng-click="selectedCategory()" class="btn btn-block btn-default btn-lg">Home</a>
 		<a ng-repeat="item in data.events | orderBy:'category' | unique:'category'"
 				ng-click="selectedCategory(item)" ng-class="getCategoryClass(item)" 
@@ -13,15 +15,12 @@
 	<div class="col-xs-8">
 		<div class="well" ng-repeat="item in data.events | filter:categoryFilterFn | range:selectedPage:pageSize">
 			<h3>
-				<strong>{{item.name}}</strong>
-				<span class="pull-right label label-primary">
-					{{item.number}}
-				</span>
+				<strong>{{item.name.text}}</strong>
 			</h3>
 			<button ng-click="viewDetails(item)" class="btn btn-success pull-right">
 				View Details
 			</button>
-			<span class="lead">{{item.description}}</span>
+			<span class="lead">{{item.venue}}</span>
 		</div>
 		<div class="pull-right btn-group">
 			<a ng-repeat="page in data.events | filter:categoryFilterFn | pageCount:pageSize"

@@ -1,6 +1,5 @@
 angular.module("eventBox", [])
-.constant("eventUserUrl", "/api/events/users")
-.factory("eventBox", function($http, eventUserUrl) {
+.factory("eventBox", function($http) {
 	var eventDetail;
 	var attendees = [];
 	var errorMsg = null;
@@ -8,13 +7,10 @@ angular.module("eventBox", [])
 	return {
 		setEvent: function (event) {
 			eventDetail = event;
-			$http.post(eventUserUrl, {event_id: event._id})
-				.success(function(data) {
-					attendees = data.attendees;
-				})
-				.error(function(error) {
-					errorMsg = error;
-				});
+		},
+
+		setAttendees: function (users) {
+			attendees = users;
 		},
 
 		getEvent: function() {

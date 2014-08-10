@@ -22,7 +22,7 @@ app.configure(function(){
 	app.use(express.session({ secret: 'keyboard cat'}));
 });
 // define model ==========================
-
+/*
 var schema_events = new mongoose.Schema({
 	name		: {type: String, required: true},
 	description	: {type: String, required: true},
@@ -31,12 +31,34 @@ var schema_events = new mongoose.Schema({
 	detail		: {type: String, required: true}
 })
 var Products = mongoose.model('Products', schema_events);
+*/
+var schema_vanue = new mongoose.Schema({lat: Number, lon: Number, name: String});
+var schema_events = new mongoose.Schema({
+	name		: {type: mongoose.Schema.Types.Mixed, required: true},
+	description	: {type: mongoose.Schema.Types.Mixed, required: true},
+	category	: {type: String, required: true},
+	id 			: {type: String, required: true},
+	url		    : {type: String, required: true},
+	start		: {type: Date, required: true},
+	end			: {type: Date, required: true},
+	venue		: {type: String, required: true},
+	lat			: {type: Number, required: true},
+	lon			: {type: Number, required: true}
+})
+
+var Events = mongoose.model('Events', schema_events);
 
 var schema_eventusers = new mongoose.Schema({
 	event_id	: {type: String, required: true},
 	users 	 	: {type: Array,  required: true}
 })
 var EventUsers = mongoose.model('Eventusers', schema_eventusers);
+
+var schema_userevents = new mongoose.Schema({
+	user_id		: {type: String, required: true},
+	events 	 	: {type: Array,  required: true}
+})
+var UserEvents = mongoose.model('Userevents', schema_userevents);
 
 var schema_userlinkedin = new mongoose.Schema({
 	given_name		: {type: String, required: true},
@@ -82,6 +104,18 @@ app.get('/admin', function(req, res) {
 	res.sendfile('./public/admin.html');
 });
 
+app.post('/api/events/view', function(req, res) {
+	
+	Events.find(
+			{lat: {$gte: (req.body.lat - 0.1), $lte: (req.body.lat + 0.1)},
+        	lon: {$gte: (req.body.lon - 0.1), $lte: (req.body.lon + 0.1)},
+        	start: {$gte: new Date()}}, function(err, events) {
+		if(err)
+			res.send(err);
+		res.json(events);
+	})
+});
+
 app.get('/api/products/view', function(req, res) {
 	Products.find(function(err, products) {
 		if(err)
@@ -91,15 +125,15 @@ app.get('/api/products/view', function(req, res) {
 });
 
 app.post('/api/events/users', function(req, res) {
-	EventUsers.find({event_id: req.body.event_id}, function(err, users) {
+	console.log(req.body);
+	UserLinkedIn.find({user_id: {$in : req.body}}, function(err, users) {
 		if(err)
 			res.send(err);
-		res.json(users[0]);
+		res.json(users);
 	})
 });
 
 app.post('/api/users/login', function(req, res) {
-	console.log(req.body);
 	UserLinkedIn.find({user_id: req.body.user_id}, function(err, users) {
 		if(err)
 			res.send(err);
@@ -119,18 +153,84 @@ app.post('/api/users/login', function(req, res) {
 		userinfo.user_id = req.body.user_id;
 		userinfo.identities = req.body.identities;
 		userinfo.created_at = req.body.created_at;
-		console.log(users);
 		if(users.length == 0){			
 			UserLinkedIn.create(userinfo, function (err, userinfo) {
   				if (err) 
-  					return err;
+  					res.send(err);
 			});
 		}
 		else{
 			users[0].update(userinfo, function (err, userinfo) {
 				if (err) 
-  					return err;
+  					res.send(err);
 			});
+		}
+	})
+});
+
+app.post("/api/users/event/join", function(req, res) {
+	UserEvents.find({user_id: req.body.user_id}, function(err, users) {
+		if(err)
+			res.send(err);
+		if(users.length == 0){	
+			var userevent = {};
+			userevent.user_id = req.body.user_id;
+			userevent.events = [req.body.event_id];
+			UserEvents.create(userevent, function (err, item) {
+  				if (err) 
+  					res.send(err);
+			});
+		}
+		else{
+			var events_attend = {};
+			events_attend.user_id = users[0].user_id;
+			events_attend.events = users[0].events;
+			if(events_attend.events.indexOf(req.body.event_id) === -1) {
+				events_attend.events.push(req.body.event_id);
+				users[0].update(events_attend, function (err, item) {
+					if (err) 
+  						res.send(err);
+				});
+			}
+		}
+	})
+	EventUsers.find({event_id: req.body.event_id}, function(err, events) {
+		if(err)
+			res.send(err);
+		if(events.length == 0){	
+			var eventuser = {};
+			eventuser.event_id = req.body.event_id;
+			eventuser.users = [req.body.user_id];
+			EventUsers.create(eventuser, function (err, item) {
+  				if (err) 
+  					res.send(err);
+  				else
+  					res.json(item.users);
+
+			});
+		}
+		else{
+			var attendees = {};
+			attendees.event_id = events[0].event_id;
+			attendees.users = events[0].users;
+
+			if(attendees.users.indexOf(req.body.user_id) === -1) {
+				attendees.users.push(req.body.user_id);
+				events[0].update(attendees, function (err, item) {
+					if (err){
+						console.log("Error");
+						res.send(err);
+					}
+  					else{
+  						console.log("Success");
+  						res.json(item.users);
+  					}
+  						
+				});
+			}else{
+				console.log(attendees.users);
+				res.json(attendees.users);
+			}			
 		}
 	})
 });

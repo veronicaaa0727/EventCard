@@ -1,7 +1,7 @@
-var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngRoute", "auth0"]);
+var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngRoute", "ngSanitize", "auth0"]);
 
 eventCards
-	.constant("dataUrl", "/api/products/view")
+	.constant("dataUrl", "/api/events/view")
 	.constant("userUrl", "/api/users/login")
 	.config(function ($routeProvider, authProvider, $httpProvider, $locationProvider) {
 		$routeProvider.when("/checkout", {
@@ -52,7 +52,7 @@ eventCards
 
 		$scope.data.selectedEvent = null;
 
-		$http.get(dataUrl)
+		$http.post(dataUrl,{'lat': 37.4225, 'lon': -122.1653})
 			.success(function(data) {
 				$scope.data.events = data;
 			})
@@ -64,7 +64,6 @@ eventCards
 		
 		$scope.$watch('auth.profile', function (newVal, oldVal, $scope) {
     		if(newVal) { 
-    			console.log(newVal);
       			$http.post(userUrl, newVal)
 					.success(function() {
 

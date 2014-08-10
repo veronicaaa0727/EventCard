@@ -2,9 +2,8 @@
 
 <div ng-controller="eventDetailCtrl">
 	<div class="text-center">
-		<h2>{{selectedEvent.name}}</h2>
-		<h3>Description: {{selectedEvent.description}}</h3>
-		<h3>Detail: {{selectedEvent.detail}}</h3>
+		<h2>{{selectedEvent.name.text}}</h2>
+		<h3 ng-bind-html="myHTML"></h3>
 		<a class="btn btn-primary" href="#/events">Back to Home</a>
 		<a class="btn btn-primary" ng-click="login()">Join the Event</a>
 	</div>
