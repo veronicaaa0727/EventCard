@@ -1,24 +1,23 @@
 angular.module("eventBox", [])
-.factory("eventBox", function($http) {
-	var eventDetail;
-	var attendees = [];
-	var errorMsg = null;
+.factory("eventBox", function() {
+	var eventDetail = 'eventDetail';
+	var attendees = 'attendees';
 
 	return {
 		setEvent: function (event) {
-			eventDetail = event;
+			localStorage.setItem(eventDetail, JSON.stringify(event));
 		},
 
 		setAttendees: function (users) {
-			attendees = users;
+			localStorage.setItem(attendees, JSON.stringify(users));
 		},
 
 		getEvent: function() {
-			return eventDetail;
+			return JSON.parse(localStorage.getItem(eventDetail) || '');
 		},
 
 		getAttendees: function() {
-			return attendees;
+			return JSON.parse(localStorage.getItem(attendees) || '[]');
 		}
 	}
 })

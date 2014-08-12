@@ -21,4 +21,9 @@ eventCards
   				});				
 			}		
 		}
+		$scope.quitEvent = function() {
+			eventBox.setEvent('');
+			$location.path('/events');
+
+		}
 	});

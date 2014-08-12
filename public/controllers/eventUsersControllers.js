@@ -25,7 +25,14 @@ eventCards
 
 		$scope.logout = function() {
     		auth.signout();
+    		eventBox.setEvent('');
     		$location.path('/events');
   		}
+
+  		$scope.quitEvent = function() {
+			eventBox.setEvent('');
+			$location.path('/events');
+
+		}
 
 	});

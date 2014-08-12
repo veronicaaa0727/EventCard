@@ -2,7 +2,9 @@
 
 // set up ================================
 var express  = require("express");
+var cors     = require("cors");
 var app      = express();
+
 var jwt = require('express-jwt');
 var mongoose = require("mongoose");
 
@@ -16,6 +18,7 @@ var jwtCheck = jwt({
 mongoose.connect("mongodb://admin:admin2014@ds059908.mongolab.com:59908/eventcard");
 
 app.configure(function(){
+	app.use(cors());
 	app.use(express.static(__dirname + '/public'));
 	app.use(express.logger('dev'));
 	app.use(express.bodyParser());

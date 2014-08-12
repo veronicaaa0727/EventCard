@@ -20,8 +20,9 @@ eventCards
 		}
 
 		$scope.categoryFilterFn = function(event) {
+			var category = (event.category === '') ? 'Other': event.category;
 			return selectedCategory == null ||
-				event.category == selectedCategory;
+				category == selectedCategory;
 		}
 
 		$scope.getCategoryClass = function(category) {

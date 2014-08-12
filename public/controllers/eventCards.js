@@ -3,6 +3,8 @@ var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngR
 eventCards
 	.constant("dataUrl", "/api/events/view")
 	.constant("userUrl", "/api/users/login")
+	.constant("connectionUrl", "https://api.linkedin.com/v1/people/~/connections:(id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url)?format=json&oauth2_access_token=")
+	.constant("profileUrl", "https://api.linkedin.com/v1/people/~:(interests,publications,patents,honors-awards,following,educations,courses,skills,certifications,languages,id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url,email-address)?format=json&oauth2_access_token=")
 	.config(function ($routeProvider, authProvider, $httpProvider, $locationProvider) {
 		$routeProvider.when("/checkout", {
 			templateUrl: "/views/checkoutSummary.html"
@@ -29,7 +31,7 @@ eventCards
 			domain: 'eventcard.auth0.com',
 			clientID: '8Zd1eXfjw0Ykbwk8AHkp7bdpeD0A1lBA',
 			callbackURL: location.href,
-			loginUrl: '/eventDetail'
+			loginUrl: '/'
 		});
 
 		authProvider.on('loginSuccess', function($location, $http, auth, userUrl) {
@@ -46,24 +48,24 @@ eventCards
 	.run(function(auth) {
   		auth.hookEvents();
 	})
-	.controller("eventCardsCtrl", function ($scope, $http, $location, auth, dataUrl, userUrl) {
+	.controller("eventCardsCtrl", function ($scope, $http, $location, auth, dataUrl, userUrl, eventBox, profileUrl) {
 		$scope.data = {
 		};
 
-		$scope.data.selectedEvent = null;
-
-		$http.post(dataUrl,{'lat': 37.4225, 'lon': -122.1653})
-			.success(function(data) {
-				$scope.data.events = data;
-			})
-			.error(function(error) {
-				$scope.data.error = error;
-			});
-		
 		$scope.auth = auth;
-		
+
 		$scope.$watch('auth.profile', function (newVal, oldVal, $scope) {
-    		if(newVal) { 
+    		if(newVal) {
+    			console.log(newVal);
+    			/*
+    			$http.get(profileUrl + auth.profile.identities[0].access_token)
+					.success(function(data) {
+						console.log(data);
+					})
+					.error(function(error) {
+				
+					});
+				*/
       			$http.post(userUrl, newVal)
 					.success(function() {
 
@@ -74,6 +76,15 @@ eventCards
    			}
   		});
 
-		
-		
+		if(eventBox.getEvent() != ''){
+			$location.path('/eventDetail');
+		}
+
+		$http.post(dataUrl,{'lat': 37.4225, 'lon': -122.1653})
+			.success(function(data) {
+				$scope.data.events = data;
+			})
+			.error(function(error) {
+				$scope.data.error = error;
+			});
 	});

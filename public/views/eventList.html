@@ -1,6 +1,6 @@
 <div class="panel panel-default row" ng-controller="eventListCtrl" ng-hide="data.error">
-	<div class="text-center">
-		<h2>Welcome {{data.auth.profile.nickname}}</h2>
+	<div class="text-center" ng-if="auth.profile">
+		<h2>Welcome {{auth.profile.nickname}}</h2>
 	</div>
 	<div class="col-xs-1">
 	</div>
