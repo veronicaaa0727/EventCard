@@ -5,6 +5,7 @@ eventCards
 		$scope.myHTML = eventBox.getEvent().description.html;
 
 		$scope.login = function() {
+			console.log(eventBox.getEvent());
 			if(auth.isAuthenticated){
 				$http.post(userEventUrl, {'user_id': auth.profile.user_id, 'event_id': $scope.selectedEvent._id})
 					.success(function(users){
@@ -16,6 +17,7 @@ eventCards
 					})
 			}
 			else{
+				console.log(eventBox.getEvent());
 				auth.signin({
   					connections: ['linkedin'],
   					connection_scopes: { 'linkedin': ['r_emailaddress', 'r_contactinfo', 'r_network', 'r_basicprofile', 'r_fullprofile']}
@@ -23,7 +25,7 @@ eventCards
 			}		
 		}
 		$scope.quitEvent = function() {
-			eventBox.setEvent('[]');
+			eventBox.setEvent({});
 			$location.path('/events');
 
 		}

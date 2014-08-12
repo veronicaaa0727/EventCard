@@ -13,11 +13,11 @@ angular.module("eventBox", [])
 		},
 
 		getEvent: function() {
-			return JSON.parse(localStorage.getItem(eventDetail) || '[]');
+			return JSON.parse(localStorage.getItem(eventDetail) || 'null');
 		},
 
 		getAttendees: function() {
-			return JSON.parse(localStorage.getItem(attendees) || '[]');
+			return JSON.parse(localStorage.getItem(attendees) || 'null');
 		}
 	}
 })

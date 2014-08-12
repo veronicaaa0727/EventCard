@@ -76,7 +76,7 @@ eventCards
    			}
   		});
 
-		if(eventBox.getEvent().length != 0){
+		if(!jQuery.isEmptyObject(eventBox.getEvent())){
 			$location.path('/eventDetail');
 		}
 
