@@ -76,7 +76,7 @@ eventCards
    			}
   		});
 
-		if(eventBox.getEvent() != ''){
+		if(eventBox.getEvent().length != 0){
 			$location.path('/eventDetail');
 		}
 

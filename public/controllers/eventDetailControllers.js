@@ -3,6 +3,7 @@ eventCards
 	.controller("eventDetailCtrl", function($scope, auth, $http, $location, eventBox, userEventUrl) {
 		$scope.selectedEvent = eventBox.getEvent();
 		$scope.myHTML = eventBox.getEvent().description.html;
+
 		$scope.login = function() {
 			if(auth.isAuthenticated){
 				$http.post(userEventUrl, {'user_id': auth.profile.user_id, 'event_id': $scope.selectedEvent._id})
@@ -22,7 +23,7 @@ eventCards
 			}		
 		}
 		$scope.quitEvent = function() {
-			eventBox.setEvent('');
+			eventBox.setEvent('[]');
 			$location.path('/events');
 
 		}

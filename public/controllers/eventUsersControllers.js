@@ -25,12 +25,12 @@ eventCards
 
 		$scope.logout = function() {
     		auth.signout();
-    		eventBox.setEvent('');
+    		eventBox.setEvent('[]');
     		$location.path('/events');
   		}
 
   		$scope.quitEvent = function() {
-			eventBox.setEvent('');
+			eventBox.setEvent('[]');
 			$location.path('/events');
 
 		}
