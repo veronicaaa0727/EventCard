@@ -1,7 +1,7 @@
 eventCards
-	.constant("eventListActiveClass", "btn-primary")
+	.constant("eventListActiveClass", "active")
 	.constant("eventListPagecount", 10)
-	.controller("eventListCtrl", function($scope, $filter, $location,
+	.controller("eventListCtrl", function($scope, $filter, $location,$anchorScroll,
 		eventListActiveClass, eventListPagecount, eventBox){
 
 		var selectedCategory = null;
@@ -17,6 +17,7 @@ eventCards
 
 		$scope.selectPage = function(newPage) {
 			$scope.selectedPage = newPage;
+			$anchorScroll();
 		}
 
 		$scope.categoryFilterFn = function(event) {
@@ -35,6 +36,7 @@ eventCards
 
 		$scope.viewDetails = function(event) {
 			eventBox.setEvent(event);
+			$anchorScroll();
 			$location.path("/eventDetail");
 		}
 

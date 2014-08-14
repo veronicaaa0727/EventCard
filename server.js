@@ -132,6 +132,7 @@ app.post('/api/events/users', function(req, res) {
 	UserLinkedIn.find({user_id: {$in : req.body}}, function(err, users) {
 		if(err)
 			res.send(err);
+		console.log(users);
 		res.json(users);
 	})
 });
@@ -170,6 +171,27 @@ app.post('/api/users/login', function(req, res) {
 		}
 	})
 });
+
+app.post("/api/users/myevents", function(req, res) {
+	console.log(req.body.user_id);
+	UserEvents.find({user_id: req.body.user_id}, function(err, users) {
+		if(err)
+			res.send(err);
+		if(users.length == 0){	
+			res.send([]);
+		}
+		else{
+			eventlist = users[0].events;
+			console.log(eventlist);
+			Events.find({_id: {$in : eventlist}}, function(err, events) {
+				if(err)
+					res.send(err);
+				res.json(events);
+			})
+		}
+	})
+});
+
 
 app.post("/api/users/event/join", function(req, res) {
 	UserEvents.find({user_id: req.body.user_id}, function(err, users) {

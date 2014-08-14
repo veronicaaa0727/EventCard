@@ -9,6 +9,7 @@
 	<script src="./bower_components/angular-route/angular-route.min.js"></script>
 	<script src="./bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src="./bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="./controllers/eventCards.js"></script>
 	<script src="./controllers/eventListControllers.js"></script>
 	<script src="./controllers/eventDetailControllers.js"></script>
@@ -26,8 +27,25 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 </head>
 <body ng-controller="eventCardsCtrl">
-	<div class="navbar navbar-inverse">
-		<a class="navbar-brand" href="#">Event Card Application</a>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+	          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	            <span class="sr-only">Toggle navigation</span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	          </button>
+	          <a class="navbar-brand" ng-click="home()">Event Card</a>
+	        </div>
+	        <div class="navbar-collapse collapse">
+	          <ul class="nav navbar-nav navbar-right">
+	            <li><a href="#">Friends</a></li>
+	            <li><a href="#">Settings</a></li>
+	            <li><a href="#">Help</a></li>
+	          </ul>
+	        </div>
+		</div>
 	</div>
 	<ng-view />
 </body>

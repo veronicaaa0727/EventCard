@@ -3,6 +3,7 @@ var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngR
 eventCards
 	.constant("dataUrl", "/api/events/view")
 	.constant("userUrl", "/api/users/login")
+	.constant("myeventsUrl", "/api/users/myevents")
 	.constant("connectionUrl", "https://api.linkedin.com/v1/people/~/connections:(id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url)?format=json&oauth2_access_token=")
 	.constant("profileUrl", "https://api.linkedin.com/v1/people/~:(interests,publications,patents,honors-awards,following,educations,courses,skills,certifications,languages,id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url,email-address)?format=json&oauth2_access_token=")
 	.config(function ($routeProvider, authProvider, $httpProvider, $locationProvider) {
@@ -34,7 +35,8 @@ eventCards
 			loginUrl: '/'
 		});
 
-		authProvider.on('loginSuccess', function($location, $http, auth, userUrl) {
+		authProvider.on('loginSuccess', function($location, $http, auth, userUrl, $anchorScroll) {
+			$anchorScroll();
 			$location.path($location.href);
 		});
 
@@ -48,7 +50,14 @@ eventCards
 	.run(function(auth) {
   		auth.hookEvents();
 	})
-	.controller("eventCardsCtrl", function ($scope, $http, $location, auth, dataUrl, userUrl, eventBox, profileUrl) {
+	.controller("eventCardsCtrl", function ($scope, $http, $location, $anchorScroll, auth, dataUrl, userUrl, eventBox, profileUrl, myeventsUrl) {
+		$scope.home = function() {
+			eventBox.setEvent({});
+			$anchorScroll();
+			$location.path('/events');
+
+		}
+
 		$scope.data = {
 		};
 
@@ -73,10 +82,19 @@ eventCards
 					.error(function(error) {
 				
 					});
+
+				$http.post(myeventsUrl, {'user_id': newVal.user_id})
+					.success(function(events) {
+						$scope.data.myevents = events;
+					})
+					.error(function(error) {
+						$scope.data.error = error;
+					});
    			}
   		});
 
 		if(!jQuery.isEmptyObject(eventBox.getEvent())){
+			$anchorScroll();
 			$location.path('/eventDetail');
 		}
 
@@ -87,4 +105,6 @@ eventCards
 			.error(function(error) {
 				$scope.data.error = error;
 			});
+
+
 	});

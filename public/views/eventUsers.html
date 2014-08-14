@@ -1,20 +1,21 @@
 <div class="panel panel-default row" ng-controller="eventUsersCtrl">
 	<div class="text-center">
-		<h2>Welcome {{auth.profile.nickname}}</h2>
+		<h2>Welcome {{auth.profile.nickname}}! (Not you? <a ng-click="logout()">Logout</a>)</h2>
 	</div>
-	<div class="well" ng-repeat="item in attendees| filter: filterAttendees">
-		<h3>
-			<strong>{{item.name}}</strong>
-		</h3>
-		<button ng-click="addFriend(item)" class="btn btn-success pull-right">
-			Poke
-		</button>
-		<span class="lead">{{item.headline}}</span>
-		<br>
-		<span class="lead">{{item.industry}}</span>
+	<div class="col-xs-1">
 	</div>
-	<div class="text-center">
-		<a class="btn btn-primary" ng-click="quitEvent()">Back to Home</a>
-		<button class="btn-sm btn-warning" ng-click="logout()">Logout</button>
+	<div class="col-xs-10">
+		<ul class="media-list">
+		  	<li class="media" ng-repeat="item in attendees| filter: filterAttendees">
+		  		<div class="pull-left">
+		  			<img ng-src="{{item.picture}}" class="media-object">
+		  		</div>
+		  		<div class="media-body pull-left">
+		  			<h5><strong>{{item.name}}</h5></strong>
+		  			<p>{{item.headline}}</p>
+			    	<p>Industry: {{item.industry}}</p>
+		  		</div>
+		  	</li>
+		</ul>
 	</div>
 </div>
