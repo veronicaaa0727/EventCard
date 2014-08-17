@@ -35,12 +35,14 @@ eventCards
 			loginUrl: '/'
 		});
 
-		authProvider.on('loginSuccess', function($location, $http, auth, userUrl, $anchorScroll) {
+		authProvider.on('loginSuccess', function($location, $http, userUrl, $anchorScroll) {
+			console.log("!!!!!");
 			$anchorScroll();
 			$location.path($location.href);
 		});
 
 		authProvider.on('loginFailure', function($log, error) {
+			console.log(".....");
 			log('Error logging in', error);
 		});
 
@@ -51,6 +53,8 @@ eventCards
   		auth.hookEvents();
 	})
 	.controller("eventCardsCtrl", function ($scope, $http, $location, $anchorScroll, auth, dataUrl, userUrl, eventBox, profileUrl, myeventsUrl) {
+		console.log(auth);
+
 		$scope.home = function() {
 			eventBox.setEvent({});
 			$anchorScroll();
@@ -65,16 +69,6 @@ eventCards
 
 		$scope.$watch('auth.profile', function (newVal, oldVal, $scope) {
     		if(newVal) {
-    			console.log(newVal);
-    			/*
-    			$http.get(profileUrl + auth.profile.identities[0].access_token)
-					.success(function(data) {
-						console.log(data);
-					})
-					.error(function(error) {
-				
-					});
-				*/
       			$http.post(userUrl, newVal)
 					.success(function() {
 

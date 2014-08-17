@@ -20,7 +20,8 @@ eventCards
 				console.log(eventBox.getEvent());
 				auth.signin({
   					connections: ['linkedin'],
-  					connection_scopes: { 'linkedin': ['r_emailaddress', 'r_contactinfo', 'r_network', 'r_basicprofile', 'r_fullprofile']}
+  					connection_scopes: { 'linkedin': ['r_emailaddress', 'r_contactinfo', 'r_network', 'r_basicprofile', 'r_fullprofile']},
+  					offline_mode: true
   				});				
 			}		
 		}

@@ -2,8 +2,8 @@
 
 // set up ================================
 var express  = require("express");
-var cors     = require("cors");
 var app      = express();
+var request = require("request");
 
 var jwt = require('express-jwt');
 var mongoose = require("mongoose");
@@ -18,12 +18,21 @@ var jwtCheck = jwt({
 mongoose.connect("mongodb://admin:admin2014@ds059908.mongolab.com:59908/eventcard");
 
 app.configure(function(){
-	app.use(cors());
 	app.use(express.static(__dirname + '/public'));
 	app.use(express.logger('dev'));
 	app.use(express.bodyParser());
 	app.use(express.session({ secret: 'keyboard cat'}));
 });
+
+
+app.all('*', function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+
 // define model ==========================
 /*
 var schema_events = new mongoose.Schema({
@@ -64,22 +73,30 @@ var schema_userevents = new mongoose.Schema({
 var UserEvents = mongoose.model('Userevents', schema_userevents);
 
 var schema_userlinkedin = new mongoose.Schema({
-	given_name		: {type: String, required: true},
-	family_name		: {type: String, required: true},
-	picture			: String,
-	name			: {type: String, required: true},
+	accessToken 	: String,
+	certifications	: [String],
+	courses			: [String],
+	educations		: [mongoose.Schema.Types.Mixed],
+	emailAddress 	: String,
+	firstName 		: String,
+	following		: [String],
 	headline		: String,
-	industry		: String,
+	honorsAwards    : [String],
+	user_id			: String,
+	industry 		: String,
+	interests 		: String,
+	languages  		: [String],
+	lastName 		: String,
 	location		: mongoose.Schema.Types.Mixed,
 	numConnections	: Number,
-	positions		: mongoose.Schema.Types.Mixed,
-	publicProfileUrl		: String,
-	summary			: String,
-	clientID		: String,
-	user_id			: String,
-	identities		: [mongoose.Schema.Types.Mixed],
-	created_at		: String,
-
+	patents			: [mongoose.Schema.Types.Mixed],
+	pictureUrl 		: String,
+	positions		: [mongoose.Schema.Types.Mixed],
+	publicProfileUrl: String,
+	publications	: [mongoose.Schema.Types.Mixed],
+	skills			: [String],
+	specialties		: [mongoose.Schema.Types.Mixed],
+	summary			: String
 })
 var UserLinkedIn = mongoose.model('UserLinkedIn', schema_userlinkedin);
 
@@ -108,7 +125,6 @@ app.get('/admin', function(req, res) {
 });
 
 app.post('/api/events/view', function(req, res) {
-	
 	Events.find(
 			{lat: {$gte: (req.body.lat - 0.1), $lte: (req.body.lat + 0.1)},
         	lon: {$gte: (req.body.lon - 0.1), $lte: (req.body.lon + 0.1)},
@@ -128,11 +144,9 @@ app.get('/api/products/view', function(req, res) {
 });
 
 app.post('/api/events/users', function(req, res) {
-	console.log(req.body);
 	UserLinkedIn.find({user_id: {$in : req.body}}, function(err, users) {
 		if(err)
 			res.send(err);
-		console.log(users);
 		res.json(users);
 	})
 });
@@ -142,38 +156,67 @@ app.post('/api/users/login', function(req, res) {
 		if(err)
 			res.send(err);
 		var userinfo = {};
-		userinfo.given_name = req.body.given_name;
-		userinfo.family_name = req.body.family_name;
-		userinfo.picture = req.body.picture;
-		userinfo.name = req.body.name;
-		userinfo.headline = req.body.headline;
-		userinfo.industry = req.body.industry;
-		userinfo.location = req.body.location;
-		userinfo.numConnections = req.body.numConnections;
-		userinfo.positions = req.body.positions;
-		userinfo.publicProfileUrl = req.body.publicProfileUrl;
-		userinfo.summary = req.body.summary;
-		userinfo.clientID = req.body.clientID;
-		userinfo.user_id = req.body.user_id;
-		userinfo.identities = req.body.identities;
-		userinfo.created_at = req.body.created_at;
-		if(users.length == 0){			
-			UserLinkedIn.create(userinfo, function (err, userinfo) {
-  				if (err) 
-  					res.send(err);
-			});
+		var accessToken = req.body.identities[0].access_token;
+		var selectField = function(values){
+			var results = [];
+			for(value in values){
+				if(values[value].language) results.push(values[value].language.name);
+				else if (values[value].skill) results.push(values[value].skill.name);
+				else results.push(values[value].name);
+			}
+			return results;
 		}
-		else{
-			users[0].update(userinfo, function (err, userinfo) {
-				if (err) 
-  					res.send(err);
-			});
-		}
+		var connectionURL = 'https://api.linkedin.com/v1/people/~/connections:(id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url)?format=json&oauth2_access_token='
+		var profileURL = 'https://api.linkedin.com/v1/people/~:(interests,publications,patents,honors-awards,following,educations,courses,skills,certifications,languages,id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url,email-address)?format=json&oauth2_access_token=';
+		request({
+    		url: profileURL + accessToken,
+    		json: true
+		}, function (error, response, body) {
+    		if (!error && response.statusCode === 200) {
+        		userinfo = body; // Print the json response
+        		userinfo.accessToken = req.body.identities[0].access_token;
+				if(userinfo.certifications) userinfo.certifications = selectField(userinfo.certifications.values);
+				if(userinfo.courses) userinfo.courses = selectField(userinfo.courses.values);
+				if(userinfo.educations) userinfo.educations = userinfo.educations.values;
+				//emailAddress
+				//firstName
+				if(userinfo.following && userinfo.following.companies) userinfo.following = selectField(userinfo.following.companies.values);
+				//headline
+				if(userinfo.honorsAwards) userinfo.honorsAwards = selectField(userinfo.honorsAwards.values);
+				userinfo.user_id = req.body.user_id;
+				//industry
+				//interests
+				if(userinfo.languages) userinfo.languages = selectField(userinfo.languages.values);
+				//lastName
+				//location
+				//numConnections
+				if(userinfo.patents) userinfo.patents = userinfo.patents.values;
+				//pictureUrl
+				if(userinfo.positions) userinfo.positions = userinfo.positions.values;
+				//publicProfileUrl
+				if(userinfo.publications) userinfo.publications = userinfo.publications.values;
+				if(userinfo.skills) userinfo.skills = selectField(userinfo.skills.values);
+				//summary
+
+				if(users.length == 0){		
+					console.log(userinfo);	
+					UserLinkedIn.create(userinfo, function (err, userinfo) {
+		  				if (err) 
+		  					res.send(err);
+					});
+				}
+				else{
+					users[0].update(userinfo, function (err, userinfo) {
+						if (err) 
+		  					res.send(err);
+					});
+				}
+    		}
+		})
 	})
 });
 
 app.post("/api/users/myevents", function(req, res) {
-	console.log(req.body.user_id);
 	UserEvents.find({user_id: req.body.user_id}, function(err, users) {
 		if(err)
 			res.send(err);
@@ -182,7 +225,6 @@ app.post("/api/users/myevents", function(req, res) {
 		}
 		else{
 			eventlist = users[0].events;
-			console.log(eventlist);
 			Events.find({_id: {$in : eventlist}}, function(err, events) {
 				if(err)
 					res.send(err);
@@ -253,7 +295,6 @@ app.post("/api/users/event/join", function(req, res) {
   						
 				});
 			}else{
-				console.log(attendees.users);
 				res.json(attendees.users);
 			}			
 		}
