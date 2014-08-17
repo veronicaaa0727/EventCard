@@ -8,10 +8,10 @@
 		<ul class="media-list">
 		  	<li class="media" ng-repeat="item in attendees| filter: filterAttendees">
 		  		<div class="pull-left">
-		  			<img ng-src="{{item.picture}}" class="media-object">
+		  			<img ng-src="{{item.pictureUrl}}" class="media-object">
 		  		</div>
 		  		<div class="media-body pull-left">
-		  			<h5><strong>{{item.name}}</h5></strong>
+		  			<h5><strong>{{item.lastName}} {{item.firstName}}</h5></strong>
 		  			<p>{{item.headline}}</p>
 			    	<p>Industry: {{item.industry}}</p>
 		  		</div>

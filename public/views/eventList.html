@@ -32,9 +32,13 @@
 				</div>
 			</div>
 			<div class="tab-pane" id="myevents">
+				<div class="text-center" ng-if="!auth.isAuthenticated">
+					<h4>Seems you are not logged in. Please login first before viewing your events!</h4>
+					<a class="btn btn-primary" ng-click="login()">Log in</a>
+				</div>
 				<div class="panel panel-default" ng-repeat="item in data.myevents | filter:categoryFilterFn | range:selectedPage:pageSize">
 					<div class="panel-heading">
-						<a ng-click="viewDetails(item)"><h4><strong>{{item.name.text}}</h4></strong></a>
+						<a ng-click="joinEvents(item)"><h4><strong>{{item.name.text}}</h4></strong></a>
 					</div>
 					<div class="panel-body">
 					    <p ng-if="item.venue">Location: {{item.venue}}</p>
