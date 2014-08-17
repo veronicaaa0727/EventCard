@@ -89,6 +89,8 @@ var schema_userlinkedin = new mongoose.Schema({
 	lastName 		: String,
 	location		: mongoose.Schema.Types.Mixed,
 	numConnections	: Number,
+	numRecommenders : Number,
+	recommendationsReceived 	:[mongoose.Schema.Types.Mixed],
 	patents			: [mongoose.Schema.Types.Mixed],
 	pictureUrl 		: String,
 	positions		: [mongoose.Schema.Types.Mixed],
@@ -167,7 +169,7 @@ app.post('/api/users/login', function(req, res) {
 			return results;
 		}
 		var connectionURL = 'https://api.linkedin.com/v1/people/~/connections:(id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url)?format=json&oauth2_access_token='
-		var profileURL = 'https://api.linkedin.com/v1/people/~:(interests,publications,patents,honors-awards,following,educations,courses,skills,certifications,languages,id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url,email-address)?format=json&oauth2_access_token=';
+		var profileURL = 'https://api.linkedin.com/v1/people/~:(interests,publications,patents,honors-awards,following,educations,courses,skills,certifications,languages,id,first-name,last-name,headline,location,industry,num-connections,summary,positions,picture-url,public-profile-url,email-address,num-recommenders,recommendations-received)?format=json&oauth2_access_token=';
 		request({
     		url: profileURL + accessToken,
     		json: true
@@ -190,6 +192,8 @@ app.post('/api/users/login', function(req, res) {
 				//lastName
 				//location
 				//numConnections
+				//numRecommenders
+				if(userinfo.numRecommenders > 0) userinfo.recommendationsReceived = userinfo.recommendationsReceived.values;
 				if(userinfo.patents) userinfo.patents = userinfo.patents.values;
 				//pictureUrl
 				if(userinfo.positions) userinfo.positions = userinfo.positions.values;
