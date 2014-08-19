@@ -8,12 +8,13 @@
 		<ul class="nav nav-tabs" role="tablist">
 		  	<li class="active"><a data-target="#events" role="tab" data-toggle="tab">Recommended Events</a></li>
 		  	<li><a data-target="#myevents" role="tab" data-toggle="tab">My Events</a></li>
+		  	<li><a data-target="#searchevents" role="tab" data-toggle="tab">Search Events</a></li>
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="events">
 				<div class="panel panel-default" ng-repeat="item in data.events | filter:categoryFilterFn | range:selectedPage:pageSize">
 					<div class="panel-heading">
-						<a ng-click="viewDetails(item)"><h4><strong>{{item.name.text}}</h4></strong></a>
+						<a ng-click="viewDetails(item)"><h4><strong>{{item.name_text}}</h4></strong></a>
 					</div>
 					<div class="panel-body">
 					    <p ng-if="item.venue">Location: {{item.venue}}</p>
@@ -38,7 +39,7 @@
 				</div>
 				<div class="panel panel-default" ng-repeat="item in data.myevents | filter:categoryFilterFn | range:selectedPage:pageSize">
 					<div class="panel-heading">
-						<a ng-click="joinEvents(item)"><h4><strong>{{item.name.text}}</h4></strong></a>
+						<a ng-click="joinEvents(item)"><h4><strong>{{item.name_text}}</h4></strong></a>
 					</div>
 					<div class="panel-body">
 					    <p ng-if="item.venue">Location: {{item.venue}}</p>
@@ -48,6 +49,33 @@
 				<div class="pull-right">
 					<ul class="pagination">
 					  	<li ng-repeat="page in data.myevents | filter:categoryFilterFn | pageCount:pageSize" 
+					  		ng-class="getPageClass($index + 1)">
+					  		<a ng-click="selectPage($index + 1)">
+								{{$index + 1}}
+					  		</a>
+					  	</li>
+					</ul>
+				</div>
+			</div>
+			<div class="tab-pane" id="searchevents">
+				<form name="searchForm" class="navbar-form" role="search">
+    				<div class="form-group">
+        				<input type="text" class="form-control" ng-model="data.searchText" placeholder="Search">
+    				</div>
+    				<button ng-click="searchEvent(data.searchText)" class="btn btn-default">Submit</button>
+				</form>
+				<div class="panel panel-default" ng-repeat="item in searchEvents | filter:categoryFilterFn | range:selectedPage:pageSize">
+					<div class="panel-heading">
+						<a ng-click="viewDetails(item)"><h4><strong>{{item.obj.name_text}}</h4></strong></a>
+					</div>
+					<div class="panel-body">
+					    <p ng-if="item.obj.venue">Location: {{item.obj.venue}}</p>
+					    <p ng-if="item.obj.category">Category: {{item.obj.category}}</p>
+					</div>
+				</div>
+				<div class="pull-right">
+					<ul class="pagination">
+					  	<li ng-repeat="page in searchEvents | filter:categoryFilterFn | pageCount:pageSize" 
 					  		ng-class="getPageClass($index + 1)">
 					  		<a ng-click="selectPage($index + 1)">
 								{{$index + 1}}

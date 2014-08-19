@@ -7,22 +7,25 @@ import re,datetime
 with open('event_data', 'r') as infile:
   	EventsData = pickle.load(infile)
 
-connection = MongoClient("ds059908.mongolab.com", 59908)
-db = connection["eventcard"]
+connection = MongoClient("ds059519.mongolab.com", 59519)
+db = connection["clairvoyant"]
 # MongoLab has user authentication
-db.authenticate("pengqil", "MIsa-901357")
+db.authenticate("admin", "admin2014")
 
 events = db.events
 
+i = 0
 for item in EventsData:
 	document = {}
 	#print type(item)
 	#print item['name']
 
 	document["category"] = '' if not item['category'] else item['category']['name']
-	document["description"] = item[u'description']
+	document["description_html"] = item[u'description']['html']
+	document["description_text"] = item[u'description']['text']
 	document["id"] = item[u'id']
-	document["name"] = item[u'name']
+	document["name_html"] = item[u'name']['html']
+	document["name_text"] = item[u'name']['text']
 	document["start"] = datetime.datetime(*map(int, re.split('[^\d]', item[u'start']['utc'])[:-1]))
 	document["end"] = datetime.datetime(*map(int, re.split('[^\d]', item[u'end']['utc'])[:-1]))
 	document["venue"] = item[u'venue'][u'name']
@@ -30,7 +33,10 @@ for item in EventsData:
 	document["lon"] = float(item[u'venue'][u'longitude'])
 	document["url"] = item[u'url']
 
-	events.insert(document)
+	try:
+		events.insert(document)
+	except ValueError:
+		print "Error Event" + i + ': ' + ValueError
 
 '''
 capacity: Number

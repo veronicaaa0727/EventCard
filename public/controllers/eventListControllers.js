@@ -1,8 +1,9 @@
 eventCards
 	.constant("eventListActiveClass", "active")
 	.constant("eventListPagecount", 10)
+	.constant('eventSearch', "/api/events/search")
 	.controller("eventListCtrl", function($scope, $filter, $location,$anchorScroll, $http, auth,
-		eventListActiveClass, eventListPagecount, eventBox, userEventUrl){
+		eventListActiveClass, eventListPagecount, eventBox, userEventUrl, eventSearch){
 
 		var selectedCategory = null;
 
@@ -10,6 +11,7 @@ eventCards
 		$scope.pageSize = eventListPagecount;
 		$scope.selectedEvent = null;
 		$scope.auth = auth;
+		$scope.searchEvents = null;
 
 		$scope.selectedCategory = function (newCategory) {
 			selectedCategory = newCategory;
@@ -60,6 +62,17 @@ eventCards
   				connection_scopes: { 'linkedin': ['r_emailaddress', 'r_contactinfo', 'r_network', 'r_basicprofile', 'r_fullprofile']},
   				offline_mode: true
   			});					
+		}
+
+		$scope.searchEvent = function(text) {
+			$http.post(eventSearch, {'searchText': text})
+				.success(function(events){
+					console.log(events);
+					$scope.searchEvents = events;
+				})
+				.error(function(error){
+					$scope.error = error
+				})
 		}
 
 	});

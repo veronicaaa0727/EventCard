@@ -7,6 +7,7 @@ var request = require("request");
 
 var jwt = require('express-jwt');
 var mongoose = require("mongoose");
+var textSearch = require('mongoose-text-search');
 
 var jwtCheck = jwt({
     secret: new Buffer('BxQiHm0-6K0WK4lVIsXHxFUNfcHHyjHPdLLItoSSurH1gRET9N20qHEBeEdP4gv3', 'base64'),
@@ -14,8 +15,7 @@ var jwtCheck = jwt({
   });
 
 // configuration =========================
-
-mongoose.connect("mongodb://admin:admin2014@ds059908.mongolab.com:59908/eventcard");
+mongoose.connect("mongodb://admin:admin2014@ds059519.mongolab.com:59519/clairvoyant");
 
 app.configure(function(){
 	app.use(express.static(__dirname + '/public'));
@@ -34,40 +34,34 @@ app.all('*', function(req, res, next) {
 
 
 // define model ==========================
-/*
-var schema_events = new mongoose.Schema({
-	name		: {type: String, required: true},
-	description	: {type: String, required: true},
-	category	: {type: String, required: true},
-	number		: {type: Number, required: true},
-	detail		: {type: String, required: true}
-})
-var Products = mongoose.model('Products', schema_events);
-*/
 var schema_vanue = new mongoose.Schema({lat: Number, lon: Number, name: String});
 var schema_events = new mongoose.Schema({
-	name		: {type: mongoose.Schema.Types.Mixed, required: true},
-	description	: {type: mongoose.Schema.Types.Mixed, required: true},
+	name_html	: {type: String, required: true},
+	name_text	: {type: String, required: true, index: true},
+	description_html	: {type: String, required: true},
+	description_text	: {type: String, required: true, index: true},
 	category	: {type: String, required: true},
 	id 			: {type: String, required: true},
 	url		    : {type: String, required: true},
-	start		: {type: Date, required: true},
+	start		: {type: Date, required: true, index: true},
 	end			: {type: Date, required: true},
 	venue		: {type: String, required: true},
-	lat			: {type: Number, required: true},
-	lon			: {type: Number, required: true}
+	lat			: {type: Number, required: true, index: true},
+	lon			: {type: Number, required: true, index: true}
 })
+schema_events.plugin(textSearch);
+schema_events.index({ name_text: 'text' });
 
 var Events = mongoose.model('Events', schema_events);
 
 var schema_eventusers = new mongoose.Schema({
-	event_id	: {type: String, required: true},
+	event_id	: {type: String, required: true, index: true},
 	users 	 	: {type: Array,  required: true}
 })
 var EventUsers = mongoose.model('Eventusers', schema_eventusers);
 
 var schema_userevents = new mongoose.Schema({
-	user_id		: {type: String, required: true},
+	user_id		: {type: String, required: true, index: true},
 	events 	 	: {type: Array,  required: true}
 })
 var UserEvents = mongoose.model('Userevents', schema_userevents);
@@ -82,7 +76,7 @@ var schema_userlinkedin = new mongoose.Schema({
 	following		: [String],
 	headline		: String,
 	honorsAwards    : [String],
-	user_id			: String,
+	user_id			: {type: String, index: true},
 	industry 		: String,
 	interests 		: String,
 	languages  		: [String],
@@ -126,10 +120,11 @@ app.get('/admin', function(req, res) {
 	res.sendfile('./public/admin.html');
 });
 
+//events
 app.post('/api/events/view', function(req, res) {
 	Events.find(
-			{lat: {$gte: (req.body.lat - 0.1), $lte: (req.body.lat + 0.1)},
-        	lon: {$gte: (req.body.lon - 0.1), $lte: (req.body.lon + 0.1)},
+			{lat: {$gte: (req.body.lat - 0.05), $lte: (req.body.lat + 0.05)},
+        	lon: {$gte: (req.body.lon - 0.05), $lte: (req.body.lon + 0.05)},
         	start: {$gte: new Date()}}, function(err, events) {
 		if(err)
 			res.send(err);
@@ -137,22 +132,26 @@ app.post('/api/events/view', function(req, res) {
 	})
 });
 
-app.get('/api/products/view', function(req, res) {
-	Products.find(function(err, products) {
-		if(err)
-			res.send(err);
-		res.json(products);
-	})
-});
-
 app.post('/api/events/users', function(req, res) {
 	UserLinkedIn.find({user_id: {$in : req.body}}, function(err, users) {
 		if(err)
-			res.send(err);
+			
 		res.json(users);
 	})
 });
 
+app.post('/api/events/search', function(req, res) {
+	Events.textSearch(req.body.searchText, function (err, output) {
+		console.log(output);
+    	if (err) 
+    		res.send(err);
+    	else{
+    		console.log("1111");
+    		res.json(output.results);
+    	}
+	})
+});
+//users
 app.post('/api/users/login', function(req, res) {
 	UserLinkedIn.find({user_id: req.body.user_id}, function(err, users) {
 		if(err)

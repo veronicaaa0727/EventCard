@@ -2,7 +2,7 @@ eventCards
 	.constant('userEventUrl', "/api/users/event/join")
 	.controller("eventDetailCtrl", function($scope, auth, $http, $location, eventBox, userEventUrl) {
 		$scope.selectedEvent = eventBox.getEvent();
-		$scope.myHTML = eventBox.getEvent().description.html;
+		$scope.myHTML = eventBox.getEvent().description_html;
 
 		$scope.login = function() {
 			console.log(eventBox.getEvent());

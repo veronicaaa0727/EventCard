@@ -1,4 +1,4 @@
-var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngRoute", "ngSanitize", "auth0"]);
+var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngRoute", "ngSanitize", "auth0", "ngCookies"]);
 
 eventCards
 	.constant("dataUrl", "/api/events/view")
@@ -57,6 +57,15 @@ eventCards
 
 		$scope.home = function() {
 			eventBox.setEvent({});
+			if(auth.profile){
+				$http.post(myeventsUrl, {'user_id': auth.profile.user_id})
+					.success(function(events) {
+						$scope.data.myevents = events;
+					})
+					.error(function(error) {
+						$scope.data.error = error;
+					});
+			}
 			$anchorScroll();
 			$location.path('/events');
 
@@ -90,7 +99,7 @@ eventCards
 		if(!jQuery.isEmptyObject(eventBox.getEvent())){
 			$anchorScroll();
 			$location.path('/eventDetail');
-		}
+		}		
 
 		$http.post(dataUrl,{'lat': 37.4225, 'lon': -122.1653})
 			.success(function(data) {
