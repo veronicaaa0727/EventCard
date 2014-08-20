@@ -1,11 +1,10 @@
 eventCards
 	.constant('userEventUrl', "/api/users/event/join")
-	.controller("eventDetailCtrl", function($scope, auth, $http, $location, eventBox, userEventUrl) {
+	.controller("eventDetailCtrl", function($scope, auth, $http, $location, eventBox, userEventUrl, userProfileUrl) {
 		$scope.selectedEvent = eventBox.getEvent();
 		$scope.myHTML = eventBox.getEvent().description_html;
 
 		$scope.login = function() {
-			console.log(eventBox.getEvent());
 			if(auth.isAuthenticated){
 				$http.post(userEventUrl, {'user_id': auth.profile.user_id, 'event_id': $scope.selectedEvent._id})
 					.success(function(users){
@@ -14,10 +13,15 @@ eventCards
 					})
 					.error(function(error){
 						$scope.error = error
+					});
+				$http.post(userProfileUrl, {'user_id': auth.profile.user_id})
+					.success(function(userinfo){
+						eventBox.setUserInfo(userinfo);
 					})
-			}
-			else{
-				console.log(eventBox.getEvent());
+					.error(function(error){
+						$scope.error = error
+					});
+			}else{
 				auth.signin({
   					connections: ['linkedin'],
   					connection_scopes: { 'linkedin': ['r_emailaddress', 'r_contactinfo', 'r_network', 'r_basicprofile', 'r_fullprofile']},

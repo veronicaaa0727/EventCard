@@ -135,18 +135,16 @@ app.post('/api/events/view', function(req, res) {
 app.post('/api/events/users', function(req, res) {
 	UserLinkedIn.find({user_id: {$in : req.body}}, function(err, users) {
 		if(err)
-			
+			res.send(err);
 		res.json(users);
 	})
 });
 
 app.post('/api/events/search', function(req, res) {
 	Events.textSearch(req.body.searchText, function (err, output) {
-		console.log(output);
     	if (err) 
     		res.send(err);
     	else{
-    		console.log("1111");
     		res.json(output.results);
     	}
 	})
@@ -202,7 +200,6 @@ app.post('/api/users/login', function(req, res) {
 				//summary
 
 				if(users.length == 0){		
-					console.log(userinfo);	
 					UserLinkedIn.create(userinfo, function (err, userinfo) {
 		  				if (err) 
 		  					res.send(err);
@@ -233,6 +230,20 @@ app.post("/api/users/myevents", function(req, res) {
 					res.send(err);
 				res.json(events);
 			})
+		}
+	})
+});
+
+app.post("/api/users/profile", function(req, res) {
+	UserLinkedIn.find({user_id: req.body.user_id}, function(err, users) {
+		if(err)
+			res.send(err);
+		if(users.length == 0){	
+			res.send({});
+		}
+		else{
+			userinfo = users[0];
+			res.json(userinfo);
 		}
 	})
 });

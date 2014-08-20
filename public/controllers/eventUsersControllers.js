@@ -1,8 +1,27 @@
 eventCards
 	.constant("eventUserUrl", "/api/events/users")
-	.controller("eventUsersCtrl", function($scope, $location, $http, auth, eventBox, eventUserUrl) {
+	.constant('userProfileUrl', "/api/users/profile")
+	.controller("eventUsersCtrl", function($scope, $location, $http, $q, auth, eventBox, eventUserUrl, userProfileUrl) {
 		$scope.attendees = [];
 		$scope.auth = auth;
+		$scope.userinfo = {};
+
+		$q.all([
+				$http.post(userProfileUrl, {'user_id': auth.profile.user_id}), 
+				$http.post(eventUserUrl, eventBox.getAttendees())
+			]).then(function(results) { 
+        		$scope.userinfo = results[0].data;
+        		$scope.attendees = results[1].data;
+        		//To-do add affinity story here
+    	});
+
+		$http.post(userProfileUrl, {'user_id': auth.profile.user_id})
+			.success(function(userinfo){
+				$scope.userinfo = userinfo;
+			})
+			.error(function(error){
+				$scope.error = error
+			});
 
 		$http.post(eventUserUrl, eventBox.getAttendees())
 			.success(function(data) {
@@ -26,6 +45,7 @@ eventCards
 		$scope.logout = function() {
     		auth.signout();
     		eventBox.setEvent({});
+    		$scope.data.myevents = {};
     		$location.path('/events');
   		}
 
