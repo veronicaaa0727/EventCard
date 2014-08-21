@@ -1,0 +1,15 @@
+{
+  "name": "auth0-widget.js",
+  "main": "build/auth0-widget.js",
+  "homepage": "https://github.com/auth0/widget",
+  "version": "5.2.7",
+  "_release": "5.2.7",
+  "_resolution": {
+    "type": "version",
+    "tag": "v5.2.7",
+    "commit": "0424ee00df0c77aff3cf8f69c05e4f1dae908a6f"
+  },
+  "_source": "git://github.com/auth0/widget.git",
+  "_target": ">= 5.2.5",
+  "_originalSource": "auth0-widget.js"
+}

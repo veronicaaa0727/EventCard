@@ -5,6 +5,7 @@ eventCards
 		$scope.attendees = [];
 		$scope.auth = auth;
 		$scope.userinfo = {};
+		$scope.isCollapsed = [];
 
 		$q.all([
 				$http.post(userProfileUrl, {'user_id': auth.profile.user_id}), 
@@ -12,7 +13,12 @@ eventCards
 			]).then(function(results) { 
         		$scope.userinfo = results[0].data;
         		$scope.attendees = results[1].data;
-        		//To-do add affinity story here
+        		for(var i = 0; i < $scope.attendees.length; i++){
+        			if($scope.attendees[i].user_id == $scope.userinfo.user_id)
+        				continue;
+        			$scope.isCollapsed.push(true);
+        		}
+        		//To-do add affinity story
     	});
 
 		$http.post(userProfileUrl, {'user_id': auth.profile.user_id})

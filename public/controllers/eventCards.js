@@ -1,4 +1,4 @@
-var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngRoute", "ngSanitize", "auth0", "ngCookies"]);
+var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngRoute", "ngSanitize", "auth0", "ngCookies", "ui.bootstrap"]);
 
 eventCards
 	.constant("dataUrl", "/api/events/view")
@@ -80,7 +80,6 @@ eventCards
     		if(newVal) {
       			$http.post(userUrl, newVal)
 					.success(function() {
-
 					})
 					.error(function(error) {
 				
