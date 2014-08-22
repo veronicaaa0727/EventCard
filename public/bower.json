@@ -19,7 +19,8 @@
     "bootstrap": "~3.2.0",
     "angular-resource": "~1.2.21",
     "angular-sanitize": "~1.2.21",
-    "auth0-angular": "~2.2.2"
+    "auth0-angular": "~2.2.2",
+    "underscore": "~1.6.0"
   },
   "resolutions": {
     "angular": ">=1"

@@ -12,11 +12,32 @@ eventCards
 				$http.post(eventUserUrl, eventBox.getAttendees())
 			]).then(function(results) { 
         		$scope.userinfo = results[0].data;
-        		$scope.attendees = results[1].data;
-        		for(var i = 0; i < $scope.attendees.length; i++){
+				$scope.attendees = results[1].data;
+        		for(var i = 0; i < results[1].data.length; i++){
         			if($scope.attendees[i].user_id == $scope.userinfo.user_id)
         				continue;
         			$scope.isCollapsed.push(true);
+
+        			$scope.attendees[i].schoolList = '';
+        			$scope.attendees[i].sharedIndustry = null;
+        			
+           			if($scope.attendees[i].industry == $scope.userinfo.industry)
+        				$scope.attendees[i].sharedIndustry = $scope.userinfo.industry;
+        			for(var j = 0; j < $scope.attendees[i].educations.length; j++){
+        				if(j == 0)
+        					$scope.attendees[i].schoolList += $scope.attendees[i].educations[j].schoolName;
+        				else
+        					$scope.attendees[i].schoolList += ', ' + $scope.attendees[i].educations[j].schoolName;
+        			}
+        			$scope.attendees[i].sharedSkills = _.intersection($scope.attendees[i].skills, $scope.userinfo.skills).join(', ');
+        			$scope.attendees[i].sharedCompany = 
+        				_.intersection(_.map($scope.attendees[i].positions, function(position) {return position.company.name}), 
+        					_.map($scope.userinfo.positions, function(position) {return position.company.name})).join(', ');
+        			$scope.attendees[i].sharedEducation = 
+        				_.intersection(_.map($scope.attendees[i].educations, function(school) {return school.schoolName}), 
+        					_.map($scope.userinfo.educations, function(school) {return school.schoolName})).join(', ');
+
+
         		}
         		//To-do add affinity story
     	});
