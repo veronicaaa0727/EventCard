@@ -74,6 +74,7 @@ var schema_userlinkedin = new mongoose.Schema({
 	emailAddress 	: String,
 	firstName 		: String,
 	following		: [String],
+	friendList		: [String],
 	headline		: String,
 	honorsAwards    : [String],
 	user_id			: {type: String, index: true},
@@ -95,6 +96,20 @@ var schema_userlinkedin = new mongoose.Schema({
 	summary			: String
 })
 var UserLinkedIn = mongoose.model('UserLinkedIn', schema_userlinkedin);
+
+var schema_userfriend = new mongoose.Schema({
+	firstName 		: String,
+	headline		: String,
+	user_id			: {type: String, index: true},
+	industry 		: String,
+	lastName 		: String,
+	location		: mongoose.Schema.Types.Mixed,
+	numConnections	: Number,
+	pictureUrl 		: String,
+	positions		: [mongoose.Schema.Types.Mixed],
+	publicProfileUrl: String
+})
+var UserFriend = mongoose.model('UserFriend', schema_userfriend);
 
 var schema_userinfo = new mongoose.Schema({
 	name			: {type: String, required: true},
@@ -151,68 +166,75 @@ app.post('/api/events/search', function(req, res) {
 });
 //users
 app.post('/api/users/login', function(req, res) {
-	UserLinkedIn.find({user_id: req.body.user_id}, function(err, users) {
-		if(err)
-			res.send(err);
-		var userinfo = {};
-		var accessToken = req.body.identities[0].access_token;
-		var selectField = function(values){
-			var results = [];
-			for(value in values){
-				if(values[value].language) results.push(values[value].language.name);
-				else if (values[value].skill) results.push(values[value].skill.name);
-				else results.push(values[value].name);
-			}
-			return results;
+	var userinfo = {};
+	var accessToken = req.body.identities[0].access_token;
+	var selectField = function(values){
+		var results = [];
+		for(value in values){
+			if(values[value].language) results.push(values[value].language.name);
+			else if (values[value].skill) results.push(values[value].skill.name);
+			else results.push(values[value].name);
 		}
-		var connectionURL = 'https://api.linkedin.com/v1/people/~/connections:(id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url)?format=json&oauth2_access_token='
-		var profileURL = 'https://api.linkedin.com/v1/people/~:(interests,publications,patents,honors-awards,following,educations,courses,skills,certifications,languages,id,first-name,last-name,headline,location,industry,num-connections,summary,positions,picture-url,public-profile-url,email-address,num-recommenders,recommendations-received)?format=json&oauth2_access_token=';
-		request({
-    		url: profileURL + accessToken,
-    		json: true
-		}, function (error, response, body) {
-    		if (!error && response.statusCode === 200) {
-        		userinfo = body; // Print the json response
-        		userinfo.accessToken = req.body.identities[0].access_token;
-				if(userinfo.certifications) userinfo.certifications = selectField(userinfo.certifications.values);
-				if(userinfo.courses) userinfo.courses = selectField(userinfo.courses.values);
-				if(userinfo.educations) userinfo.educations = userinfo.educations.values;
-				//emailAddress
-				//firstName
-				if(userinfo.following && userinfo.following.companies) userinfo.following = selectField(userinfo.following.companies.values);
-				//headline
-				if(userinfo.honorsAwards) userinfo.honorsAwards = selectField(userinfo.honorsAwards.values);
-				userinfo.user_id = req.body.user_id;
-				//industry
-				//interests
-				if(userinfo.languages) userinfo.languages = selectField(userinfo.languages.values);
-				//lastName
-				//location
-				//numConnections
-				//numRecommenders
-				if(userinfo.numRecommenders > 0) userinfo.recommendationsReceived = userinfo.recommendationsReceived.values;
-				if(userinfo.patents) userinfo.patents = userinfo.patents.values;
-				//pictureUrl
-				if(userinfo.positions) userinfo.positions = userinfo.positions.values;
-				//publicProfileUrl
-				if(userinfo.publications) userinfo.publications = userinfo.publications.values;
-				if(userinfo.skills) userinfo.skills = selectField(userinfo.skills.values);
-				//summary
+		return results;
+	}
+	var connectionURL = 'https://api.linkedin.com/v1/people/~/connections:(id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url)?format=json&oauth2_access_token='
+	var profileURL = 'https://api.linkedin.com/v1/people/~:(interests,publications,patents,honors-awards,following,educations,courses,skills,certifications,languages,id,first-name,last-name,headline,location,industry,num-connections,summary,positions,picture-url,public-profile-url,email-address,num-recommenders,recommendations-received)?format=json&oauth2_access_token=';
+	//User Profile
+	request({
+		url: profileURL + accessToken,
+		json: true
+	}, function (error, response, body) {
+		if (!error && response.statusCode === 200) {
+    		userinfo = body; // Print the json response
+    		userinfo.accessToken = req.body.identities[0].access_token;
+			if(userinfo.certifications) userinfo.certifications = selectField(userinfo.certifications.values);
+			if(userinfo.courses) userinfo.courses = selectField(userinfo.courses.values);
+			if(userinfo.educations) userinfo.educations = userinfo.educations.values;
+			//emailAddress
+			//firstName
+			if(userinfo.following && userinfo.following.companies) userinfo.following = selectField(userinfo.following.companies.values);
+			userinfo.friendList = [];
+			//headline
+			if(userinfo.honorsAwards) userinfo.honorsAwards = selectField(userinfo.honorsAwards.values);
+			userinfo.user_id = req.body.user_id;
+			//industry
+			//interests
+			if(userinfo.languages) userinfo.languages = selectField(userinfo.languages.values);
+			//lastName
+			//location
+			//numConnections
+			//numRecommenders
+			if(userinfo.numRecommenders > 0) userinfo.recommendationsReceived = userinfo.recommendationsReceived.values;
+			if(userinfo.patents) userinfo.patents = userinfo.patents.values;
+			//pictureUrl
+			if(userinfo.positions) userinfo.positions = userinfo.positions.values;
+			//publicProfileUrl
+			if(userinfo.publications) userinfo.publications = userinfo.publications.values;
+			if(userinfo.skills) userinfo.skills = selectField(userinfo.skills.values);
+			//summary
 
-				if(users.length == 0){		
-					UserLinkedIn.create(userinfo, function (err, userinfo) {
-		  				if (err) 
-		  					res.send(err);
-					});
-				}
-				else{
-					users[0].update(userinfo, function (err, userinfo) {
-						if (err) 
-		  					res.send(err);
-					});
-				}
-    		}
-		})
+			//User Connections
+			request({
+	    		url: connectionURL + accessToken,
+	    		json: true
+			}, function (error, response, data) {
+	    		if (!error && response.statusCode === 200) {
+	    			var friendList = [];
+	    			for(var i = 0; i < data.values.length; i++){
+	    				var user = data.values[i];
+	    				user.user_id = 'linkedin|' + user.id;
+	    				friendList.push(user.user_id);
+	    				UserFriend.update({user_id: user.user_id}, user, {upsert: true}, function(err){
+	    					res.send(err);
+	    				});
+	    			}
+	    			userinfo.friendList = friendList;
+	    			UserLinkedIn.update({user_id: userinfo.user_id}, userinfo, {upsert: true}, function(err){
+	    				res.send(err);
+	    			});
+	    		}
+			})
+		}
 	})
 });
 
