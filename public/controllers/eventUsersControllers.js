@@ -12,51 +12,36 @@ eventCards
 				$http.post(eventUserUrl, eventBox.getAttendees())
 			]).then(function(results) { 
         		$scope.userinfo = results[0].data;
-				$scope.attendees = results[1].data;
+				
         		for(var i = 0; i < results[1].data.length; i++){
-        			if($scope.attendees[i].user_id == $scope.userinfo.user_id)
-        				continue;
-        			$scope.isCollapsed.push(true);
+        			if(results[1].data[i].user_id == $scope.userinfo.user_id)
+        				continue;  			
 
-        			$scope.attendees[i].schoolList = '';
-        			$scope.attendees[i].sharedIndustry = null;
+        			results[1].data[i].schoolList = '';
+        			results[1].data[i].sharedIndustry = null;
         			
-           			if($scope.attendees[i].industry == $scope.userinfo.industry)
-        				$scope.attendees[i].sharedIndustry = $scope.userinfo.industry;
-        			for(var j = 0; j < $scope.attendees[i].educations.length; j++){
+           			if(results[1].data[i].industry == $scope.userinfo.industry)
+        				results[1].data[i].sharedIndustry = $scope.userinfo.industry;
+        			for(var j = 0; j < results[1].data[i].educations.length; j++){
         				if(j == 0)
-        					$scope.attendees[i].schoolList += $scope.attendees[i].educations[j].schoolName;
+        					results[1].data[i].schoolList += results[1].data[i].educations[j].schoolName;
         				else
-        					$scope.attendees[i].schoolList += ', ' + $scope.attendees[i].educations[j].schoolName;
+        					results[1].data[i].schoolList += ', ' + results[1].data[i].educations[j].schoolName;
         			}
-        			$scope.attendees[i].sharedSkills = _.intersection($scope.attendees[i].skills, $scope.userinfo.skills).join(', ');
-        			$scope.attendees[i].sharedCompany = 
-        				_.intersection(_.map($scope.attendees[i].positions, function(position) {return position.company.name}), 
+        			results[1].data[i].sharedSkills = _.intersection(results[1].data[i].skills, $scope.userinfo.skills).join(', ');
+        			results[1].data[i].sharedCompany = 
+        				_.intersection(_.map(results[1].data[i].positions, function(position) {return position.company.name}), 
         					_.map($scope.userinfo.positions, function(position) {return position.company.name})).join(', ');
-        			$scope.attendees[i].sharedEducation = 
-        				_.intersection(_.map($scope.attendees[i].educations, function(school) {return school.schoolName}), 
+        			results[1].data[i].sharedEducation = 
+        				_.intersection(_.map(results[1].data[i].educations, function(school) {return school.schoolName}), 
         					_.map($scope.userinfo.educations, function(school) {return school.schoolName})).join(', ');
-
-
+        			$scope.isCollapsed.push(true);
         		}
+        		console.log(results[1].data);
+        		$scope.attendees = results[1].data;
+        		console.log($scope.attendees);
         		//To-do add affinity story
     	});
-
-		$http.post(userProfileUrl, {'user_id': auth.profile.user_id})
-			.success(function(userinfo){
-				$scope.userinfo = userinfo;
-			})
-			.error(function(error){
-				$scope.error = error
-			});
-
-		$http.post(eventUserUrl, eventBox.getAttendees())
-			.success(function(data) {
-				$scope.attendees = data;
-			})
-			.error(function(error) {
-				$scope.attendees = [];
-			});
 
 		$scope.filterAttendees = function(item){
 			if(item.user_id === auth.profile.user_id)

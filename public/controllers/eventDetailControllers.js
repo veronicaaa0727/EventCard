@@ -14,13 +14,6 @@ eventCards
 					.error(function(error){
 						$scope.error = error
 					});
-				$http.post(userProfileUrl, {'user_id': auth.profile.user_id})
-					.success(function(userinfo){
-						eventBox.setUserInfo(userinfo);
-					})
-					.error(function(error){
-						$scope.error = error
-					});
 			}else{
 				auth.signin({
   					connections: ['linkedin'],
