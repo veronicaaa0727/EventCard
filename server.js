@@ -220,23 +220,27 @@ app.post('/api/users/login', function(req, res) {
 	var extractKeywords = function(userinfo){
 		var keywords = new Object();
 		//skills
-		for (var i = 0; i < userinfo.skills.length; i++){
-			var tokenList = tokenizer.tokenize(userinfo.skills[i].toLowerCase());
-			for (var j = 0; j < tokenList.length; j++){
-				if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
-					keywords[tokenList[j]] = (1 + 5 * (1 - i / userinfo.skills.length));				
-				else if (!_.contains(stopwords, tokenList[j]))
-					keywords[tokenList[j]] += (1 + 5 * (1 - i / userinfo.skills.length));	
+		if(userinfo.skills){
+			for (var i = 0; i < userinfo.skills.length; i++){
+				var tokenList = tokenizer.tokenize(userinfo.skills[i].toLowerCase());
+				for (var j = 0; j < tokenList.length; j++){
+					if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+						keywords[tokenList[j]] = (1 + 5 * (1 - i / userinfo.skills.length));				
+					else if (!_.contains(stopwords, tokenList[j]))
+						keywords[tokenList[j]] += (1 + 5 * (1 - i / userinfo.skills.length));	
+				}
 			}
 		}
 		//summary
-		tokenList = tokenizer.tokenize(userinfo.summary.toLowerCase());
-		for (j = 0; j < tokenList.length; j++){
-			if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
-				keywords[tokenList[j]] = 1;
-			else if (!_.contains(stopwords, tokenList[j])) 
-				keywords[tokenList[j]] += 1;
-		}
+		if(userinfo.summary){
+			tokenList = tokenizer.tokenize(userinfo.summary.toLowerCase());
+			for (j = 0; j < tokenList.length; j++){
+				if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+					keywords[tokenList[j]] = 1;
+				else if (!_.contains(stopwords, tokenList[j])) 
+					keywords[tokenList[j]] += 1;
+			}
+		}	
 		//headline
 		tokenList = tokenizer.tokenize(userinfo.headline.toLowerCase());
 		for (j = 0; j < tokenList.length; j++){
@@ -246,43 +250,53 @@ app.post('/api/users/login', function(req, res) {
 				keywords[tokenList[j]] += 5;
 		}
 		//education
-		for (i = 0; i < userinfo.educations.length; i++){
-			tokenList = tokenizer.tokenize(userinfo.educations[i].schoolName.toLowerCase());
-			for (j = 0; j < tokenList.length; j++){
-				if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
-					keywords[tokenList[j]] = 5;
-				else if (!_.contains(stopwords, tokenList[j]))
-					keywords[tokenList[j]] += 5;
+		if(userinfo.educations){
+			for (i = 0; i < userinfo.educations.length; i++){
+				if(!userinfo.educations[i].schoolName) continue;
+				tokenList = tokenizer.tokenize(userinfo.educations[i].schoolName.toLowerCase());
+				for (j = 0; j < tokenList.length; j++){
+					if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+						keywords[tokenList[j]] = 5;
+					else if (!_.contains(stopwords, tokenList[j]))
+						keywords[tokenList[j]] += 5;
+				}
 			}
 		}
 		//course
-		for (i = 0; i < userinfo.courses.length; i++){
-			tokenList = tokenizer.tokenize(userinfo.courses[i].toLowerCase());
-			for (j = 0; j < tokenList.length; j++){
-				if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
-					keywords[tokenList[j]] = 3;
-				else if (!_.contains(stopwords, tokenList[j]))
-					keywords[tokenList[j]] += 3;
+		if(userinfo.courses){
+			for (i = 0; i < userinfo.courses.length; i++){
+				tokenList = tokenizer.tokenize(userinfo.courses[i].toLowerCase());
+				for (j = 0; j < tokenList.length; j++){
+					if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+						keywords[tokenList[j]] = 3;
+					else if (!_.contains(stopwords, tokenList[j]))
+						keywords[tokenList[j]] += 3;
+				}
 			}
 		}
+		
 		//positions
-		for (i = 0; i < userinfo.positions.length; i++){
-			tokenList = tokenizer.tokenize(userinfo.positions[i].company.name.toLowerCase());
-			for (j = 0; j < tokenList.length; j++){
-				if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
-					keywords[tokenList[j]] = 5;
-				else if (!_.contains(stopwords, tokenList[j]))
-					keywords[tokenList[j]] += 5;
-			}
-			if(!userinfo.positions[i].summary) continue;
-			tokenList = tokenizer.tokenize(userinfo.positions[i].summary.toLowerCase());
-			for (j = 0; j < tokenList.length; j++){
-				if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
-					keywords[tokenList[j]] = 2;
-				else if (!_.contains(stopwords, tokenList[j]))
-					keywords[tokenList[j]] += 2;
+		if(userinfo.positions){
+			for (i = 0; i < userinfo.positions.length; i++){
+				if(!userinfo.positions[i].company) continue;
+				tokenList = tokenizer.tokenize(userinfo.positions[i].company.name.toLowerCase());
+				for (j = 0; j < tokenList.length; j++){
+					if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+						keywords[tokenList[j]] = 5;
+					else if (!_.contains(stopwords, tokenList[j]))
+						keywords[tokenList[j]] += 5;
+				}
+				if(!userinfo.positions[i].summary) continue;
+				tokenList = tokenizer.tokenize(userinfo.positions[i].summary.toLowerCase());
+				for (j = 0; j < tokenList.length; j++){
+					if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+						keywords[tokenList[j]] = 2;
+					else if (!_.contains(stopwords, tokenList[j]))
+						keywords[tokenList[j]] += 2;
+				}
 			}
 		}
+		
 		return keywords;
 	}
 	var getKeywordsLength = function(keywords){
