@@ -9,6 +9,13 @@ var jwt = require('express-jwt');
 var mongoose = require("mongoose");
 var textSearch = require('mongoose-text-search');
 
+var fs = require('fs');
+var path = require('path');
+var natural = require('natural'),
+  tokenizer = new natural.WordTokenizer();
+
+var _ = require('underscore');
+
 var jwtCheck = jwt({
     secret: new Buffer('BxQiHm0-6K0WK4lVIsXHxFUNfcHHyjHPdLLItoSSurH1gRET9N20qHEBeEdP4gv3', 'base64'),
     audience: '8Zd1eXfjw0Ykbwk8AHkp7bdpeD0A1lBA'
@@ -32,6 +39,36 @@ app.all('*', function(req, res, next) {
   next();
 });
 
+// read necessary files
+var stopwordsPath = path.join(__dirname, 'local', 'stopwords.txt');
+var stopwords = [];
+fs.readFile(stopwordsPath, function(err,data){
+    if (!err){
+    	stopwords = data.toString().split('\n');;
+    }else{
+        console.log(err);
+    }
+});
+
+var companyPath = path.join(__dirname, 'local', 'hotcompany.txt');
+var hotcompany = [];
+fs.readFile(companyPath, function(err,data){
+    if (!err){
+    	hotcompany = data.toString().split('\n');;
+    }else{
+        console.log(err);
+    }
+});
+
+var schoolPath = path.join(__dirname, 'local', 'topschool.txt');
+var topschool = [];
+fs.readFile(schoolPath, function(err,data){
+    if (!err){
+    	topschool = data.toString().split('\n');;
+    }else{
+        console.log(err);
+    }
+});
 
 // define model ==========================
 var schema_vanue = new mongoose.Schema({lat: Number, lon: Number, name: String});
@@ -68,6 +105,7 @@ var UserEvents = mongoose.model('Userevents', schema_userevents);
 
 var schema_userlinkedin = new mongoose.Schema({
 	accessToken 	: String,
+	authorityScore 	: Number,
 	certifications	: [String],
 	courses			: [String],
 	educations		: [mongoose.Schema.Types.Mixed],
@@ -80,6 +118,8 @@ var schema_userlinkedin = new mongoose.Schema({
 	user_id			: {type: String, index: true},
 	industry 		: String,
 	interests 		: String,
+	keywords   		: mongoose.Schema.Types.Mixed,
+	keywordsLength  : Number,
 	languages  		: [String],
 	lastName 		: String,
 	location		: mongoose.Schema.Types.Mixed,
@@ -177,6 +217,103 @@ app.post('/api/users/login', function(req, res) {
 		}
 		return results;
 	}
+	var extractKeywords = function(userinfo){
+		var keywords = new Object();
+		//skills
+		for (var i = 0; i < userinfo.skills.length; i++){
+			var tokenList = tokenizer.tokenize(userinfo.skills[i].toLowerCase());
+			for (var j = 0; j < tokenList.length; j++){
+				if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+					keywords[tokenList[j]] = (1 + 5 * (1 - i / userinfo.skills.length));				
+				else if (!_.contains(stopwords, tokenList[j]))
+					keywords[tokenList[j]] += (1 + 5 * (1 - i / userinfo.skills.length));	
+			}
+		}
+		//summary
+		tokenList = tokenizer.tokenize(userinfo.summary.toLowerCase());
+		for (j = 0; j < tokenList.length; j++){
+			if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+				keywords[tokenList[j]] = 1;
+			else if (!_.contains(stopwords, tokenList[j])) 
+				keywords[tokenList[j]] += 1;
+		}
+		//headline
+		tokenList = tokenizer.tokenize(userinfo.headline.toLowerCase());
+		for (j = 0; j < tokenList.length; j++){
+			if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+				keywords[tokenList[j]] = 5;
+			else if (!_.contains(stopwords, tokenList[j]))
+				keywords[tokenList[j]] += 5;
+		}
+		//education
+		for (i = 0; i < userinfo.educations.length; i++){
+			tokenList = tokenizer.tokenize(userinfo.educations[i].schoolName.toLowerCase());
+			for (j = 0; j < tokenList.length; j++){
+				if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+					keywords[tokenList[j]] = 5;
+				else if (!_.contains(stopwords, tokenList[j]))
+					keywords[tokenList[j]] += 5;
+			}
+		}
+		//course
+		for (i = 0; i < userinfo.courses.length; i++){
+			tokenList = tokenizer.tokenize(userinfo.courses[i].toLowerCase());
+			for (j = 0; j < tokenList.length; j++){
+				if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+					keywords[tokenList[j]] = 3;
+				else if (!_.contains(stopwords, tokenList[j]))
+					keywords[tokenList[j]] += 3;
+			}
+		}
+		//positions
+		for (i = 0; i < userinfo.positions.length; i++){
+			tokenList = tokenizer.tokenize(userinfo.positions[i].company.name.toLowerCase());
+			for (j = 0; j < tokenList.length; j++){
+				if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+					keywords[tokenList[j]] = 5;
+				else if (!_.contains(stopwords, tokenList[j]))
+					keywords[tokenList[j]] += 5;
+			}
+			if(!userinfo.positions[i].summary) continue;
+			tokenList = tokenizer.tokenize(userinfo.positions[i].summary.toLowerCase());
+			for (j = 0; j < tokenList.length; j++){
+				if (!_.has(keywords, tokenList[j]) && !_.contains(stopwords, tokenList[j]))
+					keywords[tokenList[j]] = 2;
+				else if (!_.contains(stopwords, tokenList[j]))
+					keywords[tokenList[j]] += 2;
+			}
+		}
+		return keywords;
+	}
+	var getKeywordsLength = function(keywords){
+		var values = _.values(keywords);
+		var sum = 0;
+		for (i = 0; i < values.length; i++){
+			sum += values[i] * values[i];
+		}
+		return Math.sqrt(sum);
+	}
+	var getAuthorityScore = function(userinfo){
+		var score = 0;
+		score += Math.log(userinfo.numConnections + 1);
+		score += Math.log(userinfo.skills.length + 1);
+		score += Math.log(userinfo.numRecommenders + 1);
+		for (var i = 0; i < userinfo.educations.length; i++){
+			schoolName = userinfo.educations[i].schoolName;
+			if(_.has(topschool, schoolName)){
+				score++;
+				break;
+			}
+		}
+		for (i = 0; i < userinfo.positions.length; i++){
+			companyName = userinfo.positions[i].company.name;
+			if(_.has(hotcompany, companyName)){
+				score++;
+				break;
+			}
+		}
+		return score;
+	}
 	var connectionURL = 'https://api.linkedin.com/v1/people/~/connections:(id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url)?format=json&oauth2_access_token='
 	var profileURL = 'https://api.linkedin.com/v1/people/~:(interests,publications,patents,honors-awards,following,educations,courses,skills,certifications,languages,id,first-name,last-name,headline,location,industry,num-connections,summary,positions,picture-url,public-profile-url,email-address,num-recommenders,recommendations-received)?format=json&oauth2_access_token=';
 	//User Profile
@@ -212,6 +349,9 @@ app.post('/api/users/login', function(req, res) {
 			if(userinfo.publications) userinfo.publications = userinfo.publications.values;
 			if(userinfo.skills) userinfo.skills = selectField(userinfo.skills.values);
 			//summary
+			userinfo.keywords = extractKeywords(userinfo);
+			userinfo.keywordsLength = getKeywordsLength(userinfo.keywords);
+			userinfo.authorityScore = 0;
 
 			//User Connections
 			request({
@@ -225,12 +365,16 @@ app.post('/api/users/login', function(req, res) {
 	    				user.user_id = 'linkedin|' + user.id;
 	    				friendList.push(user.user_id);
 	    				UserFriend.update({user_id: user.user_id}, user, {upsert: true}, function(err){
-	    					res.send(err);
+	    					if(err)
+	    						res.send(err);
 	    				});
 	    			}
 	    			userinfo.friendList = friendList;
+	    			userinfo.numConnections = friendList.length;
+	    			userinfo.authorityScore = getAuthorityScore(userinfo);
 	    			UserLinkedIn.update({user_id: userinfo.user_id}, userinfo, {upsert: true}, function(err){
-	    				res.send(err);
+	    				if(err)
+	    					res.send(err);
 	    			});
 	    		}
 			})

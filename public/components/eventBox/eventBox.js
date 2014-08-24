@@ -3,6 +3,7 @@ angular.module("eventBox", [])
 	var eventDetail = 'eventDetail';
 	var attendees = 'attendees';
 	var userinfo = 'userinfo';
+	var time = 'time';
 
 	return {
 		setEvent: function (event) {
@@ -17,6 +18,10 @@ angular.module("eventBox", [])
 			localStorage.setItem(userinfo, JSON.stringify(userinfo));
 		},
 
+		setTime: function () {
+			localStorage.setItem(time, JSON.stringify(new Date()));
+		},
+
 		getEvent: function() {
 			return JSON.parse(localStorage.getItem(eventDetail) || 'null');
 		},
@@ -27,6 +32,12 @@ angular.module("eventBox", [])
 
 		getUserInfo: function() {
 			return JSON.parse(localStorage.getItem(userinfo) || 'null');
+		},
+
+		getInterval: function() {
+			var now = new Date();
+			var lastDate = new Date(JSON.parse(localStorage.getItem(time)));
+			return now.getTime() - lastDate.getTime();
 		}
 	}
 })

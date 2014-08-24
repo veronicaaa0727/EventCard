@@ -52,8 +52,19 @@ eventCards
 	.run(function(auth) {
   		auth.hookEvents();
 	})
-	.controller("eventCardsCtrl", function ($scope, $http, $location, $anchorScroll, auth, dataUrl, userUrl, eventBox, profileUrl, myeventsUrl) {
+	.controller("eventCardsCtrl", function ($scope, $http, $location, $anchorScroll, $window, auth, dataUrl, userUrl, eventBox, profileUrl, myeventsUrl) {
 		console.log(auth);
+
+		$scope.init = function () {
+		    var interval = eventBox.getInterval();
+			eventBox.setTime();
+			if(interval > 10000000)
+				eventBox.setEvent({});
+			if(!jQuery.isEmptyObject(eventBox.getEvent())){
+				$anchorScroll();
+				$location.path('/eventDetail');
+			}
+		};
 
 		$scope.home = function() {
 			eventBox.setEvent({});
@@ -93,12 +104,7 @@ eventCards
 						$scope.data.error = error;
 					});
    			}
-  		});
-
-		if(!jQuery.isEmptyObject(eventBox.getEvent())){
-			$anchorScroll();
-			$location.path('/eventDetail');
-		}		
+  		});		
 
 		$http.post(dataUrl,{'lat': 37.4225, 'lon': -122.1653})
 			.success(function(data) {

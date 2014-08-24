@@ -3,9 +3,40 @@ eventCards
 	.constant('userProfileUrl', "/api/users/profile")
 	.controller("eventUsersCtrl", function($scope, $location, $http, $q, auth, eventBox, eventUserUrl, userProfileUrl) {
 		$scope.attendees = [];
+        $scope.results = []
 		$scope.auth = auth;
 		$scope.userinfo = {};
 		$scope.isCollapsed = [];
+        $scope.similarityScore = 'similarityScore';
+        $scope.reverse = true;
+
+        var calSimilarityScore = function (user1, user2){
+            if(!user1.keywords || !user2.keywords)
+                return 0;
+            var score = 0;
+            for (token in user1.keywords){
+                if (_.has(user2.keywords, token)){
+                    score += user1.keywords[token] * user2.keywords[token];
+                }
+            }
+            score /= (user1.keywordsLength * user2.keywordsLength);
+            return score;
+        }
+
+        var calQueryScore = function (query, user){
+            if(!user.keywords)
+                return 0;
+            var score = 0;
+            var queryTokens = query.split(' ');
+            var length = Math.sqrt(queryTokens.length);
+            for(var i = 0; i < queryTokens.length; i++){
+                if (_.has(user.keywords, queryTokens[i])){
+                    score += user.keywords[queryTokens[i]];
+                }
+            }
+            score /= (length * user.keywordsLength);
+            return score;
+        }
 
 		$q.all([
 				$http.post(userProfileUrl, {'user_id': auth.profile.user_id}), 
@@ -14,8 +45,9 @@ eventCards
         		$scope.userinfo = results[0].data;
 				
         		for(var i = 0; i < results[1].data.length; i++){
-        			if(results[1].data[i].user_id == $scope.userinfo.user_id)
-        				continue;  			
+        			if(results[1].data[i].user_id == $scope.userinfo.user_id){
+                        continue;   
+                    }  						
 
         			results[1].data[i].schoolList = '';
         			results[1].data[i].sharedIndustry = null;
@@ -35,12 +67,11 @@ eventCards
         			results[1].data[i].sharedEducation = 
         				_.intersection(_.map(results[1].data[i].educations, function(school) {return school.schoolName}), 
         					_.map($scope.userinfo.educations, function(school) {return school.schoolName})).join(', ');
+                    results[1].data[i].similarityScore = calSimilarityScore(results[0].data, results[1].data[i]);
         			$scope.isCollapsed.push(true);
+                    $scope.attendees.push(results[1].data[i]);
         		}
-        		console.log(results[1].data);
-        		$scope.attendees = results[1].data;
-        		console.log($scope.attendees);
-        		//To-do add affinity story
+                $scope.results = $scope.attendees;
     	});
 
 		$scope.filterAttendees = function(item){
@@ -53,6 +84,21 @@ eventCards
 		$scope.addFriend = function(user){
 
 		}
+
+        $scope.search = function(searchText){
+            var results = [];
+            var attendee;
+            for (var i = 0; i < $scope.attendees.length; i++){
+                attendee = angular.copy($scope.attendees[i]);
+                attendee.similarityScore = calQueryScore(searchText, attendee);
+                results.push(attendee);
+            }
+            $scope.results = results;
+        }
+
+        $scope.restore = function(){
+            $scope.results = $scope.attendees;
+        }
 
 		$scope.logout = function() {
     		auth.signout();

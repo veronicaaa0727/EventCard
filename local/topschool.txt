@@ -1,0 +1,31 @@
+Williams College
+Stanford University
+Swarthmore College
+Princeton University
+Massachusetts Institute of Technology
+Yale University
+Harvard University
+Pomona College
+United States Military Academy
+Amherst College
+Haverford College
+University of Pennsylvania
+Brown University
+Bowdoin College
+Wesleyan University
+Carleton College
+University of Notre Dame
+Dartmouth College
+Northwestern University
+Columbia University
+California Institute of Technology
+Davidson College
+Duke University
+University of Chicago
+Tufts University
+Carnegie Mellon University
+Cornell University
+University of Washington
+Georgia Institute of Technology
+University of Illinois at Urbana-Champaign
+University of California, Berkeley
