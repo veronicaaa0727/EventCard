@@ -9,6 +9,7 @@ eventCards
 				$http.post(userEventUrl, {'user_id': auth.profile.user_id, 'event_id': $scope.selectedEvent._id})
 					.success(function(users){
 						eventBox.setAttendees(users);
+						console.log(users);
 						$location.path('/joinEvent');
 					})
 					.error(function(error){

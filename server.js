@@ -489,15 +489,14 @@ app.post("/api/users/event/join", function(req, res) {
 				attendees.users.push(req.body.user_id);
 				events[0].update(attendees, function (err, item) {
 					if (err){
-						console.log("Error");
 						res.send(err);
 					}
   					else{
   						console.log("Success");
-  						res.json(item.users);
   					}
   						
 				});
+				res.json(attendees.users);
 			}else{
 				res.json(attendees.users);
 			}			

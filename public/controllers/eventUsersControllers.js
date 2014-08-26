@@ -38,10 +38,13 @@ eventCards
             return score;
         }
 
+        console.log({'user_id': auth.profile.user_id});
+        console.log(eventBox.getAttendees());
 		$q.all([
 				$http.post(userProfileUrl, {'user_id': auth.profile.user_id}), 
 				$http.post(eventUserUrl, eventBox.getAttendees())
 			]).then(function(results) { 
+                console.log(results);
         		$scope.userinfo = results[0].data;
 				
         		for(var i = 0; i < results[1].data.length; i++){
