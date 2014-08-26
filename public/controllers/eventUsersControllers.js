@@ -90,7 +90,7 @@ eventCards
             var attendee;
             for (var i = 0; i < $scope.attendees.length; i++){
                 attendee = angular.copy($scope.attendees[i]);
-                attendee.similarityScore = calQueryScore(searchText, attendee);
+                attendee.similarityScore = calQueryScore(searchText.toLowerCase(), attendee);
                 if(attendee.similarityScore > 0.00001){
                     console.log(attendee)
                     results.push(attendee);

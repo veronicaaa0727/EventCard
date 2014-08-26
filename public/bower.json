@@ -20,7 +20,8 @@
     "angular-resource": "~1.2.21",
     "angular-sanitize": "~1.2.21",
     "auth0-angular": "~2.2.2",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "angular-bootstrap-datetimepicker": "~0.2.4"
   },
   "resolutions": {
     "angular": ">=1"

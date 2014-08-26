@@ -1,4 +1,4 @@
-var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngRoute", "ngSanitize", "auth0", "ngCookies", "ui.bootstrap"]);
+var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngRoute", "ngSanitize", "auth0", "ngCookies", "ui.bootstrap", "ui.bootstrap.datetimepicker"]);
 
 eventCards
 	.constant("dataUrl", "/api/events/view")
@@ -109,6 +109,8 @@ eventCards
 		$http.post(dataUrl,{'lat': 37.4225, 'lon': -122.1653})
 			.success(function(data) {
 				$scope.data.events = data;
+				$location.path('/');
+
 			})
 			.error(function(error) {
 				$scope.data.error = error;

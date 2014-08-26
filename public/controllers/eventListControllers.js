@@ -2,24 +2,26 @@ eventCards
 	.constant("eventListActiveClass", "active")
 	.constant("eventListPagecount", 10)
 	.constant('eventSearch', "/api/events/search")
+	.constant('createEvent', "/api/events/create")
 	.controller("eventListCtrl", function($scope, $filter, $location,$anchorScroll, $http, auth,
-		eventListActiveClass, eventListPagecount, eventBox, userEventUrl, eventSearch){
+		eventListActiveClass, eventListPagecount, eventBox, userEventUrl, eventSearch, createEvent, userEventUrl){
 
 		var selectedCategory = null;
 
-		$scope.selectedPage = 1;
+		$scope.selectedPage = [1,1,1];
 		$scope.pageSize = eventListPagecount;
 		$scope.selectedEvent = null;
 		$scope.auth = auth;
 		$scope.searchEvents = null;
+		$scope.confirmation = false;
 
-		$scope.selectedCategory = function (newCategory) {
+		$scope.selectedCategory = function (number, newCategory) {
 			selectedCategory = newCategory;
 			$scope.selectedPage = 1;
 		}
 
-		$scope.selectPage = function(newPage) {
-			$scope.selectedPage = newPage;
+		$scope.selectPage = function(number, newPage) {
+			$scope.selectedPage[number] = newPage;
 			$anchorScroll();
 		}
 
@@ -33,8 +35,8 @@ eventCards
 			return selectedCategory == category ? eventListActiveClass : "";
 		}
 
-		$scope.getPageClass = function(page) {
-			return $scope.selectedPage == page ? eventListActiveClass : "";
+		$scope.getPageClass = function(number, page) {
+			return $scope.selectedPage[number] == page ? eventListActiveClass : "";
 		}
 
 		$scope.viewDetails = function(event) {
@@ -69,6 +71,36 @@ eventCards
 				.success(function(events){
 					console.log(events);
 					$scope.searchEvents = events;
+				})
+				.error(function(error){
+					$scope.error = error
+				})
+		}
+
+		$scope.confirm = function(){
+			$scope.confirmation = true;
+		}
+
+		$scope.unconfirm = function(){
+			$scope.confirmation = false;
+		}
+
+		$scope.createEvent = function(event) {
+			event.name_html = "<p>" + event.name_text + "</p>";
+			event.description_html = "<p>" + event.description_text + "</p>";
+			event.lat = 37.4225;
+			event.lon = -122.1653;
+			$http.post(createEvent, {'event': event})
+				.success(function(eventDetail){
+					console.log(events);
+					$scope.data.events.push(eventDetail);
+					$scope.data.myevents.push(eventDetail);
+					$http.post(userEventUrl, {'user_id': auth.profile.user_id, 'event_id': $scope.selectedEvent._id})
+						.success(function(users){
+						})
+						.error(function(error){
+							$scope.error = error
+						});
 				})
 				.error(function(error){
 					$scope.error = error

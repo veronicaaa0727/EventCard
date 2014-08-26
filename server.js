@@ -77,8 +77,8 @@ var schema_events = new mongoose.Schema({
 	name_text	: {type: String, required: true, index: true},
 	description_html	: {type: String, required: true},
 	description_text	: {type: String, required: true, index: true},
-	category	: {type: String, required: true},
-	id 			: {type: String, required: true},
+	category	: String,
+	id 			: String,
 	url		    : {type: String, required: true},
 	start		: {type: Date, required: true, index: true},
 	end			: {type: Date, required: true},
@@ -201,6 +201,16 @@ app.post('/api/events/search', function(req, res) {
     		res.send(err);
     	else{
     		res.json(output.results);
+    	}
+	})
+});
+
+app.post('/api/events/create', function(req, res) {
+	Events.create(req.body.event, function (err, output) {
+    	if (err) 
+    		res.send(err);
+    	else{
+    		res.json(output);
     	}
 	})
 });

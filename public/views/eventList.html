@@ -9,23 +9,25 @@
 		  	<li class="active"><a data-target="#events" role="tab" data-toggle="tab">Recommended Events</a></li>
 		  	<li><a data-target="#myevents" role="tab" data-toggle="tab">My Events</a></li>
 		  	<li><a data-target="#searchevents" role="tab" data-toggle="tab">Search Events</a></li>
+		  	<li><a data-target="#createevents" role="tab" data-toggle="tab">Create Events</a></li>
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="events">
-				<div class="panel panel-default" ng-repeat="item in data.events | filter:categoryFilterFn | range:selectedPage:pageSize">
+				<div class="panel panel-default" ng-repeat="item in data.events | filter:categoryFilterFn | orderBy:'start':false | range:selectedPage[0]:pageSize">
 					<div class="panel-heading">
 						<a ng-click="viewDetails(item)"><h4><strong>{{item.name_text}}</h4></strong></a>
 					</div>
 					<div class="panel-body">
 					    <p ng-if="item.venue">Location: {{item.venue}}</p>
 					    <p ng-if="item.category">Category: {{item.category}}</p>
+					    <p ng-if="item.start">Time: {{item.start | date:'M-dd-yyyy H:mm'}} to {{item.end | date:'M-dd-yyyy H:mm'}}</p>
 					</div>
 				</div>
 				<div class="pull-right">
 					<ul class="pagination">
 					  	<li ng-repeat="page in data.events | filter:categoryFilterFn | pageCount:pageSize" 
-					  		ng-class="getPageClass($index + 1)">
-					  		<a ng-click="selectPage($index + 1)">
+					  		ng-class="getPageClass(0, $index + 1)">
+					  		<a ng-click="selectPage(0, $index + 1)">
 								{{$index + 1}}
 					  		</a>
 					  	</li>
@@ -37,20 +39,21 @@
 					<h4>Seems you are not logged in. Please login first before viewing your events!</h4>
 					<a class="btn btn-primary" ng-click="login()">Log in</a>
 				</div>
-				<div class="panel panel-default" ng-repeat="item in data.myevents | filter:categoryFilterFn | range:selectedPage:pageSize">
+				<div class="panel panel-default" ng-repeat="item in data.myevents | filter:categoryFilterFn | orderBy:'start':false | range:selectedPage[1]:pageSize">
 					<div class="panel-heading">
 						<a ng-click="joinEvents(item)"><h4><strong>{{item.name_text}}</h4></strong></a>
 					</div>
 					<div class="panel-body">
 					    <p ng-if="item.venue">Location: {{item.venue}}</p>
 					    <p ng-if="item.category">Category: {{item.category}}</p>
+					    <p ng-if="item.start">Time: {{item.start | date:'M-dd-yyyy H:mm'}} to {{item.end | date:'M-dd-yyyy H:mm'}}
 					</div>
 				</div>
 				<div class="pull-right">
 					<ul class="pagination">
 					  	<li ng-repeat="page in data.myevents | filter:categoryFilterFn | pageCount:pageSize" 
-					  		ng-class="getPageClass($index + 1)">
-					  		<a ng-click="selectPage($index + 1)">
+					  		ng-class="getPageClass(1, $index + 1)">
+					  		<a ng-click="selectPage(1, $index + 1)">
 								{{$index + 1}}
 					  		</a>
 					  	</li>
@@ -60,29 +63,78 @@
 			<div class="tab-pane" id="searchevents">
 				<form name="searchForm" class="navbar-form" role="search">
     				<div class="form-group">
-        				<input type="text" class="form-control" ng-model="data.searchText" placeholder="Search">
+        				<input type="search" class="form-control" ng-model="data.searchText" placeholder="Search">
     				</div>
     				<button ng-click="searchEvent(data.searchText)" class="btn btn-default">Submit</button>
 				</form>
-				<div class="panel panel-default" ng-repeat="item in searchEvents | filter:categoryFilterFn | range:selectedPage:pageSize">
+				<div class="panel panel-default" ng-repeat="item in searchEvents | filter:categoryFilterFn | range:selectedPage[2]:pageSize">
 					<div class="panel-heading">
 						<a ng-click="viewDetails(item)"><h4><strong>{{item.obj.name_text}}</h4></strong></a>
 					</div>
 					<div class="panel-body">
 					    <p ng-if="item.obj.venue">Location: {{item.obj.venue}}</p>
 					    <p ng-if="item.obj.category">Category: {{item.obj.category}}</p>
+					    <p ng-if="item.start">Time: {{item.start | date:'M-dd-yyyy H:mm'}} to {{item.end | date:'M-dd-yyyy H:mm'}}
 					</div>
 				</div>
 				<div class="pull-right">
 					<ul class="pagination">
 					  	<li ng-repeat="page in searchEvents | filter:categoryFilterFn | pageCount:pageSize" 
-					  		ng-class="getPageClass($index + 1)">
-					  		<a ng-click="selectPage($index + 1)">
+					  		ng-class="getPageClass(2, $index + 1)">
+					  		<a ng-click="selectPage(2, $index + 1)">
 								{{$index + 1}}
 					  		</a>
 					  	</li>
 					</ul>
 				</div>
+			</div>
+			<div class="tab-pane" id="createevents">
+				<br>
+				<div class="text-center" ng-if="!auth.isAuthenticated">
+					<h4>Seems you are not logged in. Please login first before viewing your events!</h4>
+					<a class="btn btn-primary" ng-click="login()">Log in</a>
+				</div>
+				<form name="eventForm" role="form" ng-if="!confirmation && auth.isAuthenticated">
+    				<div class="form-group">
+    					<label for="EventName">Event Name:</label>
+    					<input type="text" class="form-control" id="EventName" placeholder="e.g. Cofounder Mix" ng-model="data.event.name_text" required>
+  					</div>
+  					<div class="form-group">
+    					<label for="EventDesc">Event Description:</label>
+    					<textarea class="form-control" rows="3" id="EventDesc" placeholder="e.g. This event is to help you find cofounder ..." ng-model="data.event.description_text" required></textarea>
+  					</div>
+  					<div class="form-group">
+    					<label for="EventLoc">Event Location:</label>
+    					<input type="text" class="form-control" id="EventLoc" placeholder="e.g. Stanford University" ng-model="data.event.venue" required>
+  					</div>
+  					<div class="form-group">
+    					<label for="EventUrl">Event URL:</label>
+    					<input type="url" class="form-control" id="EventUrl" placeholder="e.g. http://www.google.com" ng-model="data.event.url">
+  					</div>
+    				<div class="form-group col-sm-6">
+    					<label for="EventStartTime">Event Start Time:</label>
+        				<datetimepicker id="EventStartTime" data-ng-model="data.event.start"></datetimepicker>
+    				</div>
+    				<div class="form-group col-sm-6">
+    					<label for="EventEndTime">Event End Time:</label>
+        				<datetimepicker id="EventStartTime" data-ng-model="data.event.end"></datetimepicker>
+    				</div>
+    				<button ng-disabled="shippingForm.$invalid" ng-click="confirm()" class="btn btn-default">Submit</button>
+    				<br>
+				</form>
+				<div ng-if="confirmation && auth.isAuthenticated">
+					<br>
+					<p ng-if="data.event.name_text">Name: {{data.event.name_text}}</p>
+					<p ng-if="data.event.description_text">Description: {{data.event.description_text}}</p>
+					<p ng-if="data.event.venue">Location: {{data.event.venue}}</p>
+					<p ng-if="data.event.url">Url: {{data.event.url}}</p>
+					<p ng-if="data.event.start">Time: {{data.event.start | date:'M-dd-yyyy H:mm'}} to {{data.event.end | date:'M-dd-yyyy H:mm'}}</p>
+					<button ng-click="unconfirm()" class="btn btn-default">Back</button>
+					<button ng-click="createEvent(data.event)" class="btn btn-default">Confirm</button>
+					<br>
+
+				</div>
+
 			</div>
 		</div>
 	</div>
