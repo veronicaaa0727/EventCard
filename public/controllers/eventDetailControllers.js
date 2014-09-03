@@ -2,8 +2,8 @@ eventCards
 	.constant('userEventUrl', "/api/users/event/join")
 	.controller("eventDetailCtrl", function($scope, auth, $http, $location, eventBox, userEventUrl, userProfileUrl) {
 		$scope.selectedEvent = eventBox.getEvent();
+		console.log($scope.selectedEvent);
 		$scope.myHTML = eventBox.getEvent().description_html;
-
 		$scope.login = function() {
 			if(auth.isAuthenticated){
 				$http.post(userEventUrl, {'user_id': auth.profile.user_id, 'event_id': $scope.selectedEvent._id})

@@ -1,0 +1,182 @@
+<div class="panel panel-default row" ng-controller="connectionsCtrl" ng-hide="connections.error">
+	<div class="text-center" ng-if="auth.profile">
+		<h3>Welcome {{auth.profile.nickname}}! (Not you? <a ng-click="logout()">Logout</a>)</h3>
+	</div>
+	<div class="col-xs-1">
+	</div>
+	<div class="col-xs-10">
+		<ul class="nav nav-tabs" role="tablist">
+		  	<li class="active"><a data-target="#connections" role="tab" data-toggle="tab">Connections</a></li>
+		  	<li><a data-target="#pendingapproval" role="tab" data-toggle="tab">Pending Approval</a></li>
+		  	<li><a data-target="#pendingaccept" role="tab" data-toggle="tab">Pending Accept</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="connections">
+				<div class="panel-group" id="accordion">
+				  	<div class="panel panel-default" ng-repeat="item in results| filter:friends |orderBy:similarityScore:reverse | range:selectedPage:pageSize">
+				    	<div class="panel-heading">
+				      		<div class="pull-left">
+				  				<img ng-src="{{item.pictureUrl}}" class="media-object" style="width: 70%; height: 70%"/>
+				  			</div>
+				      		<h4 class="panel-title">
+				      			<img ng-if="isOnline(item.user_id)" ng-src="http://i.imgur.com/49m7kC8.jpg" style="width: 23px; height: 23px"/>
+				      			<img ng-if="!isOnline(item.user_id)" ng-src="http://i.imgur.com/RzVwui6.jpg" style="width: 23px; height: 23px"/>
+				      			{{item.firstName}} {{item.lastName}}
+				       			<span ng-if="isCollapsed[$index]" class="text-primary">
+				        			<a ng-click="isCollapsed[$index] = !isCollapsed[$index]" >
+				          				(View More)
+				        			</a>
+				        		</span>
+				        		<span ng-if="!isCollapsed[$index]" class="text-primary">
+				        			<a ng-click="isCollapsed[$index] = !isCollapsed[$index]" >
+				          				(View Less)
+				        			</a>
+				        		</span>
+				        		<button ng-if="!connection(item)" type="button" class="btn btn-primary pull-right" ng-click="connect(item)">Connect</button>
+				        		<button ng-if="connection(item)==1" type="button" class="btn btn-info pull-right">Pending Approval</button>
+				        		<button ng-if="connection(item)==2" type="button" class="btn btn-warning pull-right" ng-click="accept(item)">Accept Invitation</button>
+				        		<button ng-if="connection(item)==3" type="button" class="btn btn-success pull-right">You're connected</button>
+				      		</h4>
+				      		<h5> {{item.headline}} </h5>
+				    	</div>
+				    	<div collapse="isCollapsed[$index]">
+				      		<div class="panel-body">
+				      			<p ng-if="item.authorityScore"><strong>Authority:</strong> {{item.authorityScore}}</p>
+				      			<p ng-if="item.similarityScore"><strong>Similarity:</strong> {{item.similarityScore}}</p>
+				      			<p ng-if="item.schoolList"><strong>Education:</strong> {{item.schoolList}}</p>
+				      			<p ng-if="item.industry"><strong>Industry:</strong> {{item.industry}}</p>
+				        		<p ng-if="item.summary"><strong>Summary:</strong> {{item.summary}}</p>
+				        		<p><strong>Why you two should know each other?</strong> </p>
+				        		<p ng-if="item.sharedIndustry">You two are from same industry: {{item.sharedIndustry}}</p>
+				        		<p ng-if="item.sharedSkills">You two share common skills: {{item.sharedSkills}}</p>
+				        		<p ng-if="item.sharedCompany">You two have worked at same company: {{item.sharedCompany}}</p>
+				        		<p ng-if="item.sharedEducation">You two went to same schools: {{item.sharedEducation}}</p>
+				      		</div>
+				    	</div>
+					</div>
+				</div>
+				<div class="pull-right">
+					<ul class="pagination">
+					  	<li ng-repeat="page in results | pageCount:pageSize" 
+						  	ng-class="getPageClass($index + 1)">
+						  	<a ng-click="selectPage($index + 1)">
+								{{$index + 1}}
+						  	</a>
+						  </li>
+					</ul>
+				</div>
+			</div>
+			<div class="tab-pane" id="pendingapproval">
+				<div class="panel-group" id="accordion">
+				  	<div class="panel panel-default" ng-repeat="item in results| filter:approval |orderBy:similarityScore:reverse | range:selectedPage:pageSize">
+				    	<div class="panel-heading">
+				      		<div class="pull-left">
+				  				<img ng-src="{{item.pictureUrl}}" class="media-object" style="width: 70%; height: 70%"/>
+				  			</div>
+				      		<h4 class="panel-title">
+				      			<img ng-if="isOnline(item.user_id)" ng-src="http://i.imgur.com/49m7kC8.jpg" style="width: 23px; height: 23px"/>
+				      			<img ng-if="!isOnline(item.user_id)" ng-src="http://i.imgur.com/RzVwui6.jpg" style="width: 23px; height: 23px"/>
+				      			{{item.firstName}} {{item.lastName}}
+				       			<span ng-if="isCollapsed[$index]" class="text-primary">
+				        			<a ng-click="isCollapsed[$index] = !isCollapsed[$index]" >
+				          				(View More)
+				        			</a>
+				        		</span>
+				        		<span ng-if="!isCollapsed[$index]" class="text-primary">
+				        			<a ng-click="isCollapsed[$index] = !isCollapsed[$index]" >
+				          				(View Less)
+				        			</a>
+				        		</span>
+				        		<button ng-if="!connection(item)" type="button" class="btn btn-primary pull-right" ng-click="connect(item)">Connect</button>
+				        		<button ng-if="connection(item)==1" type="button" class="btn btn-info pull-right">Pending Approval</button>
+				        		<button ng-if="connection(item)==2" type="button" class="btn btn-warning pull-right" ng-click="accept(item)">Accept Invitation</button>
+				        		<button ng-if="connection(item)==3" type="button" class="btn btn-success pull-right">You're connected</button>
+				      		</h4>
+				      		<h5> {{item.headline}} </h5>
+				    	</div>
+				    	<div collapse="isCollapsed[$index]">
+				      		<div class="panel-body">
+				      			<p ng-if="item.authorityScore"><strong>Authority:</strong> {{item.authorityScore}}</p>
+				      			<p ng-if="item.similarityScore"><strong>Similarity:</strong> {{item.similarityScore}}</p>
+				      			<p ng-if="item.schoolList"><strong>Education:</strong> {{item.schoolList}}</p>
+				      			<p ng-if="item.industry"><strong>Industry:</strong> {{item.industry}}</p>
+				        		<p ng-if="item.summary"><strong>Summary:</strong> {{item.summary}}</p>
+				        		<p><strong>Why you two should know each other?</strong> </p>
+				        		<p ng-if="item.sharedIndustry">You two are from same industry: {{item.sharedIndustry}}</p>
+				        		<p ng-if="item.sharedSkills">You two share common skills: {{item.sharedSkills}}</p>
+				        		<p ng-if="item.sharedCompany">You two have worked at same company: {{item.sharedCompany}}</p>
+				        		<p ng-if="item.sharedEducation">You two went to same schools: {{item.sharedEducation}}</p>
+				      		</div>
+				    	</div>
+					</div>
+				</div>
+				<div class="pull-right">
+					<ul class="pagination">
+					  	<li ng-repeat="page in results | pageCount:pageSize" 
+						  	ng-class="getPageClass($index + 1)">
+						  	<a ng-click="selectPage($index + 1)">
+								{{$index + 1}}
+						  	</a>
+						  </li>
+					</ul>
+				</div>
+			</div>
+			<div class="tab-pane" id="pendingaccept">
+				<div class="panel-group" id="accordion">
+				  	<div class="panel panel-default" ng-repeat="item in results| filter:accept |orderBy:similarityScore:reverse | range:selectedPage:pageSize">
+				    	<div class="panel-heading">
+				      		<div class="pull-left">
+				  				<img ng-src="{{item.pictureUrl}}" class="media-object" style="width: 70%; height: 70%"/>
+				  			</div>
+				      		<h4 class="panel-title">
+				      			<img ng-if="isOnline(item.user_id)" ng-src="http://i.imgur.com/49m7kC8.jpg" style="width: 23px; height: 23px"/>
+				      			<img ng-if="!isOnline(item.user_id)" ng-src="http://i.imgur.com/RzVwui6.jpg" style="width: 23px; height: 23px"/>
+				      			{{item.firstName}} {{item.lastName}}
+				       			<span ng-if="isCollapsed[$index]" class="text-primary">
+				        			<a ng-click="isCollapsed[$index] = !isCollapsed[$index]" >
+				          				(View More)
+				        			</a>
+				        		</span>
+				        		<span ng-if="!isCollapsed[$index]" class="text-primary">
+				        			<a ng-click="isCollapsed[$index] = !isCollapsed[$index]" >
+				          				(View Less)
+				        			</a>
+				        		</span>
+				        		<button ng-if="!connection(item)" type="button" class="btn btn-primary pull-right" ng-click="connect(item)">Connect</button>
+				        		<button ng-if="connection(item)==1" type="button" class="btn btn-info pull-right">Pending Approval</button>
+				        		<button ng-if="connection(item)==2" type="button" class="btn btn-warning pull-right" ng-click="accept(item)">Accept Invitation</button>
+				        		<button ng-if="connection(item)==3" type="button" class="btn btn-success pull-right">You're connected</button>
+				      		</h4>
+				      		<h5> {{item.headline}} </h5>
+				    	</div>
+				    	<div collapse="isCollapsed[$index]">
+				      		<div class="panel-body">
+				      			<p ng-if="item.authorityScore"><strong>Authority:</strong> {{item.authorityScore}}</p>
+				      			<p ng-if="item.similarityScore"><strong>Similarity:</strong> {{item.similarityScore}}</p>
+				      			<p ng-if="item.schoolList"><strong>Education:</strong> {{item.schoolList}}</p>
+				      			<p ng-if="item.industry"><strong>Industry:</strong> {{item.industry}}</p>
+				        		<p ng-if="item.summary"><strong>Summary:</strong> {{item.summary}}</p>
+				        		<p><strong>Why you two should know each other?</strong> </p>
+				        		<p ng-if="item.sharedIndustry">You two are from same industry: {{item.sharedIndustry}}</p>
+				        		<p ng-if="item.sharedSkills">You two share common skills: {{item.sharedSkills}}</p>
+				        		<p ng-if="item.sharedCompany">You two have worked at same company: {{item.sharedCompany}}</p>
+				        		<p ng-if="item.sharedEducation">You two went to same schools: {{item.sharedEducation}}</p>
+				      		</div>
+				    	</div>
+					</div>
+				</div>
+				<div class="pull-right">
+					<ul class="pagination">
+					  	<li ng-repeat="page in results | pageCount:pageSize" 
+						  	ng-class="getPageClass($index + 1)">
+						  	<a ng-click="selectPage($index + 1)">
+								{{$index + 1}}
+						  	</a>
+						  </li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>

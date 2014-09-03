@@ -1,6 +1,6 @@
 <div class="panel panel-default row" ng-controller="eventListCtrl" ng-hide="data.error">
 	<div class="text-center" ng-if="auth.profile">
-		<h3>Welcome {{auth.profile.nickname}}!</h3>
+		<h3>Welcome to EventCard!</h3>
 	</div>
 	<div class="col-xs-1">
 	</div>
@@ -20,6 +20,7 @@
 					<div class="panel-body">
 					    <p ng-if="item.venue">Location: {{item.venue}}</p>
 					    <p ng-if="item.category">Category: {{item.category}}</p>
+					    <p ng-if="item.number"># of People joined: {{item.number}}</p>
 					    <p ng-if="item.start">Time: {{item.start | date:'M-dd-yyyy H:mm'}} to {{item.end | date:'M-dd-yyyy H:mm'}}</p>
 					</div>
 				</div>
@@ -46,6 +47,7 @@
 					<div class="panel-body">
 					    <p ng-if="item.venue">Location: {{item.venue}}</p>
 					    <p ng-if="item.category">Category: {{item.category}}</p>
+					    <p ng-if="item.number"># of People joined: {{item.number}}</p>
 					    <p ng-if="item.start">Time: {{item.start | date:'M-dd-yyyy H:mm'}} to {{item.end | date:'M-dd-yyyy H:mm'}}
 					</div>
 				</div>
@@ -74,6 +76,7 @@
 					<div class="panel-body">
 					    <p ng-if="item.obj.venue">Location: {{item.obj.venue}}</p>
 					    <p ng-if="item.obj.category">Category: {{item.obj.category}}</p>
+					    <p ng-if="item.number"># of People joined: {{item.number}}</p>
 					    <p ng-if="item.start">Time: {{item.start | date:'M-dd-yyyy H:mm'}} to {{item.end | date:'M-dd-yyyy H:mm'}}
 					</div>
 				</div>

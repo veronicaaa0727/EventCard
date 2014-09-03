@@ -1,25 +1,37 @@
 <div class="panel panel-default row" ng-controller="eventUsersCtrl">
 	<div class="text-center">
-		<h2>Welcome {{auth.profile.nickname}}! (Not you? <a ng-click="logout()">Logout</a>)</h2>
+		<h2>Welcome to {{eventName}}</h2>
+		<h3>You can find other attendees below</h3>
 	</div>
 	<div class="col-xs-1">
 	</div>
 	<div class="col-xs-10">
 		<form name="searchForm" class="navbar-form" role="search">
 			<div class="form-group">
+				<label>Type your query to search: </label>
+				<input type="text" class="form-control" ng-model="data.searchText" placeholder="Search">
+			</div>
+			<button ng-click="search(data.searchText)" class="btn btn-default">Search</button>
+			<button ng-click="restore()" class="btn btn-default">Back to Default</button>
+		</form>
+		<form name="searchForm" class="navbar-form" role="search">
+			<div class="form-group">
+				<label>Type your query to search: </label>
 				<input type="text" class="form-control" ng-model="data.searchText" placeholder="Search">
 			</div>
 			<button ng-click="search(data.searchText)" class="btn btn-default">Search</button>
 			<button ng-click="restore()" class="btn btn-default">Back to Default</button>
 		</form>
 		<div class="panel-group" id="accordion">
-		  	<div class="panel panel-default" ng-repeat="item in results| orderBy:similarityScore:reverse">
+		  	<div class="panel panel-default" ng-repeat="item in results| orderBy:similarityScore:reverse | range:selectedPage:pageSize">
 		    	<div class="panel-heading">
 		      		<div class="pull-left">
 		  				<img ng-src="{{item.pictureUrl}}" class="media-object" style="width: 70%; height: 70%"/>
 		  			</div>
-		      		<h4 class="panel-title">	
-		      			{{item.lastName}} {{item.firstName}}
+		      		<h4 class="panel-title">
+		      			<img ng-if="isOnline(item.user_id)" ng-src="http://i.imgur.com/49m7kC8.jpg" style="width: 23px; height: 23px"/>
+		      			<img ng-if="!isOnline(item.user_id)" ng-src="http://i.imgur.com/RzVwui6.jpg" style="width: 23px; height: 23px"/>
+		      			{{item.firstName}} {{item.lastName}}
 		       			<span ng-if="isCollapsed[$index]" class="text-primary">
 		        			<a ng-click="isCollapsed[$index] = !isCollapsed[$index]" >
 		          				(View More)
@@ -30,6 +42,10 @@
 		          				(View Less)
 		        			</a>
 		        		</span>
+		        		<button ng-if="!connection(item)" type="button" class="btn btn-primary pull-right" ng-click="connect(item)">Connect</button>
+		        		<button ng-if="connection(item)==1" type="button" class="btn btn-info pull-right">Pending Approval</button>
+		        		<button ng-if="connection(item)==2" type="button" class="btn btn-warning pull-right" ng-click="accept(item)">Accept Invitation</button>
+		        		<button ng-if="connection(item)==3" type="button" class="btn btn-success pull-right">You're connected</button>
 		      		</h4>
 		      		<h5> {{item.headline}} </h5>
 		    	</div>
@@ -48,6 +64,16 @@
 		      		</div>
 		    	</div>
 			</div>
+		</div>
+		<div class="pull-right">
+			<ul class="pagination">
+			  	<li ng-repeat="page in results | pageCount:pageSize" 
+				  	ng-class="getPageClass($index + 1)">
+				  	<a ng-click="selectPage($index + 1)">
+						{{$index + 1}}
+				  	</a>
+				  </li>
+			</ul>
 		</div>
 	</div>
 </div>

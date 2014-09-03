@@ -1,14 +1,35 @@
 eventCards
 	.constant("eventUserUrl", "/api/events/users")
 	.constant('userProfileUrl', "/api/users/profile")
-	.controller("eventUsersCtrl", function($scope, $location, $http, $q, auth, eventBox, eventUserUrl, userProfileUrl) {
+    .constant("connectUrl", "/api/users/connect")
+    .constant("acceptUrl", "/api/users/accept")
+	.controller("eventUsersCtrl", function($scope, $location, $http, $q, $filter, $anchorScroll, auth, eventBox, eventListActiveClass, eventListPagecount,
+        eventUserUrl, userProfileUrl, connectUrl, acceptUrl, mySocket) {
+
+        $scope.eventName = eventBox.getEvent().name_text;
 		$scope.attendees = [];
-        $scope.results = []
+        $scope.online = [];
+        $scope.results = [];
 		$scope.auth = auth;
 		$scope.userinfo = {};
+        $scope.connections = {};
 		$scope.isCollapsed = [];
         $scope.similarityScore = 'similarityScore';
         $scope.reverse = true;
+        $scope.selectedPage = 1;
+        $scope.pageSize = eventListPagecount;
+
+        mySocket.emit('join', auth.profile.user_id);
+        mySocket.on('join', function (data) {
+            $scope.online = data; // data will be 'woot'
+        });
+        mySocket.on('add', function (data) {
+            console.log('on add');
+            $scope.connections[data] = 2; // data will be 'woot'
+        });
+        mySocket.on('accept', function (data) {
+            $scope.connections[data] = 3; // data will be 'woot'
+        });
 
         var calSimilarityScore = function (user1, user2){
             if(!user1.keywords || !user2.keywords)
@@ -38,15 +59,14 @@ eventCards
             return score;
         }
 
-        console.log({'user_id': auth.profile.user_id});
-        console.log(eventBox.getAttendees());
 		$q.all([
 				$http.post(userProfileUrl, {'user_id': auth.profile.user_id}), 
 				$http.post(eventUserUrl, eventBox.getAttendees())
 			]).then(function(results) { 
-                console.log(results);
         		$scope.userinfo = results[0].data;
-				
+				for(var i = 0; i < $scope.data.connections.length; i++){
+                    $scope.connections[$scope.data.connections[i].receiver] = $scope.data.connections[i].status;
+                }
         		for(var i = 0; i < results[1].data.length; i++){
         			if(results[1].data[i].user_id == $scope.userinfo.user_id){
                         continue;   
@@ -77,6 +97,23 @@ eventCards
                 $scope.results = $scope.attendees;
     	});
 
+        $scope.selectPage = function(newPage) {
+            $scope.selectedPage = newPage;
+            $anchorScroll();
+        }
+
+        $scope.getPageClass = function(page) {
+            return $scope.selectedPage == page ? eventListActiveClass : "";
+        }
+
+        $scope.isOnline = function(id){
+            if($scope.online.indexOf(id) >= 0){
+                return true;
+            }
+            else
+                return false;
+        }
+
 		$scope.filterAttendees = function(item){
 			if(item.user_id === auth.profile.user_id)
 				return false;
@@ -84,10 +121,48 @@ eventCards
 				return true;
 		}
 
-		$scope.addFriend = function(user){
+		$scope.connect = function(user){
+            mySocket.emit('add', user.user_id);
+            $scope.connections[user.user_id] = 1;
+            
+            var info = {};
+            info.sender = $scope.userinfo.user_id;
+            info.receiver = user.user_id;
+            info.event_id = eventBox.getEvent()._id;
+            $http.post(connectUrl, info)
+                    .success(function(data){
+                        $scope.connections[info.receiver] = 1;
+                    })
+                    .error(function(error){
+                        $scope.error = error
+                    });
+            
 
 		}
-
+        $scope.accept = function(user){
+            mySocket.emit('accept', user.user_id);
+            $scope.connections[user.user_id] = 3;
+            
+            var info = {};
+            info.sender = $scope.userinfo.user_id;
+            info.receiver = user.user_id;
+            info.event_id = eventBox.getEvent()._id;
+            $http.post(acceptUrl, info)
+                    .success(function(data){
+                        scope.connections[info.receiver] = 3;
+                    })
+                    .error(function(error){
+                        $scope.error = error
+                    });
+            
+        }
+        $scope.connection = function(user){
+            if(user.user_id in $scope.connections){
+                return $scope.connections[user.user_id];
+            }
+            else
+                return 0;
+        }
         $scope.search = function(searchText){
             var results = [];
             var attendee;

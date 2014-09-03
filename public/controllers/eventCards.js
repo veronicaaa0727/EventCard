@@ -1,15 +1,11 @@
-var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngRoute", "ngSanitize", "auth0", "ngCookies", "ui.bootstrap", "ui.bootstrap.datetimepicker"]);
+var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngRoute", "ngSanitize", "auth0", "ngCookies", "ui.bootstrap", "ui.bootstrap.datetimepicker", "btford.socket-io"]);
 
 eventCards
 	.constant("dataUrl", "/api/events/view")
 	.constant("userUrl", "/api/users/login")
 	.constant("myeventsUrl", "/api/users/myevents")
-	.constant("connectionUrl", "https://api.linkedin.com/v1/people/~/connections:(id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url)?format=json&oauth2_access_token=")
-	.constant("profileUrl", "https://api.linkedin.com/v1/people/~:(interests,publications,patents,honors-awards,following,educations,courses,skills,certifications,languages,id,first-name,last-name,headline,location,industry,num-connections,summary,specialties,positions,picture-url,public-profile-url,email-address)?format=json&oauth2_access_token=")
+	.constant("statusUrl", "/api/users/connectstatus")
 	.config(function ($routeProvider, authProvider, $httpProvider, $locationProvider) {
-		$routeProvider.when("/checkout", {
-			templateUrl: "/views/checkoutSummary.html"
-		});
 
 		$routeProvider.when("/events", {
 			templateUrl: "/views/eventList.html"
@@ -21,6 +17,11 @@ eventCards
 
 		$routeProvider.when("/joinEvent", {
 			templateUrl: "/views/eventUsers.html",
+			requiresLogin: true
+		});
+
+		$routeProvider.when("/connections", {
+			templateUrl: "/views/connections.html",
 			requiresLogin: true
 		});
 
@@ -36,13 +37,11 @@ eventCards
 		});
 
 		authProvider.on('loginSuccess', function($location, $http, userUrl, $anchorScroll) {
-			console.log("!!!!!");
 			$anchorScroll();
 			$location.path($location.href);
 		});
 
 		authProvider.on('loginFailure', function($log, error) {
-			console.log(".....");
 			log('Error logging in', error);
 		});
 
@@ -52,7 +51,8 @@ eventCards
 	.run(function(auth) {
   		auth.hookEvents();
 	})
-	.controller("eventCardsCtrl", function ($scope, $http, $location, $anchorScroll, $window, auth, dataUrl, userUrl, eventBox, profileUrl, myeventsUrl) {
+	.controller("eventCardsCtrl", function ($scope, $http, $location, $anchorScroll, $window, auth, 
+		dataUrl, userUrl, eventBox, myeventsUrl, statusUrl) {
 		console.log(auth);
 
 		$scope.init = function () {
@@ -76,6 +76,14 @@ eventCards
 					.error(function(error) {
 						$scope.data.error = error;
 					});
+				$http.post(statusUrl, {'user_id': auth.profile.user_id})
+					.success(function(connections) {
+						$scope.data.connections = connections;
+						console.log
+					})
+					.error(function(error) {
+						$scope.data.error = error;
+					});
 			}
 			$anchorScroll();
 			$location.path('/events');
@@ -95,10 +103,16 @@ eventCards
 					.error(function(error) {
 				
 					});
-
 				$http.post(myeventsUrl, {'user_id': newVal.user_id})
 					.success(function(events) {
 						$scope.data.myevents = events;
+					})
+					.error(function(error) {
+						$scope.data.error = error;
+					});
+				$http.post(statusUrl, {'user_id': auth.profile.user_id})
+					.success(function(connections) {
+						$scope.data.connections = connections;
 					})
 					.error(function(error) {
 						$scope.data.error = error;
@@ -109,12 +123,39 @@ eventCards
 		$http.post(dataUrl,{'lat': 37.4225, 'lon': -122.1653})
 			.success(function(data) {
 				$scope.data.events = data;
-				$location.path('/');
-
 			})
 			.error(function(error) {
 				$scope.data.error = error;
 			});
 
+		$scope.login = function() {
+			auth.signin({
+  				connections: ['linkedin'],
+  				connection_scopes: { 'linkedin': ['r_emailaddress', 'r_contactinfo', 'r_network', 'r_basicprofile', 'r_fullprofile']},
+  				offline_mode: true
+  			});					
+		}
 
+		$scope.logout = function() {
+            auth.signout();
+            eventBox.setEvent({});
+            $scope.data.myevents = {};
+            $location.path('/events');
+        }
+
+
+	})
+	.factory('mySocket', function (socketFactory) {
+  		var socket = socketFactory();
+      	socket.forward('broadcast');
+      	return socket;
 	});
+
+
+
+
+
+
+
+
+

@@ -1,8 +1,11 @@
 /// server.js
 
 // set up ================================
+var http = require('http');
 var express  = require("express");
 var app      = express();
+var server = http.createServer(app);
+var io = require('socket.io')(server);
 var request = require("request");
 
 var jwt = require('express-jwt');
@@ -84,7 +87,10 @@ var schema_events = new mongoose.Schema({
 	end			: {type: Date, required: true},
 	venue		: {type: String, required: true},
 	lat			: {type: Number, required: true, index: true},
-	lon			: {type: Number, required: true, index: true}
+	lon			: {type: Number, required: true, index: true},
+	number 		: Number,
+	password    : String,
+	evaluation 	: [mongoose.Schema.Types.Mixed]
 })
 schema_events.plugin(textSearch);
 schema_events.index({ name_text: 'text' });
@@ -150,6 +156,14 @@ var schema_userfriend = new mongoose.Schema({
 	publicProfileUrl: String
 })
 var UserFriend = mongoose.model('UserFriend', schema_userfriend);
+
+var schema_userconnect = new mongoose.Schema({
+	sender			: {type: String, required: true, index: true},
+	receiver		: {type: String, required: true, index: true},
+	event_id		: {type: String, required: true},
+	status 			: {type: Number, required: true, index: true},
+})
+var UserConnection = mongoose.model('UserConnection', schema_userconnect);
 
 var schema_userinfo = new mongoose.Schema({
 	name			: {type: String, required: true},
@@ -438,6 +452,60 @@ app.post("/api/users/profile", function(req, res) {
 	})
 });
 
+app.post("/api/users/connectstatus", function(req, res) {
+	UserConnection.find({sender: req.body.user_id}, function(err, users){
+	    if(err)
+			res.send(err);
+		res.json(users);
+	});
+});
+
+app.post("/api/users/connect", function(req, res) {
+	var data1 = {};
+	data1.sender = req.body.sender;
+	data1.receiver = req.body.receiver;
+	data1.event_id = req.body.event_id;
+	data1.status = 1;
+
+	var data2 = {};
+	data2.sender = req.body.receiver;
+	data2.receiver = req.body.sender;
+	data2.event_id = req.body.event_id;
+	data2.status = 2;
+
+	UserConnection.update({sender: req.body.sender, receiver: req.body.receiver}, data1, {upsert: true}, function(err){
+	    if(err)
+			res.send(err);
+	});
+	UserConnection.update({sender: req.body.receiver, receiver: req.body.sender}, data2, {upsert: true}, function(err){
+	    if(err)
+			res.send(err);
+	});
+});
+
+app.post("/api/users/accept", function(req, res) {
+	var data1 = {};
+	data1.sender = req.body.sender;
+	data1.receiver = req.body.receiver;
+	data1.event_id = req.body.event_id;
+	data1.status = 3;
+
+	var data2 = {};
+	data2.sender = req.body.receiver;
+	data2.receiver = req.body.sender;
+	data2.event_id = req.body.event_id;
+	data2.status = 3;
+
+	UserConnection.update({sender: req.body.sender, receiver: req.body.receiver}, data1, {upsert: true}, function(err){
+	    if(err)
+			res.send(err);
+	});
+	UserConnection.update({sender: req.body.receiver, receiver: req.body.sender}, data2, {upsert: true}, function(err){
+	    if(err)
+			res.send(err);
+	});
+});
+
 
 app.post("/api/users/event/join", function(req, res) {
 	UserEvents.find({user_id: req.body.user_id}, function(err, users) {
@@ -468,23 +536,23 @@ app.post("/api/users/event/join", function(req, res) {
 	EventUsers.find({event_id: req.body.event_id}, function(err, events) {
 		if(err)
 			res.send(err);
+
+		var num = 0;
+		var attendees = {};
 		if(events.length == 0){	
-			var eventuser = {};
 			eventuser.event_id = req.body.event_id;
 			eventuser.users = [req.body.user_id];
+			attendees = eventuser;
 			EventUsers.create(eventuser, function (err, item) {
   				if (err) 
   					res.send(err);
-  				else
-  					res.json(item.users);
-
 			});
 		}
 		else{
-			var attendees = {};
+			
 			attendees.event_id = events[0].event_id;
 			attendees.users = events[0].users;
-
+			num = attendees.users.length;
 			if(attendees.users.indexOf(req.body.user_id) === -1) {
 				attendees.users.push(req.body.user_id);
 				events[0].update(attendees, function (err, item) {
@@ -496,13 +564,59 @@ app.post("/api/users/event/join", function(req, res) {
   					}
   						
 				});
-				res.json(attendees.users);
-			}else{
-				res.json(attendees.users);
-			}			
+			}
 		}
-	})
+		
+		Events.find({_id: req.body.event_id}, function(err, data) {	
+			console.log(data.length);
+			if(err || data.length == 0)
+				res.send(err);
+			else{
+				var eventDetail = data[0];
+				eventDetail['number'] = num;
+				Events.update({_id: req.body.event_id}, eventDetail.toObject(), {upsert: true}, function(err){
+	    			if(err)
+						res.send(err);
+				});
+			}
+		})
+
+		res.json(attendees.users);
+
+	});
 });
+
+//Socket.io
+var sockets = {};
+io.on('connection', function (socket) {
+	var user_id = '';
+	socket.on('join', function(id){
+		user_id = id;
+		sockets[id] = socket;
+		io.emit('join', Object.keys(sockets));
+	});
+	
+	socket.on('disconnect', function(){
+    	delete sockets[user_id];
+    	io.emit('join', Object.keys(sockets));
+  	});
+
+  	socket.on('add', function(id){
+  		console.log(id);
+  		console.log(Object.keys(sockets));
+		if(id in sockets){
+			sockets[id].emit('add', user_id);
+		}
+	});
+
+	socket.on('accept', function(id){
+		if(id in sockets){
+			sockets[id].emit('accept', user_id);
+		}
+	});
+});
+
+
 // listen
-app.listen(8080);
+server.listen(8080);
 console.log("App listening on port 8080");
