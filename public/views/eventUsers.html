@@ -14,14 +14,6 @@
 			<button ng-click="search(data.searchText)" class="btn btn-default">Search</button>
 			<button ng-click="restore()" class="btn btn-default">Back to Default</button>
 		</form>
-		<form name="searchForm" class="navbar-form" role="search">
-			<div class="form-group">
-				<label>Type your query to search: </label>
-				<input type="text" class="form-control" ng-model="data.searchText" placeholder="Search">
-			</div>
-			<button ng-click="search(data.searchText)" class="btn btn-default">Search</button>
-			<button ng-click="restore()" class="btn btn-default">Back to Default</button>
-		</form>
 		<div class="panel-group" id="accordion">
 		  	<div class="panel panel-default" ng-repeat="item in results| orderBy:similarityScore:reverse | range:selectedPage:pageSize">
 		    	<div class="panel-heading">
