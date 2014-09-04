@@ -92,15 +92,16 @@ eventCards
 			event.lon = -122.1653;
 			$http.post(createEvent, {'event': event})
 				.success(function(eventDetail){
-					console.log(events);
+					console.log(eventDetail);
 					$scope.data.events.push(eventDetail);
 					$scope.data.myevents.push(eventDetail);
-					$http.post(userEventUrl, {'user_id': auth.profile.user_id, 'event_id': $scope.selectedEvent._id})
+					$http.post(userEventUrl, {'user_id': auth.profile.user_id, 'event_id': eventDetail._id})
 						.success(function(users){
 						})
 						.error(function(error){
 							$scope.error = error
 						});
+					$location.path('/');
 				})
 				.error(function(error){
 					$scope.error = error

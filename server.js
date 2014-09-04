@@ -540,6 +540,7 @@ app.post("/api/users/event/join", function(req, res) {
 		var num = 0;
 		var attendees = {};
 		if(events.length == 0){	
+			var eventuser = {}
 			eventuser.event_id = req.body.event_id;
 			eventuser.users = [req.body.user_id];
 			attendees = eventuser;

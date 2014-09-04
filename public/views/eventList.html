@@ -1,7 +1,5 @@
 <div class="panel panel-default row" ng-controller="eventListCtrl" ng-hide="data.error">
-	<div class="text-center" ng-if="auth.profile">
-		<h3>Welcome to EventCard!</h3>
-	</div>
+	<h3 class="text-center">Welcome to EventCard!</h3>
 	<div class="col-xs-1">
 	</div>
 	<div class="col-xs-10">
@@ -122,6 +120,10 @@
     					<label for="EventEndTime">Event End Time:</label>
         				<datetimepicker id="EventStartTime" data-ng-model="data.event.end"></datetimepicker>
     				</div>
+    				<div class="form-group">
+    					<label for="EventCode">Event Password:</label>
+    					<input type="text" class="form-control" id="EventCode"  ng-model="data.event.password" >
+  					</div>
     				<button ng-disabled="shippingForm.$invalid" ng-click="confirm()" class="btn btn-default">Submit</button>
     				<br>
 				</form>

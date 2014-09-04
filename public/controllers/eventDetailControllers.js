@@ -4,6 +4,15 @@ eventCards
 		$scope.selectedEvent = eventBox.getEvent();
 		console.log($scope.selectedEvent);
 		$scope.myHTML = eventBox.getEvent().description_html;
+		$scope.valid = true;
+
+		$scope.checkPassword = function(password){
+			if(password == $scope.selectedEvent.password){
+				$scope.login();
+			}else{
+				$scope.valid = false;
+			}
+		}
 		$scope.login = function() {
 			if(auth.isAuthenticated){
 				$http.post(userEventUrl, {'user_id': auth.profile.user_id, 'event_id': $scope.selectedEvent._id})
