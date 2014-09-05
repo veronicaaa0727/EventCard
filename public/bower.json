@@ -23,7 +23,8 @@
     "underscore": "~1.6.0",
     "angular-bootstrap-datetimepicker": "~0.2.4",
     "angular-socket-io": "~0.6.0",
-    "socket.io-client": "~1.0.6"
+    "socket.io-client": "~1.0.6",
+    "bootstrap-rating-input": "~0.2.5"
   },
   "resolutions": {
     "angular": ">=1"

@@ -90,7 +90,8 @@ var schema_events = new mongoose.Schema({
 	lon			: {type: Number, required: true, index: true},
 	number 		: Number,
 	password    : String,
-	evaluation 	: [mongoose.Schema.Types.Mixed]
+	evaluation 	: [Number],
+	evalscore 	: Number
 })
 schema_events.plugin(textSearch);
 schema_events.index({ name_text: 'text' });
@@ -108,6 +109,13 @@ var schema_userevents = new mongoose.Schema({
 	events 	 	: {type: Array,  required: true}
 })
 var UserEvents = mongoose.model('Userevents', schema_userevents);
+
+var schema_usereventratings = new mongoose.Schema({
+	user_id		: {type: String, required: true, index: true},
+	event_id 	: {type: String,  required: true, index: true},
+	rating 	 	: {type: Number,  required: true}
+})
+var UserEventRatings = mongoose.model('UserEventRatings', schema_usereventratings);
 
 var schema_userlinkedin = new mongoose.Schema({
 	accessToken 	: String,
@@ -228,6 +236,47 @@ app.post('/api/events/create', function(req, res) {
     	}
 	})
 });
+
+app.post('/api/events/evaluate', function(req, res) {
+	Events.find({_id: req.body.event_id}, function(err, data) {	
+		if(err || data.length == 0)
+			res.send(err);
+		else{
+			var eventDetail = data[0];
+			if(eventDetail['evaluation']){
+				eventDetail['evaluation'].push(req.body.rating);
+				eventDetail['evalscore'] 
+					= eventDetail['evaluation'].reduce(function(a, b) {return a + b;})/eventDetail['evaluation'].length;
+			}
+				
+			else{
+				eventDetail['evaluation'] = [req.body.rating];
+				eventDetail['evalscore'] = req.body.rating;
+			}
+				
+			Events.update({_id: req.body.event_id}, eventDetail.toObject(), {upsert: true}, function(err){
+    			if(err)
+					res.send(err);
+			});
+		}
+	})
+	UserEventRatings.create(req.body, function (err, output) {
+    	if (err) 
+    		res.send(err);
+	})
+});
+
+app.post('/api/events/users/rating', function(req, res) {
+	UserEventRatings.find({user_id: req.body.user_id, event_id: req.body.event_id}, function(err, rating) {
+		if(err)
+			res.send(err);
+		if(rating.length > 0)
+			res.json(rating[0]);
+		else
+			res.send(err);
+	})
+});
+
 //users
 app.post('/api/users/login', function(req, res) {
 	var userinfo = {};

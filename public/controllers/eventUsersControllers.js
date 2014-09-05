@@ -1,10 +1,12 @@
 eventCards
 	.constant("eventUserUrl", "/api/events/users")
 	.constant('userProfileUrl', "/api/users/profile")
+    .constant('userEventRatingUrl', '/api/events/users/rating')
     .constant("connectUrl", "/api/users/connect")
     .constant("acceptUrl", "/api/users/accept")
+    .constant("eventEvaluate", "/api/events/evaluate")
 	.controller("eventUsersCtrl", function($scope, $location, $http, $q, $filter, $anchorScroll, auth, eventBox, eventListActiveClass, eventListPagecount,
-        eventUserUrl, userProfileUrl, connectUrl, acceptUrl, mySocket) {
+        eventUserUrl, userProfileUrl, connectUrl, acceptUrl, userEventRatingUrl, eventEvaluate, mySocket) {
 
         $scope.eventName = eventBox.getEvent().name_text;
 		$scope.attendees = [];
@@ -18,6 +20,7 @@ eventCards
         $scope.reverse = true;
         $scope.selectedPage = 1;
         $scope.pageSize = eventListPagecount;
+        $scope.rating = 0;
 
         mySocket.emit('join', auth.profile.user_id);
         mySocket.on('join', function (data) {
@@ -30,6 +33,36 @@ eventCards
         mySocket.on('accept', function (data) {
             $scope.connections[data] = 3; // data will be 'woot'
         });
+
+
+        $scope.rate = 7;
+        $scope.max = 10;
+
+        $scope.hoveringOver = function(value) {
+            $scope.overStar = value;
+            $scope.percent = 100 * (value / $scope.max);
+        };
+
+        $scope.ratingStates = [
+            {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
+        ];
+
+        $scope.evaluate = function(rating){
+
+            $scope.rating = 0;
+            $scope.ratingMessage = "Thanks for the evaluation!"
+            data = {}
+            data.rating = rating;
+            data.event_id = eventBox.getEvent()._id;
+            data.user_id = auth.profile.user_id;
+            $http.post(eventEvaluate, data)
+                    .success(function(data){
+                        
+                    })
+                    .error(function(error){
+                        $scope.error = error
+                    });
+        }
 
         var calSimilarityScore = function (user1, user2){
             if(!user1.keywords || !user2.keywords)
@@ -59,11 +92,13 @@ eventCards
             return score;
         }
 
-		$q.all([
-				$http.post(userProfileUrl, {'user_id': auth.profile.user_id}), 
-				$http.post(eventUserUrl, eventBox.getAttendees())
+		$q.all([			
+                $http.post(userProfileUrl, {'user_id': auth.profile.user_id}), 
+				$http.post(eventUserUrl, eventBox.getAttendees()),
+                $http.post(userEventRatingUrl, {'user_id': auth.profile.user_id, 'event_id': eventBox.getEvent()._id})
 			]).then(function(results) { 
         		$scope.userinfo = results[0].data;
+                    
 				for(var i = 0; i < $scope.data.connections.length; i++){
                     $scope.connections[$scope.data.connections[i].receiver] = $scope.data.connections[i].status;
                 }
@@ -95,6 +130,10 @@ eventCards
                     $scope.attendees.push(results[1].data[i]);
         		}
                 $scope.results = $scope.attendees;
+                if(!results[2].data){
+                    $scope.rating = 1;
+                }
+                    
     	});
 
         $scope.selectPage = function(newPage) {
