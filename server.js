@@ -73,6 +73,16 @@ fs.readFile(schoolPath, function(err,data){
     }
 });
 
+var tagPath = path.join(__dirname, 'local', 'tags.txt');
+var toptags = [];
+fs.readFile(tagPath, function(err,data){
+    if (!err){
+    	toptags = data.toString().split('\n');;
+    }else{
+        console.log(err);
+    }
+});
+
 // define model ==========================
 var schema_vanue = new mongoose.Schema({lat: Number, lon: Number, name: String});
 var schema_events = new mongoose.Schema({
@@ -82,10 +92,10 @@ var schema_events = new mongoose.Schema({
 	description_text	: {type: String, required: true, index: true},
 	category	: String,
 	id 			: String,
-	url		    : {type: String, required: true},
+	url		    : {type: String},
 	start		: {type: Date, required: true, index: true},
 	end			: {type: Date, required: true},
-	venue		: {type: String, required: true},
+	venue		: {type: String},
 	lat			: {type: Number, required: true, index: true},
 	lon			: {type: Number, required: true, index: true},
 	number 		: Number,
@@ -113,7 +123,10 @@ var UserEvents = mongoose.model('Userevents', schema_userevents);
 var schema_usereventratings = new mongoose.Schema({
 	user_id		: {type: String, required: true, index: true},
 	event_id 	: {type: String,  required: true, index: true},
-	rating 	 	: {type: Number,  required: true}
+	rating 	 	: {type: Number,  required: true},
+	comments  	: {type: String},
+	anonymous 	: {type: Boolean,  required: true},
+	created_at 	: {type: Date}
 })
 var UserEventRatings = mongoose.model('UserEventRatings', schema_usereventratings);
 
@@ -147,7 +160,8 @@ var schema_userlinkedin = new mongoose.Schema({
 	publications	: [mongoose.Schema.Types.Mixed],
 	skills			: [String],
 	specialties		: [mongoose.Schema.Types.Mixed],
-	summary			: String
+	summary			: String,
+	created_at 		: Date
 })
 var UserLinkedIn = mongoose.model('UserLinkedIn', schema_userlinkedin);
 
@@ -170,6 +184,7 @@ var schema_userconnect = new mongoose.Schema({
 	receiver		: {type: String, required: true, index: true},
 	event_id		: {type: String, required: true},
 	status 			: {type: Number, required: true, index: true},
+	created_at 		: Date
 })
 var UserConnection = mongoose.model('UserConnection', schema_userconnect);
 
@@ -196,6 +211,14 @@ app.get('/', function(req, res) {
 app.get('/admin', function(req, res) {
 	res.sendfile('./public/admin.html');
 });
+
+//tags
+app.get('/api/tags', function(req, res) {
+	var tags = _.map(toptags, function(tag){ return {text: tag}; });
+	console.log(tags);
+	res.json(tags);
+});
+
 
 //events
 app.post('/api/events/view', function(req, res) {
@@ -260,7 +283,10 @@ app.post('/api/events/evaluate', function(req, res) {
 			});
 		}
 	})
-	UserEventRatings.create(req.body, function (err, output) {
+
+	var rating = req.body;
+	rating.created_at = new Date();
+	UserEventRatings.create(rating, function (err, output) {
     	if (err) 
     		res.send(err);
 	})
@@ -412,6 +438,7 @@ app.post('/api/users/login', function(req, res) {
     		userinfo = body; // Print the json response
     		userinfo.accessToken = req.body.identities[0].access_token;
 			if(userinfo.certifications) userinfo.certifications = selectField(userinfo.certifications.values);
+			//created_at
 			if(userinfo.courses) userinfo.courses = selectField(userinfo.courses.values);
 			if(userinfo.educations) userinfo.educations = userinfo.educations.values;
 			//emailAddress
@@ -447,15 +474,17 @@ app.post('/api/users/login', function(req, res) {
 			}, function (error, response, data) {
 	    		if (!error && response.statusCode === 200) {
 	    			var friendList = [];
-	    			for(var i = 0; i < data.values.length; i++){
-	    				var user = data.values[i];
-	    				user.user_id = 'linkedin|' + user.id;
-	    				friendList.push(user.user_id);
-	    				UserFriend.update({user_id: user.user_id}, user, {upsert: true}, function(err){
-	    					if(err)
-	    						res.send(err);
-	    				});
-	    			}
+	    			if(data.values){
+	    				for(var i = 0; i < data.values.length; i++){
+		    				var user = data.values[i];
+		    				user.user_id = 'linkedin|' + user.id;
+		    				friendList.push(user.user_id);
+		    				UserFriend.update({user_id: user.user_id}, user, {upsert: true}, function(err){
+		    					if(err)
+		    						res.send(err);
+		    				});
+		    			}
+	    			}	
 	    			userinfo.friendList = friendList;
 	    			userinfo.numConnections = friendList.length;
 	    			userinfo.authorityScore = getAuthorityScore(userinfo);
@@ -515,12 +544,14 @@ app.post("/api/users/connect", function(req, res) {
 	data1.receiver = req.body.receiver;
 	data1.event_id = req.body.event_id;
 	data1.status = 1;
+	data1.created_at = new Date();
 
 	var data2 = {};
 	data2.sender = req.body.receiver;
 	data2.receiver = req.body.sender;
 	data2.event_id = req.body.event_id;
 	data2.status = 2;
+	data2.created_at = new Date();
 
 	UserConnection.update({sender: req.body.sender, receiver: req.body.receiver}, data1, {upsert: true}, function(err){
 	    if(err)
@@ -538,20 +569,27 @@ app.post("/api/users/accept", function(req, res) {
 	data1.receiver = req.body.receiver;
 	data1.event_id = req.body.event_id;
 	data1.status = 3;
+	data1.created_at = new Date();
 
 	var data2 = {};
 	data2.sender = req.body.receiver;
 	data2.receiver = req.body.sender;
 	data2.event_id = req.body.event_id;
 	data2.status = 3;
+	data2.created_at = new Date();
 
 	UserConnection.update({sender: req.body.sender, receiver: req.body.receiver}, data1, {upsert: true}, function(err){
-	    if(err)
-			res.send(err);
+	    if(err){
+	    	console.log(err);
+	    	res.send(err);
+	    }
+			
 	});
 	UserConnection.update({sender: req.body.receiver, receiver: req.body.sender}, data2, {upsert: true}, function(err){
-	    if(err)
-			res.send(err);
+	    if(err){
+	    	console.log(err);
+	    	res.send(err);
+	    }
 	});
 });
 
@@ -640,9 +678,11 @@ app.post("/api/users/event/join", function(req, res) {
 var sockets = {};
 io.on('connection', function (socket) {
 	var user_id = '';
-	socket.on('join', function(id){
-		user_id = id;
-		sockets[id] = socket;
+	var userInfo = {};
+	socket.on('join', function(data){
+		user_id = data.user_id;
+		userInfo = data;
+		sockets[user_id] = socket;
 		io.emit('join', Object.keys(sockets));
 	});
 	
@@ -651,17 +691,15 @@ io.on('connection', function (socket) {
     	io.emit('join', Object.keys(sockets));
   	});
 
-  	socket.on('add', function(id){
-  		console.log(id);
-  		console.log(Object.keys(sockets));
-		if(id in sockets){
-			sockets[id].emit('add', user_id);
+  	socket.on('add', function(data){
+		if(data.user_id in sockets){
+			sockets[data.user_id].emit('add', {user:userInfo, event_id: data.event_id});
 		}
 	});
 
 	socket.on('accept', function(id){
 		if(id in sockets){
-			sockets[id].emit('accept', user_id);
+			sockets[id].emit('accept', userInfo);
 		}
 	});
 });

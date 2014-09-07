@@ -108,11 +108,11 @@
     					<textarea class="form-control" rows="3" id="EventDesc" placeholder="e.g. This event is to help you find cofounder ..." ng-model="data.event.description_text" required></textarea>
   					</div>
   					<div class="form-group">
-    					<label for="EventLoc">Event Location:</label>
-    					<input type="text" class="form-control" id="EventLoc" placeholder="e.g. Stanford University" ng-model="data.event.venue" required>
+    					<label for="EventLoc">Event Location (Optional):</label>
+    					<input type="text" class="form-control" id="EventLoc" placeholder="e.g. Stanford University" ng-model="data.event.venue">
   					</div>
   					<div class="form-group">
-    					<label for="EventUrl">Event URL:</label>
+    					<label for="EventUrl">Event URL (Optional):</label>
     					<input type="url" class="form-control" id="EventUrl" placeholder="e.g. http://www.google.com" ng-model="data.event.url">
   					</div>
     				<div class="form-group col-sm-6">
@@ -124,10 +124,10 @@
         				<datetimepicker id="EventStartTime" data-ng-model="data.event.end"></datetimepicker>
     				</div>
     				<div class="form-group">
-    					<label for="EventCode">Event Password:</label>
+    					<label for="EventCode">Event Password (Optional):</label>
     					<input type="text" class="form-control" id="EventCode"  ng-model="data.event.password" >
   					</div>
-    				<button ng-disabled="shippingForm.$invalid" ng-click="confirm()" class="btn btn-default">Submit</button>
+    				<button ng-disabled="eventForm.$invalid || !data.event.start || !data.event.end" ng-click="confirm()" class="btn btn-default">Submit</button>
     				<br>
 				</form>
 				<div ng-if="confirmation && auth.isAuthenticated">

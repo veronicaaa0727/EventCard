@@ -5,54 +5,50 @@ eventCards
     .constant("connectUrl", "/api/users/connect")
     .constant("acceptUrl", "/api/users/accept")
     .constant("eventEvaluate", "/api/events/evaluate")
+    .constant("tagsUrl", "/api/tags")
 	.controller("eventUsersCtrl", function($scope, $location, $http, $q, $filter, $anchorScroll, auth, eventBox, eventListActiveClass, eventListPagecount,
-        eventUserUrl, userProfileUrl, connectUrl, acceptUrl, userEventRatingUrl, eventEvaluate, mySocket) {
+        eventUserUrl, userProfileUrl, connectUrl, acceptUrl, userEventRatingUrl, eventEvaluate, tagsUrl, mySocket) {
 
         $scope.eventName = eventBox.getEvent().name_text;
 		$scope.attendees = [];
-        $scope.online = [];
         $scope.results = [];
 		$scope.auth = auth;
 		$scope.userinfo = {};
-        $scope.connections = {};
 		$scope.isCollapsed = [];
         $scope.similarityScore = 'similarityScore';
         $scope.reverse = true;
         $scope.selectedPage = 1;
         $scope.pageSize = eventListPagecount;
         $scope.rating = 0;
+        $scope.evalCollapsed = true;
 
-        mySocket.emit('join', auth.profile.user_id);
-        mySocket.on('join', function (data) {
-            $scope.online = data; // data will be 'woot'
-        });
-        mySocket.on('add', function (data) {
-            console.log('on add');
-            $scope.connections[data] = 2; // data will be 'woot'
-        });
-        mySocket.on('accept', function (data) {
-            $scope.connections[data] = 3; // data will be 'woot'
-        });
+        $scope.tags = [];
 
 
-        $scope.rate = 7;
-        $scope.max = 10;
+        $scope.rate = 3;
+        $scope.max = 5;
 
         $scope.hoveringOver = function(value) {
             $scope.overStar = value;
-            $scope.percent = 100 * (value / $scope.max);
         };
 
         $scope.ratingStates = [
             {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
         ];
 
-        $scope.evaluate = function(rating){
+        $scope.changeCollapsed = function(){
+            $scope.evalCollapsed = !$scope.evalCollapsed;
+            console.log($scope.evalCollapsed);
+        }
+
+        $scope.evaluate = function(evaluation){
 
             $scope.rating = 0;
             $scope.ratingMessage = "Thanks for the evaluation!"
             data = {}
-            data.rating = rating;
+            data.rating = evaluation.rate;
+            data.comments = evaluation.comments;
+            data.anonymous = evaluation.anonymous;
             data.event_id = eventBox.getEvent()._id;
             data.user_id = auth.profile.user_id;
             $http.post(eventEvaluate, data)
@@ -62,6 +58,23 @@ eventCards
                     .error(function(error){
                         $scope.error = error
                     });
+        }
+
+        //Tag
+        $scope.filterTag = function(val) {
+            return $http.get(tagsUrl).then(function(res){
+                var skills = [];
+                angular.forEach(res.data, function(item){
+                    if(item.text.toLowerCase().indexOf(val) > -1)
+                        skills.push(item);
+                });
+                return skills;
+            });
+        };
+
+        $scope.apply = function(tags){
+            var searchText = _.map(tags, function(data){return data.text}).join([separator = ' '])
+            $scope.search(searchText);
         }
 
         var calSimilarityScore = function (user1, user2){
@@ -91,6 +104,7 @@ eventCards
             score /= (length * user.keywordsLength);
             return score;
         }
+
 
 		$q.all([			
                 $http.post(userProfileUrl, {'user_id': auth.profile.user_id}), 
@@ -161,7 +175,7 @@ eventCards
 		}
 
 		$scope.connect = function(user){
-            mySocket.emit('add', user.user_id);
+            mySocket.emit('add', {user_id: user.user_id, event_id: eventBox.getEvent()._id});
             $scope.connections[user.user_id] = 1;
             
             var info = {};
@@ -203,17 +217,22 @@ eventCards
                 return 0;
         }
         $scope.search = function(searchText){
-            var results = [];
-            var attendee;
-            for (var i = 0; i < $scope.attendees.length; i++){
-                attendee = angular.copy($scope.attendees[i]);
-                attendee.similarityScore = calQueryScore(searchText.toLowerCase(), attendee);
-                if(attendee.similarityScore > 0.00001){
-                    console.log(attendee)
-                    results.push(attendee);
-                }
+            if(!searchText){
+                $scope.restore();
             }
-            $scope.results = results;
+            else{
+                var results = [];
+                var attendee;
+                for (var i = 0; i < $scope.attendees.length; i++){
+                    attendee = angular.copy($scope.attendees[i]);
+                    attendee.similarityScore = calQueryScore(searchText.toLowerCase(), attendee);
+                    if(attendee.similarityScore > 0.00001){
+                        console.log(attendee)
+                        results.push(attendee);
+                    }
+                }
+                $scope.results = results;
+            }
         }
 
         $scope.restore = function(){

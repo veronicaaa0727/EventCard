@@ -10,7 +10,7 @@
 		<div class="tab-content">
 			<div class="tab-pane active" id="connections">
 				<div class="panel-group" id="accordion">
-				  	<div class="panel panel-default" ng-repeat="item in results| filter:friends |orderBy:similarityScore:reverse | range:selectedPage:pageSize">
+				  	<div class="panel panel-default" ng-repeat="item in results| filter:friendsStatus |orderBy:similarityScore:reverse | range:selectedPage[0]:pageSize">
 				    	<div class="panel-heading">
 				      		<div class="pull-left">
 				  				<img ng-src="{{item.pictureUrl}}" class="media-object" style="width: 70%; height: 70%"/>
@@ -54,9 +54,9 @@
 				</div>
 				<div class="pull-right">
 					<ul class="pagination">
-					  	<li ng-repeat="page in results | pageCount:pageSize" 
-						  	ng-class="getPageClass($index + 1)">
-						  	<a ng-click="selectPage($index + 1)">
+					  	<li ng-repeat="page in results | filter:friendsStatus | pageCount:pageSize" 
+						  	ng-class="getPageClass(0, $index + 1)">
+						  	<a ng-click="selectPage(0, $index + 1)">
 								{{$index + 1}}
 						  	</a>
 						  </li>
@@ -65,7 +65,7 @@
 			</div>
 			<div class="tab-pane" id="pendingapproval">
 				<div class="panel-group" id="accordion">
-				  	<div class="panel panel-default" ng-repeat="item in results| filter:approval |orderBy:similarityScore:reverse | range:selectedPage:pageSize">
+				  	<div class="panel panel-default" ng-repeat="item in results| filter:approvalStatus |orderBy:similarityScore:reverse | range:selectedPage[1]:pageSize">
 				    	<div class="panel-heading">
 				      		<div class="pull-left">
 				  				<img ng-src="{{item.pictureUrl}}" class="media-object" style="width: 70%; height: 70%"/>
@@ -109,9 +109,9 @@
 				</div>
 				<div class="pull-right">
 					<ul class="pagination">
-					  	<li ng-repeat="page in results | pageCount:pageSize" 
-						  	ng-class="getPageClass($index + 1)">
-						  	<a ng-click="selectPage($index + 1)">
+					  	<li ng-repeat="page in results | filter:approvalStatus| pageCount:pageSize" 
+						  	ng-class="getPageClass(1, $index + 1)">
+						  	<a ng-click="selectPage(1, $index + 1)">
 								{{$index + 1}}
 						  	</a>
 						  </li>
@@ -120,7 +120,7 @@
 			</div>
 			<div class="tab-pane" id="pendingaccept">
 				<div class="panel-group" id="accordion">
-				  	<div class="panel panel-default" ng-repeat="item in results| filter:accept |orderBy:similarityScore:reverse | range:selectedPage:pageSize">
+				  	<div class="panel panel-default" ng-repeat="item in results| filter:acceptStatus |orderBy:similarityScore:reverse | range:selectedPage[2]:pageSize">
 				    	<div class="panel-heading">
 				      		<div class="pull-left">
 				  				<img ng-src="{{item.pictureUrl}}" class="media-object" style="width: 70%; height: 70%"/>
@@ -164,9 +164,9 @@
 				</div>
 				<div class="pull-right">
 					<ul class="pagination">
-					  	<li ng-repeat="page in results | pageCount:pageSize" 
-						  	ng-class="getPageClass($index + 1)">
-						  	<a ng-click="selectPage($index + 1)">
+					  	<li ng-repeat="page in results | filter:acceptStatus| pageCount:pageSize" 
+						  	ng-class="getPageClass(2, $index + 1)">
+						  	<a ng-click="selectPage(2, $index + 1)">
 								{{$index + 1}}
 						  	</a>
 						  </li>

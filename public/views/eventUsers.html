@@ -14,11 +14,30 @@
 			<button ng-click="search(data.searchText)" class="btn btn-default">Search</button>
 			<button ng-click="restore()" class="btn btn-default">Back to Default</button>
 		</form>
+		<form ng-if="attendees.length" name="tagForm" class="navbar-form" role="tag">
+			<div class="form-group">
+				<tags-input ng-model="tags" placeholder="Add tag to filter..." style="width: 200px;">
+        			<auto-complete source="filterTag($query)"></auto-complete>
+    			</tags-input>
+			</div>
+			<button ng-click="apply(tags)" class="btn btn-default">Apply</button>
+		</form>		
 		<form ng-if="rating" name="evaluateForm" class="navbar-form" role="search">
-			<label>Please evaluate this event:    </label>
-			<rating ng-model="rate" max="max" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null"></rating>
-	    	<span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
-			<button class="btn btn-primary" ng-click="evaluate(rate)" >Submit</button>
+			<label>    Please evaluate this event:    </label>
+			<button ng-if="rating" class="btn btn-primary" ng-click="changeCollapsed()">Event Evaluation</button>
+			<div collapse="evalCollapsed">
+				<span>Overall Ratings:    </span>
+				<rating ng-model="evaluation.rate" max="max" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null"></rating>
+				<br>
+				<div class="form-group">
+					<lable>Comments (Optional):</lable>
+					<textarea class="form-control" rows="3" id="EventDesc" ng-model="evaluation.comments"></textarea>
+				</div>
+				<br>
+				<div class="checkbox"> <label> <input type="checkbox" ng-model="evaluation.anonymous"> Submit Anonymously </label> </div>
+				<br>
+				<button class="btn btn-primary" ng-click="evaluate(evaluation)" >Submit</button>
+			</div>
 		</form>
 		<p class="alert" ng-if="ratingMessage">{{ratingMessage}}</p>
 

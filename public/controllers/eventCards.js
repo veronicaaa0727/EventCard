@@ -1,4 +1,4 @@
-var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngRoute", "ngSanitize", "auth0", "ngCookies", "ui.bootstrap", "ui.bootstrap.datetimepicker", "btford.socket-io"]);
+var eventCards = angular.module("eventCards", ["customFilters", "eventBox", "ngRoute", "ngSanitize", "auth0", "ngCookies", "ui.bootstrap", "ui.bootstrap.datetimepicker", "btford.socket-io", "ngTagsInput", "cgNotify"]);
 
 eventCards
 	.constant("dataUrl", "/api/events/view")
@@ -52,7 +52,13 @@ eventCards
   		auth.hookEvents();
 	})
 	.controller("eventCardsCtrl", function ($scope, $http, $location, $anchorScroll, $window, auth, 
-		dataUrl, userUrl, eventBox, myeventsUrl, statusUrl) {
+		dataUrl, userUrl, eventBox, myeventsUrl, statusUrl, mySocket, notify) {
+
+		$scope.template = '';
+		$scope.data = {};
+		$scope.connections = {};
+		$scope.events = {};
+		$scope.online = []
 		console.log(auth);
 
 		$scope.init = function () {
@@ -90,13 +96,12 @@ eventCards
 
 		}
 
-		$scope.data = {
-		};
-
 		$scope.auth = auth;
 
 		$scope.$watch('auth.profile', function (newVal, oldVal, $scope) {
     		if(newVal) {
+    			mySocket.emit('join', {user_id: auth.profile.user_id, name: auth.profile.nickname});
+
       			$http.post(userUrl, newVal)
 					.success(function() {
 					})
@@ -143,6 +148,18 @@ eventCards
             $location.path('/events');
         }
 
+        mySocket.on('join', function (data) {
+            $scope.online = data; // data will be 'woot'
+        });
+        mySocket.on('add', function (data) {
+            notify({ message: data.user.name +' add you as a connection!', templateUrl:'/views/angular-notify.html'} );
+            $scope.connections[data.user.user_id] = 2; // data will be 'woot'
+            $scope.events[data.user.user_id] = data.event_id;
+        });
+        mySocket.on('accept', function (data) {
+        	notify({ message: data.name +' accept your invitation!', templateUrl:'/views/angular-notify.html'} );
+            $scope.connections[data.user_id] = 3; // data will be 'woot'
+        });
 
 	})
 	.factory('mySocket', function (socketFactory) {
