@@ -6,14 +6,19 @@ eventCards
     .constant("acceptUrl", "/api/users/accept")
     .constant("eventEvaluate", "/api/events/evaluate")
     .constant("tagsUrl", "/api/tags")
-	.controller("eventUsersCtrl", function($scope, $location, $http, $q, $filter, $anchorScroll, auth, eventBox, eventListActiveClass, eventListPagecount,
-        eventUserUrl, userProfileUrl, connectUrl, acceptUrl, userEventRatingUrl, eventEvaluate, tagsUrl, mySocket) {
+	.controller("eventUsersCtrl", function($scope, $location, $http, $q, $filter, $anchorScroll, $routeParams, auth, eventBox, eventListActiveClass, eventListPagecount,
+        eventUserUrl, userProfileUrl, connectUrl, acceptUrl, userEventRatingUrl, eventDetailUrl, eventEvaluate, tagsUrl, mySocket) {
 
-        $scope.eventName = eventBox.getEvent().name_text;
+        if(!eventBox.getAttendees() || eventBox.getAttendees().length == 0){
+            $location.path('/eventDetail/' + $routeParams.event_id);
+        }
+
+        $scope.event_id = $routeParams.event_id;
 		$scope.attendees = [];
         $scope.results = [];
 		$scope.auth = auth;
 		$scope.userinfo = {};
+        $scope.selectedEvent = {};
 		$scope.isCollapsed = [];
         $scope.similarityScore = 'similarityScore';
         $scope.reverse = true;
@@ -49,7 +54,7 @@ eventCards
             data.rating = evaluation.rate;
             data.comments = evaluation.comments;
             data.anonymous = evaluation.anonymous;
-            data.event_id = eventBox.getEvent()._id;
+            data.event_id = $scope.event_id;
             data.user_id = auth.profile.user_id;
             $http.post(eventEvaluate, data)
                     .success(function(data){
@@ -107,11 +112,13 @@ eventCards
 
 
 		$q.all([			
-                $http.post(userProfileUrl, {'user_id': auth.profile.user_id}), 
+                $http.post(userProfileUrl, {user_id: auth.profile.user_id}), 
 				$http.post(eventUserUrl, eventBox.getAttendees()),
-                $http.post(userEventRatingUrl, {'user_id': auth.profile.user_id, 'event_id': eventBox.getEvent()._id})
+                $http.post(userEventRatingUrl, {user_id: auth.profile.user_id, event_id: $scope.event_id}),
+                $http.post(eventDetailUrl, {event_id: $scope.event_id})
 			]).then(function(results) { 
         		$scope.userinfo = results[0].data;
+                $scope.selectedEvent = results[3].data;
                     
 				for(var i = 0; i < $scope.data.connections.length; i++){
                     $scope.connections[$scope.data.connections[i].receiver] = $scope.data.connections[i].status;
@@ -175,13 +182,13 @@ eventCards
 		}
 
 		$scope.connect = function(user){
-            mySocket.emit('add', {user_id: user.user_id, event_id: eventBox.getEvent()._id});
+            mySocket.emit('add', {user_id: user.user_id, event_id: $scope.event_id});
             $scope.connections[user.user_id] = 1;
             
             var info = {};
             info.sender = $scope.userinfo.user_id;
             info.receiver = user.user_id;
-            info.event_id = eventBox.getEvent()._id;
+            info.event_id = $scope.event_id;
             $http.post(connectUrl, info)
                     .success(function(data){
                         $scope.connections[info.receiver] = 1;
@@ -199,7 +206,7 @@ eventCards
             var info = {};
             info.sender = $scope.userinfo.user_id;
             info.receiver = user.user_id;
-            info.event_id = eventBox.getEvent()._id;
+            info.event_id = $scope.event_id;
             $http.post(acceptUrl, info)
                     .success(function(data){
                         scope.connections[info.receiver] = 3;
@@ -241,13 +248,11 @@ eventCards
 
 		$scope.logout = function() {
     		auth.signout();
-    		eventBox.setEvent({});
     		$scope.data.myevents = {};
     		$location.path('/events');
   		}
 
   		$scope.quitEvent = function() {
-			eventBox.setEvent({});
 			$location.path('/events');
 
 		}

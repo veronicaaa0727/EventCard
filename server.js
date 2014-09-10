@@ -225,7 +225,7 @@ app.post('/api/events/view', function(req, res) {
 	Events.find(
 			{lat: {$gte: (req.body.lat - 0.05), $lte: (req.body.lat + 0.05)},
         	lon: {$gte: (req.body.lon - 0.05), $lte: (req.body.lon + 0.05)},
-        	start: {$gte: new Date()}}, function(err, events) {
+        	start: {$gte: new Date()}}, 'name_text venue category number evalscore evaluation start end', function(err, events) {
 		if(err)
 			res.send(err);
 		res.json(events);
@@ -241,12 +241,26 @@ app.post('/api/events/users', function(req, res) {
 });
 
 app.post('/api/events/search', function(req, res) {
-	Events.textSearch(req.body.searchText, function (err, output) {
+	Events.textSearch(req.body.searchText, 'name_text venue category number evalscore evaluation start end', function (err, output) {
     	if (err) 
     		res.send(err);
     	else{
     		res.json(output.results);
     	}
+	})
+});
+
+app.post('/api/events/filter', function(req, res) {
+	Events.find(
+			{
+				lat: {$gte: (req.body.lat - req.body.dist), $lte: (req.body.lat + req.body.dist)},
+        		lon: {$gte: (req.body.lon - req.body.dist), $lte: (req.body.lon + req.body.dist)},
+        		start: {$gte: new Date()},
+        		category: {$in: req.body.category}
+        	}, 'name_text venue category number evalscore evaluation start end', function(err, events) {
+		if(err)
+			res.send(err);
+		res.json(events);
 	})
 });
 
@@ -300,6 +314,15 @@ app.post('/api/events/users/rating', function(req, res) {
 			res.json(rating[0]);
 		else
 			res.send(err);
+	})
+});
+
+app.post('/api/events/detail', function(req, res) {
+	Events.find(
+			{_id: req.body.event_id}, function(err, events) {
+		if(err)
+			res.send(err);
+		res.json(events[0]);
 	})
 });
 

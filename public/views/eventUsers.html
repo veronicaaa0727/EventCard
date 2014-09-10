@@ -1,6 +1,6 @@
 <div class="panel panel-default row" ng-controller="eventUsersCtrl">
 	<div class="text-center">
-		<h2>Welcome to {{eventName}}</h2>
+		<h2 ng-if="selectedEvent.name_text">Welcome to {{selectedEvent.name_text}}</h2>
 		<h3 ng-if="attendees.length">You can find other attendees below</h3>
 	</div>
 	<div class="col-xs-1">

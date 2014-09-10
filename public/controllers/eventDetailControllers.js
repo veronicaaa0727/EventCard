@@ -1,10 +1,18 @@
 eventCards
 	.constant('userEventUrl', "/api/users/event/join")
-	.controller("eventDetailCtrl", function($scope, auth, $http, $location, eventBox, userEventUrl, userProfileUrl) {
-		$scope.selectedEvent = eventBox.getEvent();
-		console.log($scope.selectedEvent);
-		$scope.myHTML = eventBox.getEvent().description_html;
+	.constant('eventDetailUrl', "/api/events/detail")
+	.controller("eventDetailCtrl", function($scope, auth, $http, $location, $routeParams, eventBox, userEventUrl, userProfileUrl, eventDetailUrl) {
+		$scope.selectedEvent = {};
 		$scope.valid = true;
+		$scope.event_id = $routeParams.event_id;
+
+		$http.post(eventDetailUrl, {event_id: $scope.event_id})
+			.success(function(event){
+				$scope.selectedEvent = event;
+			})
+			.error(function(error){
+				$scope.error = error
+			});
 
 		$scope.checkPassword = function(password){
 			if(password == $scope.selectedEvent.password){
@@ -18,8 +26,8 @@ eventCards
 				$http.post(userEventUrl, {'user_id': auth.profile.user_id, 'event_id': $scope.selectedEvent._id})
 					.success(function(users){
 						eventBox.setAttendees(users);
-						console.log(users);
-						$location.path('/joinEvent');
+						console.log('users');
+						$location.path('/joinEvent/' + $scope.selectedEvent._id);
 					})
 					.error(function(error){
 						$scope.error = error

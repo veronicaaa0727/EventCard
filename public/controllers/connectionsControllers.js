@@ -41,12 +41,7 @@ eventCards
         }
 
         var refresh = function(){
-
-            for(var i = 0; i < $scope.data.connections.length; i++){
-                $scope.connections[$scope.data.connections[i].receiver] = $scope.data.connections[i].status;
-                $scope.events[$scope.data.connections[i].receiver] = $scope.data.connections[i].event_id;
-            }
-
+            console.log($scope.connections);
             $q.all([
                 $http.post(userProfileUrl, {'user_id': auth.profile.user_id}), 
                 $http.post(eventUserUrl, Object.keys($scope.connections))
@@ -157,7 +152,6 @@ eventCards
         }
 
         $scope.quitEvent = function() {
-            eventBox.setEvent({});
             $location.path('/events');
 
         }

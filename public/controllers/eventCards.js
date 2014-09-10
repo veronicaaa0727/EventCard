@@ -11,11 +11,11 @@ eventCards
 			templateUrl: "/views/eventList.html"
 		});
 
-		$routeProvider.when("/eventDetail", {
+		$routeProvider.when("/eventDetail/:event_id", {
 			templateUrl: "/views/eventDetail.html"
 		});
 
-		$routeProvider.when("/joinEvent", {
+		$routeProvider.when("/joinEvent/:event_id", {
 			templateUrl: "/views/eventUsers.html",
 			requiresLogin: true
 		});
@@ -58,8 +58,7 @@ eventCards
 		$scope.data = {};
 		$scope.connections = {};
 		$scope.events = {};
-		$scope.online = []
-		console.log(auth);
+		$scope.online = [];
 
 		$scope.init = function () {
 		    var interval = eventBox.getInterval();
@@ -72,8 +71,11 @@ eventCards
 			}
 		};
 
+		$window.onbeforeunload = function (event) {
+			eventBox.setAttendees([]);
+		}
+
 		$scope.home = function() {
-			eventBox.setEvent({});
 			if(auth.profile){
 				$http.post(myeventsUrl, {'user_id': auth.profile.user_id})
 					.success(function(events) {
@@ -85,6 +87,10 @@ eventCards
 				$http.post(statusUrl, {'user_id': auth.profile.user_id})
 					.success(function(connections) {
 						$scope.data.connections = connections;
+						for(var i = 0; i < $scope.data.connections.length; i++){
+			                $scope.connections[$scope.data.connections[i].receiver] = $scope.data.connections[i].status;
+			                $scope.events[$scope.data.connections[i].receiver] = $scope.data.connections[i].event_id;
+			            }
 						console.log
 					})
 					.error(function(error) {
@@ -118,6 +124,10 @@ eventCards
 				$http.post(statusUrl, {'user_id': auth.profile.user_id})
 					.success(function(connections) {
 						$scope.data.connections = connections;
+						for(var i = 0; i < $scope.data.connections.length; i++){
+			                $scope.connections[$scope.data.connections[i].receiver] = $scope.data.connections[i].status;
+			                $scope.events[$scope.data.connections[i].receiver] = $scope.data.connections[i].event_id;
+			            }
 					})
 					.error(function(error) {
 						$scope.data.error = error;

@@ -11,9 +11,9 @@
 			<button ng-click="checkPassword(data.password)" class="btn btn-primary">Join the Event</button>
 			<div ng-if="!valid" class="alert alert-danger" role="alert">The password is wrong</div>
 		</form>
-		<a ng-if="!selectedEvent.password" class="btn btn-primary" ng-click="login()">Join the Event</a>
+		<a ng-if="!selectedEvent.password && selectedEvent.name_text" class="btn btn-primary" ng-click="login()">Join the Event</a>
 	</div>
 	<div class="col-xs-2"></div>
-	<div class="col-xs-8" ng-bind-html="myHTML"></div>
+	<div class="col-xs-8" ng-bind-html="selectedEvent.description_html"></div>
 	<div class="col-xs-2"></div>
 </div>
