@@ -13,6 +13,7 @@ eventCards
             $location.path('/eventDetail/' + $routeParams.event_id);
         }
 
+        $scope.shareText = "mailto:?subject=I wanted you to checkout this event&body=Check out this event " + $location.absUrl().replace("joinEvent", "eventDetail");
         $scope.event_id = $routeParams.event_id;
 		$scope.attendees = [];
         $scope.results = [];

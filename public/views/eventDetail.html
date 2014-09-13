@@ -2,7 +2,7 @@
 
 <div ng-controller="eventDetailCtrl">
 	<div class="text-center">
-		<h2>{{selectedEvent.name_text}}</h2>
+		<h2 ng-if="selectedEvent.name_text">{{selectedEvent.name_text}}(<a ng-href="{{shareText}}" title="Share by Email">share</a>)</h2>
 		<form ng-if="selectedEvent.password" name="searchForm" class="navbar-form" role="search">
 			<div class="form-group">
 				<label>Please provide password: </label>

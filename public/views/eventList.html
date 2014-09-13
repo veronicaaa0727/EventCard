@@ -35,7 +35,7 @@
 				  	<button type="button" class="btn btn-default" ng-click="sortBy(0, 'evalscore', true)">Review</button>
 				</div>
 				<hr>
-				<div class="panel panel-default" ng-repeat="item in data.events | filter:categoryFilterFn | orderBy:order[0]:false | range:selectedPage[0]:pageSize">
+				<div class="panel panel-default" ng-repeat="item in data.events | filter:categoryFilterFn | orderBy:order[0]:reverse[0] | range:selectedPage[0]:pageSize">
 					<div class="panel-heading">
 						<a ng-click="viewDetails(item)"><h4><strong>{{item.name_text}}</h4></strong></a>
 					</div>
@@ -63,7 +63,7 @@
 					<h4>Seems you are not logged in. Please login first before viewing your events!</h4>
 					<a class="btn btn-primary" ng-click="login()">Log in</a>
 				</div>
-				<div class="panel panel-default" ng-repeat="item in data.myevents | filter:categoryFilterFn | orderBy:order[1]:false | range:selectedPage[1]:pageSize">
+				<div class="panel panel-default" ng-repeat="item in data.myevents | filter:categoryFilterFn | orderBy:order[1]:reverse[1] | range:selectedPage[1]:pageSize">
 					<div class="panel-heading">
 						<a ng-click="joinEvents(item)"><h4><strong>{{item.name_text}}</h4></strong></a>
 					</div>
@@ -93,7 +93,7 @@
     				</div>
     				<button ng-click="searchEvent(data.searchText)" class="btn btn-default">Submit</button>
 				</form>
-				<div class="panel panel-default" ng-repeat="item in searchEvents | filter:categoryFilterFn | orderBy:order[2]:false | range:selectedPage[2]:pageSize">
+				<div class="panel panel-default" ng-repeat="item in searchEvents | filter:categoryFilterFn | orderBy:order[2]:reverse[2] | range:selectedPage[2]:pageSize">
 					<div class="panel-heading">
 						<a ng-click="viewDetails(item)"><h4><strong>{{item.obj.name_text}}</h4></strong></a>
 					</div>

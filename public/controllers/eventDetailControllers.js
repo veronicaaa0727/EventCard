@@ -5,6 +5,7 @@ eventCards
 		$scope.selectedEvent = {};
 		$scope.valid = true;
 		$scope.event_id = $routeParams.event_id;
+		$scope.shareText = "mailto:?subject=I wanted you to checkout this event&body=Check out this event " + $location.absUrl();
 
 		$http.post(eventDetailUrl, {event_id: $scope.event_id})
 			.success(function(event){
