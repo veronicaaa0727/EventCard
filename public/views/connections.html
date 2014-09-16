@@ -29,10 +29,7 @@
 				          				(View Less)
 				        			</a>
 				        		</span>
-				        		<button ng-if="!connection(item)" type="button" class="btn btn-primary pull-right" ng-click="connect(item)">Connect</button>
-				        		<button ng-if="connection(item)==1" type="button" class="btn btn-info pull-right">Pending Approval</button>
-				        		<button ng-if="connection(item)==2" type="button" class="btn btn-warning pull-right" ng-click="accept(item)">Accept Invitation</button>
-				        		<button ng-if="connection(item)==3" type="button" class="btn btn-success pull-right">You're connected</button>
+				        		<button type="button" class="btn btn-success pull-right" ng-click="message(item)">Message</button>
 				      		</h4>
 				      		<h5> {{item.headline}} </h5>
 				    	</div>
@@ -84,10 +81,7 @@
 				          				(View Less)
 				        			</a>
 				        		</span>
-				        		<button ng-if="!connection(item)" type="button" class="btn btn-primary pull-right" ng-click="connect(item)">Connect</button>
-				        		<button ng-if="connection(item)==1" type="button" class="btn btn-info pull-right">Pending Approval</button>
-				        		<button ng-if="connection(item)==2" type="button" class="btn btn-warning pull-right" ng-click="accept(item)">Accept Invitation</button>
-				        		<button ng-if="connection(item)==3" type="button" class="btn btn-success pull-right">You're connected</button>
+				        		<button type="button" class="btn btn-info pull-right">Pending Approval</button>
 				      		</h4>
 				      		<h5> {{item.headline}} </h5>
 				    	</div>
@@ -139,10 +133,7 @@
 				          				(View Less)
 				        			</a>
 				        		</span>
-				        		<button ng-if="!connection(item)" type="button" class="btn btn-primary pull-right" ng-click="connect(item)">Connect</button>
-				        		<button ng-if="connection(item)==1" type="button" class="btn btn-info pull-right">Pending Approval</button>
-				        		<button ng-if="connection(item)==2" type="button" class="btn btn-warning pull-right" ng-click="accept(item)">Accept Invitation</button>
-				        		<button ng-if="connection(item)==3" type="button" class="btn btn-success pull-right">You're connected</button>
+				        		<button type="button" class="btn btn-warning pull-right" ng-click="accept(item)">Accept Invitation</button>
 				      		</h4>
 				      		<h5> {{item.headline}} </h5>
 				    	</div>

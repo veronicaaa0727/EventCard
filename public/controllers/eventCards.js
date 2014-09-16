@@ -25,6 +25,11 @@ eventCards
 			requiresLogin: true
 		});
 
+		$routeProvider.when("/chat", {
+			templateUrl: "/views/chat.html",
+			requiresLogin: true
+		});
+
 		$routeProvider.otherwise({
 			templateUrl: "/views/eventList.html"
 		});
@@ -51,14 +56,17 @@ eventCards
 	.run(function(auth) {
   		auth.hookEvents();
 	})
-	.controller("eventCardsCtrl", function ($scope, $http, $location, $anchorScroll, $window, auth, 
-		dataUrl, userUrl, eventBox, myeventsUrl, statusUrl, mySocket, notify) {
+	.controller("eventCardsCtrl", function ($scope, $http, $location, $anchorScroll, $window, $q, auth, 
+		dataUrl, userUrl, eventBox, myeventsUrl, statusUrl, userProfileUrl, mySocket, chatUserService, notify) {
 
 		$scope.template = '';
 		$scope.data = {};
 		$scope.connections = {};
 		$scope.events = {};
 		$scope.online = [];
+		$scope.userinfo = {};
+		$scope.data.messages = {};
+		$scope.data.chatUsers = {};
 
 		$scope.init = function () {
 		    var interval = eventBox.getInterval();
@@ -96,6 +104,13 @@ eventCards
 					.error(function(error) {
 						$scope.data.error = error;
 					});
+				$http.post(userProfileUrl, {'user_id': auth.profile.user_id})
+					.success(function(data) {
+						$scope.userinfo = data;
+					})
+					.error(function(error) {
+						$scope.data.error = error;
+					});
 			}
 			$anchorScroll();
 			$location.path('/events');
@@ -128,6 +143,13 @@ eventCards
 			                $scope.connections[$scope.data.connections[i].receiver] = $scope.data.connections[i].status;
 			                $scope.events[$scope.data.connections[i].receiver] = $scope.data.connections[i].event_id;
 			            }
+					})
+					.error(function(error) {
+						$scope.data.error = error;
+					});
+				$http.post(userProfileUrl, {'user_id': auth.profile.user_id})
+					.success(function(data) {
+						$scope.userinfo = data;
 					})
 					.error(function(error) {
 						$scope.data.error = error;
@@ -170,11 +192,21 @@ eventCards
         	notify({ message: data.name +' accept your invitation!', templateUrl:'/views/angular-notify.html'} );
             $scope.connections[data.user_id] = 3; // data will be 'woot'
         });
+        mySocket.on('message', function(data){
+        	if($location.absUrl().indexOf('chat') == -1){
+        		notify({ message: data.sender.firstName + ' ' + data.sender.lastName +' sends you a message!', templateUrl:'/views/chat-notify.html'} );
+        	}
+			chatUserService.addUser(data.sender);
+			if(!$scope.data.messages[data.sender.user_id] || $scope.data.messages[data.sender.user_id].length == 0)
+				$scope.data.messages[data.sender.user_id] = [data];
+			else
+				$scope.data.messages[data.sender.user_id].push(data);
+		});
 
 	})
 	.factory('mySocket', function (socketFactory) {
   		var socket = socketFactory();
-      	socket.forward('broadcast');
+      	//socket.forward('broadcast');
       	return socket;
 	});
 

@@ -704,9 +704,14 @@ io.on('connection', function (socket) {
 	var userInfo = {};
 	socket.on('join', function(data){
 		user_id = data.user_id;
-		userInfo = data;
-		sockets[user_id] = socket;
-		io.emit('join', Object.keys(sockets));
+		if(user_id in sockets){
+			
+		}
+		else{
+			userInfo = data;
+			sockets[user_id] = socket;
+			io.emit('join', Object.keys(sockets));
+		}
 	});
 	
 	socket.on('disconnect', function(){
@@ -723,6 +728,12 @@ io.on('connection', function (socket) {
 	socket.on('accept', function(id){
 		if(id in sockets){
 			sockets[id].emit('accept', userInfo);
+		}
+	});
+
+	socket.on('message', function(data){
+		if(data.receiver.user_id in sockets){
+			sockets[data.receiver.user_id].emit('message', data);
 		}
 	});
 });
