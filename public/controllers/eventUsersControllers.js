@@ -255,4 +255,9 @@ eventCards
 
 		}
 
+        $scope.message = function(user){
+            chatUserService.addUser(user);
+            $location.path('/chat');
+        }
+
 	});

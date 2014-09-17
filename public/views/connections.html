@@ -29,7 +29,7 @@
 				          				(View Less)
 				        			</a>
 				        		</span>
-				        		<button type="button" class="btn btn-success pull-right" ng-click="message(item)">Message</button>
+				        		<button type="button" class="btn btn-success pull-right" ng-click="message(item)" ng-disabled="!isOnline(item.user_id)">Message</button>
 				      		</h4>
 				      		<h5> {{item.headline}} </h5>
 				    	</div>
