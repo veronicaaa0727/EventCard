@@ -89,15 +89,19 @@ var schema_events = new mongoose.Schema({
 	name_html	: {type: String, required: true},
 	name_text	: {type: String, required: true, index: true},
 	description_html	: {type: String, required: true},
-	description_text	: {type: String, required: true, index: true},
+	description_text	: {type: String, required: true},
 	category	: String,
-	id 			: String,
+	event_id 			: String,
 	url		    : {type: String},
 	start		: {type: Date, required: true, index: true},
 	end			: {type: Date, required: true},
 	venue		: {type: String},
 	lat			: {type: Number, required: true, index: true},
 	lon			: {type: Number, required: true, index: true},
+	address 	: {type: mongoose.Schema.Types.Mixed},
+	organizer_id: String,
+	organizer_name 		 : String,
+	logo_url	: String,
 	number 		: Number,
 	password    : String,
 	evaluation 	: [Number],
@@ -222,10 +226,12 @@ app.get('/api/tags', function(req, res) {
 
 //events
 app.post('/api/events/view', function(req, res) {
+	var future = new Date();
+	future.setDate(future.getDate() + 7);
 	Events.find(
 			{lat: {$gte: (req.body.lat - 0.05), $lte: (req.body.lat + 0.05)},
         	lon: {$gte: (req.body.lon - 0.05), $lte: (req.body.lon + 0.05)},
-        	start: {$gte: new Date()}}, 'name_text venue category number evalscore evaluation start end', function(err, events) {
+        	start: {$gte: new Date(), $lte: future}}, 'name_text venue category lat lon start end address organizer_id', function(err, events) {
 		if(err)
 			res.send(err);
 		res.json(events);
@@ -240,27 +246,47 @@ app.post('/api/events/users', function(req, res) {
 	})
 });
 
+//to-do preprocess search result
 app.post('/api/events/search', function(req, res) {
-	Events.textSearch(req.body.searchText, 'name_text venue category number evalscore evaluation start end', function (err, output) {
+	Events.textSearch(req.body.searchText, function (err, output) {
     	if (err) 
     		res.send(err);
     	else{
-    		res.json(output.results);
+    		var results = [];
+    		for(var i = 0; i < output.results.length; ++i){
+    			record = output.results[i].obj;
+    			newRecord = {};
+    			newRecord._id = record._id;
+    			newRecord.name_text = record.name_text;
+    			newRecord.venue = record.vanue;
+    			newRecord.category = record.category;
+    			newRecord.lat = record.lat;
+    			newRecord.lon = record.lon;
+    			newRecord.start = record.start;
+    			newRecord.end = record.end;
+    			newRecord.address = record.address;
+    			newRecord.organizer_id = record.organizer_id;
+    			results.push(newRecord);
+    		}
+    		res.json(results);
     	}
 	})
 });
 
 app.post('/api/events/filter', function(req, res) {
+	var future = new Date();
+	future.setDate(future.getDate() + req.body.datespan);
 	Events.find(
 			{
-				lat: {$gte: (req.body.lat - req.body.dist), $lte: (req.body.lat + req.body.dist)},
-        		lon: {$gte: (req.body.lon - req.body.dist), $lte: (req.body.lon + req.body.dist)},
-        		start: {$gte: new Date()},
+				lat: {$gte: (req.body.location.lat - req.body.dist), $lte: (req.body.location.lat + req.body.dist)},
+        		lon: {$gte: (req.body.location.lon - req.body.dist), $lte: (req.body.location.lon + req.body.dist)},
+        		start: {$gte: new Date(), $lte: future},
         		category: {$in: req.body.category}
-        	}, 'name_text venue category number evalscore evaluation start end', function(err, events) {
+        	}, 'name_text venue category lat lon start end address organizer_id', function(err, events) {
 		if(err)
 			res.send(err);
-		res.json(events);
+		
+		console.log(events.length);
 	})
 });
 

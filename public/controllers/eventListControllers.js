@@ -19,6 +19,13 @@ eventCards
 		$scope.confirmation = false;
         $scope.max = 5;
         $scope.isReadonly = true;
+        $scope.filterCollapsed = true;
+        $scope.events = [];
+        $scope.searchedEvents = [];
+        $scope.searchText = null;
+        $scope.changeCollapsed = function(){
+            $scope.filterCollapsed = !$scope.filterCollapsed;
+        }
 
         $scope.ratingStates = [
             {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
@@ -28,28 +35,60 @@ eventCards
         $scope.filter = {};
         $scope.filter.categories = [
         	"All",
-        	"Business",
-        	"Science & Tech",
-        	"Other",
-        	"Health",
-        	"Community",
-        	"Family & Education",
+        	"Business & Professional",
+        	"Music",
         	"Food & Drink",
+        	"Community & Culture",
+        	"Performing & Visual Arts",
+        	"Film, Media & Entertainment",
         	"Sports & Fitness",
-        	"Charity & Causes",
-        	"Spirituality",
+        	"Health & Wellness",
+        	"Science & Technology",
         	"Travel & Outdoor",
-        	"Film & Media"
+        	"Charity & Causes",
+        	"Religion & Spirituality",
+        	"Family & Education",
+        	"Seasonal & Holiday",
+        	"Government & Politics",
+        	"Fashion & Beauty",
+        	"Home & Lifestyle",
+        	"Auto, Boat & Air",
+        	"Hobbies & Special Interest",
+        	"Other"
         ];
-        $scope.filter.distances = {
+        var distances = {
         	'1 mile': 1,
         	'5 miles': 5,
         	'10 miles': 10,
         	'20 miles': 20,
-        	'50 miles': 50,
-        	'100 miles': 100
+        	'50 miles': 50
         }
-        $scope.filter.dist = Object.keys($scope.filter.distances);
+        var cities = {  	
+        	'Berkeley': {lat: 37.871593, lon: -122.272747},
+        	'Cupertino': {lat: 37.322998, lon: -122.032182},
+        	'Fremont': {lat: 37.548270, lon: -121.988572},       	
+        	'Redwood City': {lat: 37.485215, lon: -122.236355},
+        	'Menlo Park': {lat: 37.452960, lon: -122.181725},
+        	'Milbrea': {lat: 37.598547, lon: -122.387194},
+        	'Milpitas': {lat: 37.432334, lon: -121.899574},
+        	'Mountain View': {lat: 37.386052, lon: -122.083851},
+        	'Oakland': {lat: 37.804364, lon: -122.271114},
+        	'Palo Alto': {lat: 37.441883, lon: -122.143019},
+        	'San Francisco': {lat: 37.774929, lon: -122.419416},
+        	'San Mateo': {lat: 37.562992, lon: -122.325525},
+        	'San Jose': {lat: 37.339386, lon: -121.894955},
+        	'Santa Clara': {lat: 37.354108, lon: -121.955236},
+        	'South San Francisco': {lat: 37.654656, lon: -122.407750},
+        	'Sunnyvale': {lat: 37.368830, lon: -122.036350},	
+        }
+        var date = {
+        	'1 Week': 7,
+        	'2 Weeks': 14,
+        	'1 Month': 30
+        }
+        $scope.filter.dist = Object.keys(distances);
+        $scope.filter.cities = Object.keys(cities);
+        $scope.filter.date = Object.keys(date);
 
 		$scope.selectedCategory = function (number, newCategory) {
 			selectedCategory = newCategory;
@@ -100,15 +139,23 @@ eventCards
   			});					
 		}
 
-		$scope.searchEvent = function(text) {
-			$http.post(eventSearch, {'searchText': text})
+		$scope.searchEvent = function() {
+			$http.post(eventSearch, {'searchText': $scope.searchText})
 				.success(function(events){
-					console.log(events);
-					$scope.searchEvents = events;
+					$scope.events = JSON.parse(JSON.stringify($scope.data.events));
+					$scope.data.events = JSON.parse(JSON.stringify(events))
+					$scope.searchedEvents = JSON.parse(JSON.stringify(events));
 				})
 				.error(function(error){
 					$scope.error = error
 				})
+		}
+
+		$scope.restore = function() {
+			$scope.searchText = null;
+			$scope.data.events = JSON.parse(JSON.stringify($scope.events));
+			$scope.events = [];
+			$scope.searchedEvents = [];
 		}
 
 		$scope.confirm = function(){
@@ -148,22 +195,48 @@ eventCards
 		}
 		
 		$scope.eventFilter = function(){
-			distance = 0.05;
-			categories = JSON.parse(JSON.stringify($scope.filter.categories));
-			categories.push("");
+			var data = {};
+			data.location = {lat: 37.4225, lon: -122.1653};
+			data.distance = 0.05;
+			data.categories = JSON.parse(JSON.stringify($scope.filter.categories));
+			data.datespan = 7;
+			if($scope.filter.selectedCity)
+				data.location = cities[$scope.filter.selectedCity];
 			if($scope.filter.selectedDistance)
-				distance = 0.01 * $scope.filter.distances[$scope.filter.selectedDistance];
+				data.distance = 0.01 * distances[$scope.filter.selectedDistance];
 			if($scope.filter.selectedCategory && $scope.filter.selectedCategory != 'All')
-				categories = [$scope.filter.selectedCategory];
-			$http.post(eventFilter,{lat: 37.4225, lon: -122.1653, dist: distance, category: categories})
-				.success(function(data) {
-					$scope.data.events = data;
-					console.log(data);
-					$location.path('/');
-				})
-				.error(function(error) {
-					$scope.data.error = error;
-				});
+				data.categories = [$scope.filter.selectedCategory];
+			if($scope.filter.selectedDate)
+				data.datespan = date[$scope.filter.selectedDate];
+			if($scope.searchText){
+				var events = [];
+				var future = new Date();
+				future.setDate(future.getDate() + data.datespan);
+				for (var i = 0; i < $scope.searchedEvents.length; ++i){
+					if($scope.searchedEvents[i].lat < data.location.lat - data.distance || 
+						$scope.searchedEvents[i].lat > data.location.lat + data.distance)
+						continue;
+					if($scope.searchedEvents[i].lon < data.location.lon - data.distance || 
+						$scope.searchedEvents[i].lon > data.location.lon + data.distance)
+						continue;
+					if(data.categories.indexOf($scope.searchedEvents[i].category) < 0)
+						continue;
+					if(new Date($scope.searchedEvents[i].start) < new Date() || new Date($scope.searchedEvents[i].start) > future)
+						continue;
+					events.push($scope.searchedEvents[i]);
+				}
+				$scope.data.events = events;
+			}
+			else{
+				$http.post(eventFilter,data)
+					.success(function(data) {
+						$scope.data.events = data;
+						//$location.path('/');
+					})
+					.error(function(error) {
+						$scope.data.error = error;
+					});
+			}
 		}
 
 	});

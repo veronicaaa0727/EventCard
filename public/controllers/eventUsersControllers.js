@@ -55,6 +55,7 @@ eventCards
             data.comments = evaluation.comments;
             data.anonymous = evaluation.anonymous;
             data.event_id = $scope.event_id;
+            data.organizer_id = $scope.selectedEvent.organizer_id;
             data.user_id = auth.profile.user_id;
             $http.post(eventEvaluate, data)
                     .success(function(data){

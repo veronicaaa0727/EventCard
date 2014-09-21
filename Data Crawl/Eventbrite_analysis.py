@@ -1,3 +1,4 @@
+#coding=utf-8
 import pickle,json
 import sys
 import pymongo
@@ -19,11 +20,13 @@ for item in EventsData:
 	document = {}
 	#print type(item)
 	#print item['name']
+	if not item[u'venue']:
+		continue
 
-	document["category"] = '' if not item['category'] else item['category']['name']
+	document["category"] = 'Other' if not item['category'] else item['category']['name']
 	document["description_html"] = item[u'description']['html']
 	document["description_text"] = item[u'description']['text']
-	document["id"] = item[u'id']
+	document["event_id"] = item[u'id']
 	document["name_html"] = item[u'name']['html']
 	document["name_text"] = item[u'name']['text']
 	document["start"] = datetime.datetime(*map(int, re.split('[^\d]', item[u'start']['utc'])[:-1]))
@@ -32,9 +35,13 @@ for item in EventsData:
 	document["lat"] = float(item[u'venue'][u'latitude'])
 	document["lon"] = float(item[u'venue'][u'longitude'])
 	document["url"] = item[u'url']
+	document["address"] = item[u'venue'][u'address']
+	document["organizer_id"] = item[u'organizer_id']
+	document["organizer_name"] = item[u'organizer'][u'name']
+	document["logo_url"] = item[u'logo_url']
 
 	try:
-		events.insert(document)
+		events.insert(document, upsert=True)
 	except ValueError:
 		print "Error Event" + i + ': ' + ValueError
 

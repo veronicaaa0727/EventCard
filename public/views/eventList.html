@@ -6,33 +6,57 @@
 		<ul class="nav nav-tabs" role="tablist">
 		  	<li class="active"><a data-target="#events" role="tab" data-toggle="tab">Recommended Events</a></li>
 		  	<li><a data-target="#myevents" role="tab" data-toggle="tab">My Events</a></li>
-		  	<li><a data-target="#searchevents" role="tab" data-toggle="tab">Search Events</a></li>
 		  	<li><a data-target="#createevents" role="tab" data-toggle="tab">Create Events</a></li>
 		</ul>
+		<hr>
 		<div class="tab-content">
 			<div class="tab-pane active" id="events">
-				<br>
-				<form class="form-inline" role="form">
-				  	<div class="form-group">
-				    	<label for="category">Category: </label>
-				    	<select class="form-control" ng-model="filter.selectedCategory" id="category">
-						  	<option ng-repeat="item in filter.categories">{{item}}</option>
-						</select>
-				  	</div>
-				  	<div class="form-group">
-				    	<label for="distance">Distance: </label>
-				    	<select class="form-control" ng-model="filter.selectedDistance" id="distance">
-						  	<option ng-repeat="item in filter.dist">{{item}}</option>
-						</select>
-				  	</div>
-				  	<button ng-click="eventFilter()" class="btn btn-default">Filter</button>
+				<form name="searchForm" class="navbar-form" role="search">
+    				<div class="form-group">
+        				<input type="search" class="form-control" ng-model="searchText" placeholder="Search">
+    				</div>
+    				<button ng-click="searchEvent()" class="btn btn-default">Submit</button>
+    				<button ng-click="restore()" class="btn btn-default">Back to Default</button>
 				</form>
-				<br>
-				<label> Sort By: </label>
-				<div class="btn-group">
-				  	<button type="button" class="btn btn-default" ng-click="sortBy(0, 'start', false)">Time</button>
-				  	<button type="button" class="btn btn-default" ng-click="sortBy(0, 'number', true)">Popularity</button>
-				  	<button type="button" class="btn btn-default" ng-click="sortBy(0, 'evalscore', true)">Review</button>
+				<button ng-if="filterCollapsed" class="btn btn-primary" ng-click="changeCollapsed()" style="margin-left: 15px;">Filter Results</button>
+				<button ng-if="!filterCollapsed" class="btn btn-primary" ng-click="changeCollapsed()" style="margin-left: 15px;">Hide Filter</button>
+
+				<div collapse="filterCollapsed">
+					<br>
+					<form class="form-inline" role="form">
+						<div class="form-group">
+					    	<label for="category">City: </label>
+					    	<select class="form-control" ng-model="filter.selectedCity" id="city">
+							  	<option ng-repeat="item in filter.cities">{{item}}</option>
+							</select>
+					  	</div>
+					  	<div class="form-group">
+					    	<label for="distance">Distance: </label>
+					    	<select class="form-control" ng-model="filter.selectedDistance" id="distance">
+							  	<option ng-repeat="item in filter.dist">{{item}}</option>
+							</select>
+					  	</div>
+					  	<div class="form-group">
+					    	<label for="category">Category: </label>
+					    	<select class="form-control" ng-model="filter.selectedCategory" id="category">
+							  	<option ng-repeat="item in filter.categories">{{item}}</option>
+							</select>
+					  	</div>
+					  	<div class="form-group">
+					    	<label for="distance">Date: </label>
+					    	<select class="form-control" ng-model="filter.selectedDate" id="date">
+							  	<option ng-repeat="item in filter.date">{{item}}</option>
+							</select>
+					  	</div>
+					  	<button ng-click="eventFilter()" class="btn btn-default">Filter</button>
+					</form>
+					<br>
+					<label> Sort By: </label>
+					<div class="btn-group">
+					  	<button type="button" class="btn btn-default" ng-click="sortBy(0, 'start', false)">Time</button>
+					  	<button type="button" class="btn btn-default" ng-click="sortBy(0, 'number', true)">Popularity</button>
+					  	<button type="button" class="btn btn-default" ng-click="sortBy(0, 'evalscore', true)">Review</button>
+					</div>
 				</div>
 				<hr>
 				<div class="panel panel-default" ng-repeat="item in data.events | filter:categoryFilterFn | orderBy:order[0]:reverse[0] | range:selectedPage[0]:pageSize">
@@ -40,9 +64,10 @@
 						<a ng-click="viewDetails(item)"><h4><strong>{{item.name_text}}</h4></strong></a>
 					</div>
 					<div class="panel-body">
-					    <p ng-if="item.venue">Location: {{item.venue}}</p>
+						<p ng-if="item.venue">Location: {{item.venue}}</p>
+					    <p ng-if="item.address">Address: {{item.address.address_1}}, {{item.address.city}}, {{item.address.region}} {{item.address.postal_code}}</p>
 					    <p ng-if="item.category">Category: {{item.category}}</p>
-					    <p ng-if="item.number"># of People joined: {{item.number}}</p>
+					    <p ng-if="item.number > 10"># of People joined: {{item.number}}</p>
 					    <span ng-if="item.evalscore">Evaluation Score: <rating ng-model="item.evalscore" max="max" readonly="isReadonly"></rating>({{item.evaluation.length}})</span>
 					    <p ng-if="item.start">Time: {{item.start | date:'M-dd-yyyy H:mm'}} to {{item.end | date:'M-dd-yyyy H:mm'}}</p>
 					</div>
@@ -80,36 +105,6 @@
 					  	<li ng-repeat="page in data.myevents | filter:categoryFilterFn | pageCount:pageSize" 
 					  		ng-class="getPageClass(1, $index + 1)">
 					  		<a ng-click="selectPage(1, $index + 1)">
-								{{$index + 1}}
-					  		</a>
-					  	</li>
-					</ul>
-				</div>
-			</div>
-			<div class="tab-pane" id="searchevents">
-				<form name="searchForm" class="navbar-form" role="search">
-    				<div class="form-group">
-        				<input type="search" class="form-control" ng-model="data.searchText" placeholder="Search">
-    				</div>
-    				<button ng-click="searchEvent(data.searchText)" class="btn btn-default">Submit</button>
-				</form>
-				<div class="panel panel-default" ng-repeat="item in searchEvents | filter:categoryFilterFn | orderBy:order[2]:reverse[2] | range:selectedPage[2]:pageSize">
-					<div class="panel-heading">
-						<a ng-click="viewDetails(item)"><h4><strong>{{item.obj.name_text}}</h4></strong></a>
-					</div>
-					<div class="panel-body">
-					    <p ng-if="item.obj.venue">Location: {{item.obj.venue}}</p>
-					    <p ng-if="item.obj.category">Category: {{item.obj.category}}</p>
-					    <p ng-if="item.number"># of People joined: {{item.number}}</p>
-					    <span ng-if="item.evalscore">Evaluation Score: <rating ng-model="item.evalscore" max="max" readonly="isReadonly"></rating>({{item.evaluation.length}})</span>
-					    <p ng-if="item.start">Time: {{item.start | date:'M-dd-yyyy H:mm'}} to {{item.end | date:'M-dd-yyyy H:mm'}}
-					</div>
-				</div>
-				<div class="pull-right">
-					<ul class="pagination">
-					  	<li ng-repeat="page in searchEvents | filter:categoryFilterFn | pageCount:pageSize" 
-					  		ng-class="getPageClass(2, $index + 1)">
-					  		<a ng-click="selectPage(2, $index + 1)">
 								{{$index + 1}}
 					  		</a>
 					  	</li>
