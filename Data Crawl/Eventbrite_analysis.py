@@ -15,6 +15,30 @@ db.authenticate("admin", "admin2014")
 
 events = db.events
 
+categories = {
+        	"All": 0,
+        	"Business & Professional": 0,
+        	"Music": 0,
+        	"Food & Drink": 0,
+        	"Community & Culture": 0,
+        	"Performing & Visual Arts": 0,
+        	"Film, Media & Entertainment": 0,
+        	"Sports & Fitness": 0,
+        	"Health & Wellness": 0,
+        	"Science & Technology": 0,
+        	"Travel & Outdoor": 0,
+        	"Charity & Causes": 0,
+        	"Religion & Spirituality": 0,
+        	"Family & Education": 0,
+        	"Seasonal & Holiday": 0,
+        	"Government & Politics": 0,
+        	"Fashion & Beauty": 0,
+        	"Home & Lifestyle": 0,
+        	"Auto, Boat & Air": 0,
+        	"Hobbies & Special Interest": 0,
+        	"Other": 0
+        }
+
 i = 0
 for item in EventsData:
 	document = {}
@@ -44,6 +68,8 @@ for item in EventsData:
 		events.insert(document, upsert=True)
 	except ValueError:
 		print "Error Event" + i + ': ' + ValueError
+
+print categories
 
 '''
 capacity: Number

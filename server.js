@@ -275,18 +275,18 @@ app.post('/api/events/search', function(req, res) {
 
 app.post('/api/events/filter', function(req, res) {
 	var future = new Date();
-	future.setDate(future.getDate() + req.body.datespan);
+	future.setDate(future.getDate() + req.body.date);
+
 	Events.find(
-			{
-				lat: {$gte: (req.body.location.lat - req.body.dist), $lte: (req.body.location.lat + req.body.dist)},
-        		lon: {$gte: (req.body.location.lon - req.body.dist), $lte: (req.body.location.lon + req.body.dist)},
-        		start: {$gte: new Date(), $lte: future},
-        		category: {$in: req.body.category}
-        	}, 'name_text venue category lat lon start end address organizer_id', function(err, events) {
+		{
+			lat: {$gte: (req.body.city.lat - req.body.dist), $lte: (req.body.city.lat + req.body.dist)},
+    		lon: {$gte: (req.body.city.lon - req.body.dist), $lte: (req.body.city.lon + req.body.dist)},
+    		start: {$gte: new Date(), $lte: future},
+    		category: {$in: req.body.categories}
+    	}, 'name_text venue category lat lon start end address organizer_id', function(err, events) {
 		if(err)
 			res.send(err);
-		
-		console.log(events.length);
+		res.json(events);
 	})
 });
 

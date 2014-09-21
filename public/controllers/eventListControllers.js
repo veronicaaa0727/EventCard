@@ -196,28 +196,28 @@ eventCards
 		
 		$scope.eventFilter = function(){
 			var data = {};
-			data.location = {lat: 37.4225, lon: -122.1653};
-			data.distance = 0.05;
+			data.city = {lat: 37.4225, lon: -122.1653};
+			data.dist = 0.05;
 			data.categories = JSON.parse(JSON.stringify($scope.filter.categories));
-			data.datespan = 7;
+			data.date = 7;
 			if($scope.filter.selectedCity)
-				data.location = cities[$scope.filter.selectedCity];
+				data.city = cities[$scope.filter.selectedCity];
 			if($scope.filter.selectedDistance)
-				data.distance = 0.01 * distances[$scope.filter.selectedDistance];
+				data.dist = 0.01 * distances[$scope.filter.selectedDistance];
 			if($scope.filter.selectedCategory && $scope.filter.selectedCategory != 'All')
 				data.categories = [$scope.filter.selectedCategory];
 			if($scope.filter.selectedDate)
-				data.datespan = date[$scope.filter.selectedDate];
+				data.date = date[$scope.filter.selectedDate];
 			if($scope.searchText){
 				var events = [];
 				var future = new Date();
-				future.setDate(future.getDate() + data.datespan);
+				future.setDate(future.getDate() + data.date);
 				for (var i = 0; i < $scope.searchedEvents.length; ++i){
-					if($scope.searchedEvents[i].lat < data.location.lat - data.distance || 
-						$scope.searchedEvents[i].lat > data.location.lat + data.distance)
+					if($scope.searchedEvents[i].lat < data.city.lat - data.dist || 
+						$scope.searchedEvents[i].lat > data.city.lat + data.dist)
 						continue;
-					if($scope.searchedEvents[i].lon < data.location.lon - data.distance || 
-						$scope.searchedEvents[i].lon > data.location.lon + data.distance)
+					if($scope.searchedEvents[i].lon < data.city.lon - data.dist || 
+						$scope.searchedEvents[i].lon > data.city.lon + data.dist)
 						continue;
 					if(data.categories.indexOf($scope.searchedEvents[i].category) < 0)
 						continue;
@@ -229,8 +229,9 @@ eventCards
 			}
 			else{
 				$http.post(eventFilter,data)
-					.success(function(data) {
-						$scope.data.events = data;
+					.success(function(results) {
+						console.log(results);
+						$scope.data.events = results;
 						//$location.path('/');
 					})
 					.error(function(error) {
