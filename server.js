@@ -234,7 +234,7 @@ app.post('/api/events/view', function(req, res) {
 	Events.find(
 			{lat: {$gte: (req.body.lat - 0.05), $lte: (req.body.lat + 0.05)},
         	lon: {$gte: (req.body.lon - 0.05), $lte: (req.body.lon + 0.05)},
-        	start: {$gte: new Date(), $lte: future}}, 'name_text venue category lat lon start end address organizer_id evalscore evaluation', function(err, events) {
+        	start: {$gte: new Date(), $lte: future}}, 'name_text venue category lat lon start end address organizer_id organizer_name evalscore evaluation', function(err, events) {
 		if(err)
 			res.send(err);
 		res.json(events);

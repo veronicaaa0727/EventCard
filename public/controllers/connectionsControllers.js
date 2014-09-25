@@ -1,5 +1,5 @@
 eventCards
-	.controller("connectionsCtrl", function($scope, $location, $http, $filter, $q, $anchorScroll, auth, eventListActiveClass, eventListPagecount,
+	.controller("connectionsCtrl", function($scope, $location, $http, $filter, $q, $anchorScroll, $window, auth, eventListActiveClass, eventListPagecount,
         eventUserUrl, userProfileUrl, connectUrl, acceptUrl, chatUserService, mySocket) {
 
         $scope.attendees = [];
@@ -97,6 +97,10 @@ eventCards
             }
             else
                 return false;
+        }
+
+        $scope.viewLinkedIn = function(path){
+            $window.open(path);
         }
         
         $scope.accept = function(user){

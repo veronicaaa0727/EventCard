@@ -9,8 +9,8 @@ eventCards
 
 		var selectedCategory = null;
 
-		$scope.selectedPage = [1,1,1];
-		$scope.order = ['start', 'start', 'start']
+		$scope.selectedPage = [1,1];
+		$scope.order = ['start', 'start']
 		$scope.reverse = [false, false, false]
 		$scope.pageSize = eventListPagecount;
 		$scope.selectedEvent = null;
