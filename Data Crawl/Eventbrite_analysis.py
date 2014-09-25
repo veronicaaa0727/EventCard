@@ -63,6 +63,8 @@ for item in EventsData:
 	document["organizer_id"] = item[u'organizer_id']
 	document["organizer_name"] = item[u'organizer'][u'name']
 	document["logo_url"] = item[u'logo_url']
+	document["evaluation"] = []
+	document["evalscore"] = 0
 
 	try:
 		events.insert(document, upsert=True)

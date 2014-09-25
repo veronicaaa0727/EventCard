@@ -124,16 +124,6 @@ var schema_userevents = new mongoose.Schema({
 })
 var UserEvents = mongoose.model('Userevents', schema_userevents);
 
-var schema_usereventratings = new mongoose.Schema({
-	user_id		: {type: String, required: true, index: true},
-	event_id 	: {type: String,  required: true, index: true},
-	rating 	 	: {type: Number,  required: true},
-	comments  	: {type: String},
-	anonymous 	: {type: Boolean,  required: true},
-	created_at 	: {type: Date}
-})
-var UserEventRatings = mongoose.model('UserEventRatings', schema_usereventratings);
-
 var schema_userlinkedin = new mongoose.Schema({
 	accessToken 	: String,
 	authorityScore 	: Number,
@@ -192,6 +182,19 @@ var schema_userconnect = new mongoose.Schema({
 })
 var UserConnection = mongoose.model('UserConnection', schema_userconnect);
 
+var schema_userorgratings = new mongoose.Schema({
+	user_id		: {type: String, required: true, index: true},
+	event_id 	: {type: String,  required: true, index: true},
+	organizer_id 	: {type: String,  required: true, index: true},
+	rating 	 	: {type: Number,  required: true},
+	comments  	: {type: String},
+	anonymous 	: {type: Boolean,  required: true},
+	created_at 	: {type: Date}
+})
+var UserOrgRatings = mongoose.model('UserOrgRatings', schema_userorgratings);
+
+
+
 var schema_userinfo = new mongoose.Schema({
 	name			: {type: String, required: true},
 	company			: {type: String, required: true},
@@ -231,7 +234,7 @@ app.post('/api/events/view', function(req, res) {
 	Events.find(
 			{lat: {$gte: (req.body.lat - 0.05), $lte: (req.body.lat + 0.05)},
         	lon: {$gte: (req.body.lon - 0.05), $lte: (req.body.lon + 0.05)},
-        	start: {$gte: new Date(), $lte: future}}, 'name_text venue category lat lon start end address organizer_id', function(err, events) {
+        	start: {$gte: new Date(), $lte: future}}, 'name_text venue category lat lon start end address organizer_id evalscore evaluation', function(err, events) {
 		if(err)
 			res.send(err);
 		res.json(events);
@@ -301,39 +304,49 @@ app.post('/api/events/create', function(req, res) {
 });
 
 app.post('/api/events/evaluate', function(req, res) {
-	Events.find({_id: req.body.event_id}, function(err, data) {	
-		if(err || data.length == 0)
-			res.send(err);
+	Events.find({organizer_id: req.body.organizer_id}, function(err, data) {	
+		if(err || data.length == 0){
+	    	console.log(err);
+	    	res.send(err);
+	    }
 		else{
-			var eventDetail = data[0];
-			if(eventDetail['evaluation']){
-				eventDetail['evaluation'].push(req.body.rating);
-				eventDetail['evalscore'] 
-					= eventDetail['evaluation'].reduce(function(a, b) {return a + b;})/eventDetail['evaluation'].length;
-			}
-				
-			else{
-				eventDetail['evaluation'] = [req.body.rating];
-				eventDetail['evalscore'] = req.body.rating;
-			}
-				
-			Events.update({_id: req.body.event_id}, eventDetail.toObject(), {upsert: true}, function(err){
-    			if(err)
-					res.send(err);
-			});
+			for(var i = 0; i < data.length; ++i){
+				var temp = JSON.parse(JSON.stringify(data[i]));
+				if(temp['evaluation']){
+					temp['evaluation'].push(req.body.rating);
+					temp['evalscore'] 
+						= temp['evaluation'].reduce(function(a, b) {return a + b;})/temp['evaluation'].length;
+				}
+					
+				else{
+					temp['evaluation'] = [req.body.rating];
+					temp['evalscore'] = req.body.rating;
+				}
+					
+				Events.update({_id: temp._id}, temp, {upsert: true}, function(err){
+
+	    			if(err){
+	    				console.log(err);
+	    				res.send(err);
+	    			}
+						
+				});
+			}		
 		}
 	})
 
 	var rating = req.body;
 	rating.created_at = new Date();
-	UserEventRatings.create(rating, function (err, output) {
-    	if (err) 
-    		res.send(err);
+	UserOrgRatings.create(rating, function (err, output) {
+    	if (err){
+	    	console.log(err);
+	    	res.send(err);
+	    }
 	})
 });
 
 app.post('/api/events/users/rating', function(req, res) {
-	UserEventRatings.find({user_id: req.body.user_id, event_id: req.body.event_id}, function(err, rating) {
+	UserOrgRatings.find({user_id: req.body.user_id, event_id: req.body.event_id}, function(err, rating) {
 		if(err)
 			res.send(err);
 		if(rating.length > 0)

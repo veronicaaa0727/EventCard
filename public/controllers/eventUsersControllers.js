@@ -26,6 +26,8 @@ eventCards
         $scope.pageSize = eventListPagecount;
         $scope.rating = 0;
         $scope.evalCollapsed = true;
+        $scope.evaluation = {};
+        $scope.evaluation.anonymous = false;
 
         $scope.tags = [];
 
