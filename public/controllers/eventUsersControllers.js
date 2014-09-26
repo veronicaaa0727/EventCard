@@ -6,7 +6,7 @@ eventCards
     .constant("acceptUrl", "/api/users/accept")
     .constant("eventEvaluate", "/api/events/evaluate")
     .constant("tagsUrl", "/api/tags")
-	.controller("eventUsersCtrl", function($scope, $location, $http, $q, $filter, $anchorScroll, $routeParams, auth, eventBox, eventListActiveClass, eventListPagecount,
+	.controller("eventUsersCtrl", function($scope, $location, $http, $q, $filter, $anchorScroll, $routeParams, $window, auth, eventBox, eventListActiveClass, eventListPagecount,
         eventUserUrl, userProfileUrl, connectUrl, acceptUrl, userEventRatingUrl, eventDetailUrl, eventEvaluate, tagsUrl, mySocket) {
 
         if(!eventBox.getAttendees() || eventBox.getAttendees().length == 0){
@@ -111,6 +111,10 @@ eventCards
             }
             score /= (length * user.keywordsLength);
             return score;
+        }
+
+        $scope.viewLinkedIn = function(path){
+            $window.open(path);
         }
 
 
